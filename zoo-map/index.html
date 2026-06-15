@@ -1,0 +1,1069 @@
+﻿<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <!-- Cleaned deploy package: assets reorganized under /assets and /data. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
+  <link rel="icon" type="image/png" href="assets/common/favicon.png">
+    <link rel="stylesheet" href="assets/common/bear-cursor.css">
+  <link rel="stylesheet" href="assets/common/footstep-transition.css">
+  <title>閱讀動物園地圖</title>
+  <style>
+    :root {
+      --ink: #3c2f1f;
+      --leaf: #637a4f;
+      --leaf-dark: #405a3a;
+      --paper: #fff8e9;
+      --line: #a56f37;
+      --shadow: 0 16px 30px rgba(71, 53, 24, .16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: #f7edd9;
+      font-family: "Noto Serif TC", "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", serif;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255, 249, 235, .65), rgba(241, 226, 193, .8)),
+        #f7edd9;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      z-index: 20;
+      width: min(1120px, calc(100vw - 32px));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 10px 14px 10px 18px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(121, 92, 44, .18);
+      border-radius: 8px;
+      background: rgba(255, 248, 232, .82);
+      box-shadow: 0 12px 24px rgba(80, 58, 23, .1);
+      backdrop-filter: blur(8px);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .brand strong {
+      font-size: clamp(18px, 2.2vw, 26px);
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: #5e6f53;
+      font-size: 14px;
+      letter-spacing: .12em;
+      white-space: nowrap;
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      color: #fffaf0;
+      background: linear-gradient(135deg, var(--leaf), var(--leaf-dark));
+      font-weight: 700;
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+
+    .map-shell {
+      width: 100%;
+      margin: 0 auto;
+      padding-top: 0;
+    }
+
+    body.is-editing {
+      overflow-x: auto;
+    }
+
+    body.is-editing .map-shell {
+      width: var(--map-edit-width, 100%);
+      transform-origin: top center;
+    }
+
+    .map {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #f8efd9;
+      isolation: isolate;
+    }
+
+    .map-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    .zone {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      z-index: var(--z, 2);
+      display: grid;
+      justify-items: center;
+      gap: clamp(6px, .8vw, 10px);
+      width: var(--w);
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .zone img {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 9px 8px rgba(57, 44, 21, .12));
+      transition: transform .25s ease, filter .25s ease;
+    }
+
+    .zone:hover img,
+    .zone:focus-within img {
+      transform: translateY(-4px);
+      filter: drop-shadow(0 13px 11px rgba(57, 44, 21, .18));
+    }
+
+    .zone-sheep img {
+      transform: translateY(8px);
+    }
+
+    .zone-sheep:hover img,
+    .zone-sheep:focus-within img {
+      transform: translateY(4px);
+    }
+
+    .zone-name {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: min(100%, 220px);
+      min-height: 48px;
+      padding: 7px 22px 9px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      color: #6b3f18;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 246, .92), rgba(255, 243, 218, .92)),
+        var(--paper);
+      box-shadow:
+        inset 0 0 0 3px rgba(166, 111, 55, .16),
+        var(--shadow);
+      font-size: clamp(20px, 1.75vw, 32px);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+
+    .zone-owl {
+      --x: 46.4%;
+      --y: 45.7%;
+      --w: 14.2%;
+      --z: 4;
+    }
+
+    .zone-fox {
+      --x: 26.5%;
+      --y: 49.8%;
+      --w: 7.6%;
+      --z: 5;
+    }
+
+    .zone-giraffe {
+      --x: 68.9%;
+      --y: 41.4%;
+      --w: 15.8%;
+      --z: 4;
+    }
+
+    .zone-giraffe .zone-name {
+      transform: translateY(-18px);
+    }
+
+    .zone-bear {
+      --x: 12.8%;
+      --y: 67.6%;
+      --w: 14.8%;
+      --z: 7;
+    }
+
+    .zone-sheep {
+      --x: 30.5%;
+      --y: 77.4%;
+      --w: 14.4%;
+      --z: 6;
+    }
+
+    .zone-kangaroo {
+      --x: 59.6%;
+      --y: 70.3%;
+      --w: 15.8%;
+      --z: 6;
+    }
+
+    .zone-kangaroo .zone-name {
+      transform: translateY(-12px);
+    }
+
+    .zone-owl .zone-name {
+      margin-top: -8px;
+    }
+
+    .zone-bear .zone-name {
+      margin-top: -4px;
+    }
+
+    @media (max-width: 767px) {
+      .topbar {
+        top: 10px;
+        width: calc(100vw - 20px);
+        padding: 8px 10px 8px 12px;
+        padding-right: 86px;
+      }
+
+      .brand {
+        display: block;
+        flex: 1 1 0;
+        gap: 0;
+        min-width: 0;
+      }
+
+      .brand strong {
+        font-size: 17px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .brand span {
+        display: block;
+        font-size: 11px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .home-link {
+        display: none;
+      }
+
+      body.is-editing .map-shell {
+        width: var(--map-edit-width, 100%);
+      }
+
+      .map {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 821 / 1916;
+      }
+
+      .zone-name {
+        min-height: 38px;
+        padding: 5px 14px 7px;
+        border-width: 1.5px;
+        border-radius: 7px;
+        font-size: clamp(18px, 6vw, 28px);
+        box-shadow:
+          inset 0 0 0 2px rgba(166, 111, 55, .16),
+          0 9px 18px rgba(71, 53, 24, .13);
+      }
+
+      .zone-owl {
+        --x: 49%;
+        --y: 25.3%;
+        --w: 37.9%;
+        --z: 5;
+      }
+
+      .zone-fox {
+        --x: 25.1%;
+        --y: 41.1%;
+        --w: 17.7%;
+        --z: 5;
+      }
+
+      .zone-giraffe {
+        --x: 74.2%;
+        --y: 43.4%;
+        --w: 39%;
+        --z: 4;
+      }
+
+      .zone-sheep {
+        --x: 26.2%;
+        --y: 64.1%;
+        --w: 33%;
+        --z: 6;
+      }
+
+      .zone-bear {
+        --x: 23.8%;
+        --y: 82.2%;
+        --w: 37%;
+        --z: 7;
+      }
+
+      .zone-kangaroo {
+        --x: 72.5%;
+        --y: 66%;
+        --w: 38%;
+        --z: 6;
+      }
+
+      .zone-owl .zone-name,
+      .zone-bear .zone-name {
+        margin-top: -2px;
+      }
+
+      .zone-giraffe .zone-name {
+        transform: translate(-42px, -48px);
+      }
+
+      .zone-kangaroo .zone-name {
+        transform: translateY(-12px);
+      }
+
+      .zone-sheep img {
+        transform: translateY(10px);
+      }
+
+      .zone-sheep:hover img,
+      .zone-sheep:focus-within img {
+        transform: translateY(6px);
+      }
+
+      .map-editor {
+        left: auto;
+        right: 10px;
+        bottom: 10px;
+        width: min(360px, calc(100vw - 20px));
+        max-height: 56vh;
+        padding: 10px;
+      }
+
+      .map-editor:not(.is-expanded) {
+        width: auto;
+        max-height: none;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        overflow: visible;
+      }
+
+      .map-editor:not(.is-expanded) > :not(.editor-toggle) {
+        display: none;
+      }
+
+      .editor-toggle {
+        display: inline-flex;
+      }
+
+      .editor-tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .editor-output {
+        min-height: 110px;
+      }
+    }
+
+    .map-editor {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 40;
+      display: none;
+      width: min(380px, calc(100vw - 28px));
+      max-height: min(680px, calc(100vh - 28px));
+      overflow: auto;
+      padding: 14px;
+      border: 1px solid rgba(88, 68, 34, .2);
+      border-radius: 8px;
+      background: rgba(255, 249, 236, .94);
+      box-shadow: 0 16px 36px rgba(55, 42, 20, .2);
+      backdrop-filter: blur(8px);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    .editor-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-width: 84px;
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 999px;
+      color: #fffaf0;
+      background: #3c2f1f;
+      box-shadow: 0 10px 22px rgba(55, 42, 20, .22);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    body.is-editing .map-editor {
+      display: block;
+    }
+
+    body.is-editing .zone {
+      cursor: move;
+      outline: 2px dashed rgba(75, 97, 57, .55);
+      outline-offset: 6px;
+      user-select: none;
+      touch-action: none;
+    }
+
+    body.is-editing .map {
+      touch-action: none;
+    }
+
+    body.is-editing .zone.is-selected {
+      outline-color: #9b6225;
+    }
+
+    .map-editor h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: .08em;
+    }
+
+    .editor-hint {
+      margin: -2px 0 12px;
+      color: #5e6f53;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .editor-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .editor-tabs button,
+    .editor-actions button {
+      min-height: 34px;
+      border: 0;
+      border-radius: 6px;
+      color: #fffaf0;
+      background: #637a4f;
+      cursor: pointer;
+      font: inherit;
+      font-size: 14px;
+    }
+
+    .editor-tabs button.is-active {
+      background: #3c2f1f;
+    }
+
+    .editor-field {
+      display: grid;
+      grid-template-columns: 48px 1fr 64px;
+      align-items: center;
+      gap: 8px;
+      margin: 9px 0;
+      font-size: 14px;
+    }
+
+    .editor-field input {
+      width: 100%;
+    }
+
+    .editor-field output {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .editor-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .editor-actions button[data-action="copy"] {
+      grid-column: 1 / -1;
+      background: #8a6332;
+    }
+
+    .editor-actions button[data-action="toggle-follow"] {
+      grid-column: 1 / -1;
+      background: #6e532f;
+    }
+
+    .map-zoom-controls {
+      position: fixed;
+      left: 14px;
+      bottom: 14px;
+      z-index: 39;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 7px;
+      border: 1px solid rgba(88, 68, 34, .18);
+      border-radius: 8px;
+      background: rgba(255, 249, 236, .94);
+      box-shadow: 0 12px 28px rgba(55, 42, 20, .18);
+      backdrop-filter: blur(8px);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    body.is-editing .map-zoom-controls {
+      display: flex;
+    }
+
+    .map-zoom-controls button {
+      min-width: 36px;
+      min-height: 36px;
+      border: 0;
+      border-radius: 6px;
+      color: #fffaf0;
+      background: #637a4f;
+      cursor: pointer;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .map-zoom-controls button[data-action="zoom-reset"] {
+      min-width: 58px;
+      background: #6e532f;
+      font-size: 13px;
+      letter-spacing: .04em;
+    }
+
+    .map-zoom-value {
+      min-width: 44px;
+      color: #3c2f1f;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+
+    .editor-output {
+      width: 100%;
+      min-height: 150px;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid rgba(88, 68, 34, .18);
+      border-radius: 6px;
+      color: #3c2f1f;
+      background: rgba(255, 255, 255, .62);
+      font: 12px/1.45 Consolas, monospace;
+      resize: vertical;
+    }
+
+    .page-transition {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(circle at center, rgba(255, 250, 235, .96), rgba(229, 202, 157, .86));
+      transition: opacity .18s ease;
+    }
+
+    .page-transition.is-active {
+      opacity: 1;
+    }
+
+    .transition-card {
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+      color: #5b3518;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: clamp(20px, 3vw, 34px);
+      font-weight: 900;
+      letter-spacing: .08em;
+      transform: translateY(10px) scale(.98);
+      transition: transform .22s ease;
+    }
+
+    .page-transition.is-active .transition-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .paw-trail {
+      position: relative;
+      width: min(520px, 78vw);
+      height: 150px;
+      overflow: hidden;
+    }
+
+    .paw-trail img {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      width: clamp(58px, 12vw, 82px);
+      height: auto;
+      opacity: 0;
+      filter: drop-shadow(0 6px 10px rgba(91, 53, 24, .24));
+    }
+
+    .paw-trail img:nth-child(odd) {
+      top: 16px;
+    }
+
+    .paw-trail img:nth-child(even) {
+      top: 74px;
+    }
+
+    .paw-trail img:nth-child(2) {
+      left: 15%;
+    }
+
+    .paw-trail img:nth-child(3) {
+      left: 30%;
+    }
+
+    .paw-trail img:nth-child(4) {
+      left: 45%;
+    }
+
+    .paw-trail img:nth-child(5) {
+      left: 60%;
+    }
+
+    .paw-trail img:nth-child(6) {
+      left: 75%;
+    }
+
+    .page-transition.is-active .paw-trail img {
+      animation: pawStep .42s ease both;
+    }
+
+    .page-transition.is-active .paw-trail img:nth-child(2) {
+      animation-delay: .12s;
+    }
+
+    .page-transition.is-active .paw-trail img:nth-child(3) {
+      animation-delay: .24s;
+    }
+
+    .page-transition.is-active .paw-trail img:nth-child(4) {
+      animation-delay: .36s;
+    }
+
+    .page-transition.is-active .paw-trail img:nth-child(5) {
+      animation-delay: .48s;
+    }
+
+    .page-transition.is-active .paw-trail img:nth-child(6) {
+      animation-delay: .6s;
+    }
+
+    @keyframes pawStep {
+      0% {
+        opacity: 0;
+        transform: scale(.86);
+      }
+      30%, 72% {
+        opacity: .95;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(.96);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .editor-toggle {
+        display: inline-flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="topbar" aria-label="網站導覽">
+      <div class="brand">
+        <strong>閱讀動物園平面圖</strong>
+      </div>
+      <a class="home-link" href="/">回首頁</a>
+    </nav>
+
+    <div class="map-shell">
+      <section class="map" aria-label="閱讀動物園地圖">
+        <picture>
+          <source media="(max-width: 767px)" srcset="assets/books/map/mobile-bg.png">
+          <img class="map-bg" src="assets/books/map/desktop-bg.png" alt="">
+        </picture>
+
+        <a class="zone zone-fox" href="/fox-books/" aria-label="狐狸少年區">
+          <img src="assets/books/map/fox-zone.png" alt="">
+          <div class="zone-name">狐狸少年區</div>
+        </a>
+
+        <a class="zone zone-owl" href="/owl-books/" aria-label="貓頭鷹教員區">
+          <img src="assets/books/map/owl-zone.png" alt="">
+          <div class="zone-name">貓頭鷹教員區</div>
+        </a>
+
+        <a class="zone zone-giraffe" href="/giraffe-books/" aria-label="長頸鹿大人區">
+          <img src="assets/books/map/giraffe-zone.png" alt="">
+          <div class="zone-name">長頸鹿大人區</div>
+        </a>
+
+        <a class="zone zone-bear" href="/bear-books/" aria-label="熊新a書區">
+          <img src="assets/books/map/bear-zone.png" alt="">
+          <div class="zone-name">熊新a書區</div>
+        </a>
+
+        <a class="zone zone-sheep" href="/sheep-books/" aria-label="小羊童書區">
+          <img src="assets/books/map/sheep-zone.png" alt="">
+          <div class="zone-name">小羊童書區</div>
+        </a>
+
+        <a class="zone zone-kangaroo" href="/kangaroo-books/" aria-label="袋鼠家長區">
+          <img src="assets/books/map/kangaroo-zone.png" alt="">
+          <div class="zone-name">袋鼠家長區</div>
+        </a>
+      </section>
+    </div>
+
+  </main>
+
+  <aside class="map-editor" aria-label="地圖編輯面板" hidden>
+    <button class="editor-toggle" type="button" data-action="toggle-editor">編輯地圖</button>
+    <h2>書區位置編輯</h2>
+    <p class="editor-hint">調整各書區的位置與大小，用於微調地圖排版。</p>
+    <div class="editor-tabs">
+      <button type="button" data-target="fox">狐狸</button>
+      <button type="button" data-target="owl">貓頭鷹</button>
+      <button type="button" data-target="giraffe">長頸鹿</button>
+      <button type="button" data-target="bear">熊</button>
+      <button type="button" data-target="sheep">羊</button>
+      <button type="button" data-target="kangaroo">袋鼠</button>
+    </div>
+    <label class="editor-field">
+      <span>X%</span>
+      <input type="range" min="-20" max="120" step=".1" data-prop="x">
+      <output></output>
+    </label>
+    <label class="editor-field">
+      <span>Y%</span>
+      <input type="range" min="-10" max="110" step=".1" data-prop="y">
+      <output></output>
+    </label>
+    <label class="editor-field">
+      <span>寬度</span>
+      <input type="range" min="5" max="55" step=".1" data-prop="w">
+      <output></output>
+    </label>
+    <div class="editor-actions">
+      <button type="button" data-action="reset-one">重設目前</button>
+      <button type="button" data-action="reset-all">全部重設</button>
+      <button type="button" data-action="toggle-follow">跟隨選取</button>
+      <button type="button" data-action="copy">複製 CSS 設定</button>
+    </div>
+    <textarea class="editor-output" readonly></textarea>
+  </aside>
+
+  <div class="map-zoom-controls" aria-label="?啣?蝮格">
+    <button type="button" data-action="zoom-out" aria-label="蝮桀??啣?">-</button>
+    <span class="map-zoom-value">100%</span>
+    <button type="button" data-action="zoom-in" aria-label="?曉之?啣?">+</button>
+    <button type="button" data-action="zoom-reset">?身</button>
+  </div>
+
+  <script>
+    (() => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("edit") !== "1") return;
+
+      document.body.classList.add("is-editing");
+
+      const mapShell = document.querySelector(".map-shell");
+      const map = document.querySelector(".map");
+      const editor = document.querySelector(".map-editor");
+      const output = editor.querySelector(".editor-output");
+      const fields = [...editor.querySelectorAll("[data-prop]")];
+      const tabs = [...editor.querySelectorAll("[data-target]")];
+      const editorToggle = editor.querySelector('[data-action="toggle-editor"]');
+      const zoomControls = document.querySelector(".map-zoom-controls");
+      const zoomValue = zoomControls.querySelector(".map-zoom-value");
+      const zones = {
+        fox: document.querySelector(".zone-fox"),
+        owl: document.querySelector(".zone-owl"),
+        giraffe: document.querySelector(".zone-giraffe"),
+        bear: document.querySelector(".zone-bear"),
+        sheep: document.querySelector(".zone-sheep"),
+        kangaroo: document.querySelector(".zone-kangaroo")
+      };
+      const labels = {
+        fox: "?撠僑?",
+        owl: "鞎曋寞??∪?",
+        giraffe: "?琿暽踹之鈭箏?",
+        bear: "?a?詨?",
+        sheep: "撠?蝡交?",
+        kangaroo: "鋡?摰園?"
+      };
+      const defaults = {
+        desktop: {
+          fox: { x: 26.5, y: 49.8, w: 7.6 },
+          owl: { x: 46.4, y: 45.7, w: 14.2 },
+          giraffe: { x: 68.9, y: 41.4, w: 15.8 },
+          bear: { x: 12.8, y: 67.6, w: 14.8 },
+          sheep: { x: 30.5, y: 77.4, w: 14.4 },
+          kangaroo: { x: 59.6, y: 70.3, w: 15.8 }
+        },
+        mobile: {
+          fox: { x: 25.1, y: 41.1, w: 17.7 },
+          owl: { x: 49, y: 25.3, w: 37.9 },
+          giraffe: { x: 74.2, y: 43.4, w: 39 },
+          bear: { x: 23.8, y: 82.2, w: 37 },
+          sheep: { x: 26.2, y: 64.1, w: 33 },
+          kangaroo: { x: 72.5, y: 66, w: 38 }
+        }
+      };
+      const mode = () => window.matchMedia("(max-width: 767px)").matches ? "mobile" : "desktop";
+      const storageKey = "reading-zoo-map-editor-v3";
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+      const state = JSON.parse(JSON.stringify(defaults));
+
+      Object.keys(saved).forEach((screen) => {
+        if (!state[screen]) return;
+        Object.keys(saved[screen]).forEach((key) => {
+          if (state[screen][key]) Object.assign(state[screen][key], saved[screen][key]);
+        });
+      });
+
+      let current = "fox";
+      let following = true;
+      let zoom = 1;
+
+      const round = (value) => Math.round(value * 10) / 10;
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+      const save = () => localStorage.setItem(storageKey, JSON.stringify(state));
+      const followButton = editor.querySelector('[data-action="toggle-follow"]');
+
+      const applyZoom = () => {
+        const maxWidth = mode() === "mobile" ? 821 : 1672;
+        mapShell.style.setProperty("--map-edit-width", `min(${maxWidth}px, ${zoom * 100}vw)`);
+        zoomValue.textContent = `${Math.round(zoom * 100)}%`;
+      };
+
+      const apply = (key) => {
+        const screen = mode();
+        const zone = zones[key];
+        const data = state[screen][key];
+        zone.style.setProperty("--x", `${data.x}%`);
+        zone.style.setProperty("--y", `${data.y}%`);
+        zone.style.setProperty("--w", `${data.w}%`);
+      };
+
+      const cssFor = (screen) => Object.entries(state[screen]).map(([key, data]) => (
+        `.zone-${key} {\n` +
+        `  --x: ${data.x}%;\n` +
+        `  --y: ${data.y}%;\n` +
+        `  --w: ${data.w}%;\n` +
+        `}`
+      )).join("\n\n");
+
+      const renderOutput = () => {
+        output.value =
+          `目前模式：${mode() === "mobile" ? "手機" : "電腦"}\n` +
+          `目前書區：${labels[current]}\n` +
+          `跟隨選取：${following ? "是" : "否"}\n\n` +
+          `/* 電腦版 */\n${cssFor("desktop")}\n\n` +
+          `/* 手機版 */\n${cssFor("mobile")}`;
+      };
+
+      const syncPanel = () => {
+        tabs.forEach((tab) => tab.classList.toggle("is-active", tab.dataset.target === current));
+        Object.entries(zones).forEach(([key, zone]) => zone.classList.toggle("is-selected", key === current));
+        followButton.textContent = following ? "停止跟隨選取" : "跟隨選取";
+        editorToggle.textContent = editor.classList.contains("is-expanded") ? "收合編輯" : "編輯地圖";
+        fields.forEach((field) => {
+          const prop = field.dataset.prop;
+          field.value = state[mode()][current][prop];
+          field.parentElement.querySelector("output").textContent = field.value;
+        });
+        renderOutput();
+      };
+
+      const applyAll = () => {
+        Object.keys(zones).forEach(apply);
+        syncPanel();
+      };
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          current = tab.dataset.target;
+          following = true;
+          syncPanel();
+        });
+      });
+
+      fields.forEach((field) => {
+        field.addEventListener("input", () => {
+          state[mode()][current][field.dataset.prop] = round(Number(field.value));
+          apply(current);
+          save();
+          syncPanel();
+        });
+      });
+
+      Object.entries(zones).forEach(([key, zone]) => {
+        zone.addEventListener("pointerdown", (event) => {
+          event.preventDefault();
+          current = key;
+          following = false;
+          syncPanel();
+          zone.setPointerCapture(event.pointerId);
+
+          const onMove = (moveEvent) => {
+            const rect = map.getBoundingClientRect();
+            state[mode()][key].x = round(((moveEvent.clientX - rect.left) / rect.width) * 100);
+            state[mode()][key].y = round(((moveEvent.clientY - rect.top) / rect.height) * 100);
+            apply(key);
+            save();
+            syncPanel();
+          };
+
+          const onUp = () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            window.removeEventListener("pointercancel", onUp);
+          };
+
+          window.addEventListener("pointermove", onMove);
+          window.addEventListener("pointerup", onUp);
+          window.addEventListener("pointercancel", onUp);
+        });
+      });
+
+      const setCurrentFromPointer = (event) => {
+        const rect = map.getBoundingClientRect();
+        state[mode()][current].x = round(((event.clientX - rect.left) / rect.width) * 100);
+        state[mode()][current].y = round(((event.clientY - rect.top) / rect.height) * 100);
+        apply(current);
+        save();
+        syncPanel();
+      };
+
+      map.addEventListener("pointermove", (event) => {
+        if (!following) return;
+        setCurrentFromPointer(event);
+      });
+
+      map.addEventListener("click", () => {
+        following = false;
+        syncPanel();
+      });
+
+      editor.querySelector('[data-action="reset-one"]').addEventListener("click", () => {
+        state[mode()][current] = { ...defaults[mode()][current] };
+        apply(current);
+        save();
+        syncPanel();
+      });
+
+      editor.querySelector('[data-action="reset-all"]').addEventListener("click", () => {
+        state[mode()] = JSON.parse(JSON.stringify(defaults[mode()]));
+        applyAll();
+        save();
+      });
+
+      followButton.addEventListener("click", () => {
+        following = !following;
+        syncPanel();
+      });
+
+      editorToggle.addEventListener("click", () => {
+        editor.classList.toggle("is-expanded");
+        syncPanel();
+      });
+
+      zoomControls.querySelector('[data-action="zoom-in"]').addEventListener("click", () => {
+        zoom = clamp(round(zoom + 0.25), 0.75, 2.5);
+        applyZoom();
+      });
+
+      zoomControls.querySelector('[data-action="zoom-out"]').addEventListener("click", () => {
+        zoom = clamp(round(zoom - 0.25), 0.75, 2.5);
+        applyZoom();
+      });
+
+      zoomControls.querySelector('[data-action="zoom-reset"]').addEventListener("click", () => {
+        zoom = 1;
+        applyZoom();
+      });
+
+      editor.querySelector('[data-action="copy"]').addEventListener("click", async () => {
+        renderOutput();
+        output.select();
+        try {
+          await navigator.clipboard.writeText(output.value);
+        } catch {
+          document.execCommand("copy");
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        applyZoom();
+        applyAll();
+      });
+      applyZoom();
+      applyAll();
+    })();
+  </script>
+  <script src="assets/common/footstep-transition.js"></script>
+</body>
+</html>
+
+
+
+

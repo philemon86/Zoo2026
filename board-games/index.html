@@ -1,0 +1,314 @@
+﻿<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <!-- Cleaned deploy package: assets reorganized under /assets and /data. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
+  <title>閱讀動物園｜桌遊區</title>
+  <link rel="icon" type="image/png" href="assets/common/favicon.png">
+  <link rel="stylesheet" href="assets/common/bear-cursor.css">
+  <style>
+    :root {
+      --sand: #f7efdf;
+      --card: rgba(255, 252, 245, 0.94);
+      --ink: #3f2d1f;
+      --muted: #7a6247;
+      --line: rgba(95, 70, 41, 0.16);
+      --accent: #8b5e34;
+      --accent-deep: #5e7a44;
+      --shadow: 0 24px 50px rgba(70, 49, 25, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 252, 245, 0.92), rgba(247, 239, 223, 0.82) 42%, rgba(237, 224, 198, 0.96) 100%),
+        #f1e2c6;
+      cursor: url("assets/common/bear-cursor-64.png") 14 2, auto;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      width: min(1180px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(255, 250, 240, 0.96), rgba(245, 236, 216, 0.92)),
+        var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -56px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139, 94, 52, 0.14), rgba(139, 94, 52, 0));
+      pointer-events: none;
+    }
+
+
+    .hero-banner { display: block; width: 100%; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); }
+    .hero-banner img { display: block; width: 100%; height: auto; }
+    .top-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 16px;
+      border: 1px solid rgba(95, 70, 41, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .pill.primary {
+      color: #fffaf0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    }
+
+    .pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 20px rgba(75, 52, 27, 0.12);
+    }
+
+    .headline { max-width: 760px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .22em;
+    }
+
+    .headline h1 {
+      margin: 0;
+      font-size: clamp(34px, 5.2vw, 62px);
+      line-height: 1.02;
+      letter-spacing: .03em;
+    }
+
+    .headline p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.75;
+    }
+
+    .meta {
+      margin-top: 20px;
+      color: #6d563d;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .board {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      display: block;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 14px 30px rgba(72, 51, 26, 0.1);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(139, 94, 52, 0.28);
+      box-shadow: 0 22px 34px rgba(72, 51, 26, 0.16);
+    }
+
+    .cover-wrap {
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 250, 241, 0.88), rgba(233, 217, 191, 0.75));
+    }
+
+    .cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .copy { padding: 16px 16px 18px; }
+
+    .sku {
+      color: #917150;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .18em;
+    }
+
+    .title {
+      margin-top: 8px;
+      min-height: 3.2em;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.6;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .price {
+      color: var(--accent);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .02em;
+    }
+
+    .compare {
+      color: #9a866f;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: line-through;
+    }
+
+    .empty {
+      margin-top: 26px;
+      padding: 24px;
+      border: 1px dashed rgba(95, 70, 41, 0.24);
+      border-radius: 24px;
+      background: rgba(255, 251, 245, 0.66);
+      color: #6d563d;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    @media (max-width: 767px) {
+      .page {
+        width: calc(100vw - 20px);
+        padding: 14px 0 34px;
+      }
+
+      .hero {
+        padding: 22px 16px;
+        border-radius: 24px;
+      }
+
+      .headline h1 { font-size: 34px; }
+      .headline p { line-height: 1.7; }
+
+      .board {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .copy { padding: 14px 12px 16px; }
+      .title { min-height: 3.6em; font-size: 15px; }
+      .price { font-size: 19px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="top-links">
+        <a class="pill" href="/">返回首頁</a>
+        <a class="pill" href="/gift/">返回禮品區</a>
+        <a class="pill primary" href="https://www.pbooks.com.tw/collections/%E5%90%84%E9%A1%9E%E6%A1%8C%E9%81%8A" target="_blank" rel="noopener">下單桌遊</a>
+      </div>
+      <picture class="hero-banner">
+        <source media="(max-width: 767px)" srcset="assets/gift/banners/board-games-mobile.jpg">
+        <img src="assets/gift/banners/board-games-desktop.jpg" alt="桌遊區">
+      </picture>
+</section>
+
+    <section id="board" class="board" aria-live="polite"></section>
+    <div id="empty" class="empty" hidden>目前沒有抓到桌遊資料。</div>
+  </main>
+
+  <script src="data/board-games-data.js"></script>
+  <script>
+    (function () {
+      const root = document.getElementById("board");
+      const empty = document.getElementById("empty");
+      const payload = window.BOARD_GAMES_DATA;
+
+      function renderCard(item) {
+        const link = document.createElement("a");
+        link.className = "card";
+        link.href = item.url;
+        link.target = "_blank";
+        link.rel = "noopener";
+
+        const compare = item.compareAtPrice && item.compareAtPrice !== item.price
+          ? '<span class="compare">' + item.compareAtPrice + '</span>'
+          : "";
+
+        link.innerHTML =
+          '<div class="cover-wrap">' +
+            '<img class="cover" src="' + item.cover + '" alt="' + item.title + '" loading="lazy" referrerpolicy="no-referrer">' +
+          "</div>" +
+          '<div class="copy">' +
+            '<div class="sku">' + (item.sku || "BOARD GAME") + "</div>" +
+            '<div class="title">' + item.title + "</div>" +
+            '<div class="price-row">' +
+              '<span class="price">' + item.price + "</span>" +
+              compare +
+            "</div>" +
+          "</div>";
+
+        return link;
+      }
+
+      if (!payload || !Array.isArray(payload.items) || !payload.items.length) {
+        empty.hidden = false;
+        return;
+      }
+
+      root.innerHTML = "";
+      payload.items.forEach(function (item) {
+        root.appendChild(renderCard(item));
+      });
+    })();
+  </script>
+</body>
+</html>
+
+
+

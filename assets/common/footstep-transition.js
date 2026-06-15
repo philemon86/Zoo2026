@@ -53,8 +53,7 @@
 
     const targetPath = new URL(link.href, window.location.href).pathname.replace(/\\/g, "/");
     const isReverse =
-      targetPath.endsWith("/zoo-map.html") ||
-      targetPath.endsWith("/index.html");
+      targetPath === "/" || targetPath.endsWith("/zoo-map/") || targetPath.endsWith("/index.html");
 
     const zoneLabel = link.classList.contains("zone")
       ? `前往${link.getAttribute("aria-label") || link.textContent.trim() || "書區"}`

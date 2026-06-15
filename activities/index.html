@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
+  <link rel="icon" type="image/png" href="assets/common/favicon.png">
+  <link rel="stylesheet" href="assets/common/bear-cursor.css">
+  <link rel="stylesheet" href="assets/common/footstep-transition.css">
+  <title>各類活動告知</title>
+  <style>
+    :root {
+      --ink: #33473d;
+      --muted: #6e7d56;
+      --paper: rgba(255, 252, 242, .96);
+      --line: rgba(97, 118, 84, .18);
+      --brown: #7d6038;
+      --leaf: #5f704c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Noto Serif TC", "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 252, 242, .92), rgba(255, 249, 238, .72) 44%, rgba(238, 225, 196, .9) 100%),
+        #fff9ee;
+      cursor: url("assets/common/bear-cursor-64.png") 14 2, auto;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+
+    .top-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .deadline-countdown {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 40px;
+      padding: 8px 16px;
+      border: 1px solid rgba(125, 96, 56, .18);
+      border-radius: 999px;
+      color: var(--brown);
+      background: rgba(255, 255, 255, .64);
+      box-shadow: 0 10px 24px rgba(79, 65, 35, .09);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-weight: 900;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+
+    .deadline-label {
+      color: var(--leaf);
+      font-size: 14px;
+      letter-spacing: .08em;
+    }
+
+    .deadline-time {
+      font-variant-numeric: tabular-nums;
+      font-size: 15px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      color: #fffaf0;
+      background: linear-gradient(135deg, var(--brown), var(--leaf));
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .hero {
+      padding: clamp(26px, 4vw, 44px);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      box-shadow: 0 20px 46px rgba(79, 65, 35, .13);
+      text-align: center;
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .22em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.12;
+      letter-spacing: .08em;
+    }
+
+    .activity-group {
+      margin-top: 28px;
+      padding: clamp(22px, 3vw, 34px);
+      border: 1px solid rgba(125, 96, 56, .16);
+      border-radius: 8px;
+      background: rgba(255, 250, 239, .86);
+      box-shadow: 0 14px 34px rgba(79, 65, 35, .1);
+    }
+
+    .activity-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 20px;
+    }
+
+    .activity-tab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 9px 18px;
+      border: 1px solid rgba(125, 96, 56, .22);
+      border-radius: 999px;
+      color: var(--brown);
+      background: rgba(255, 255, 255, .58);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+    }
+
+    .activity-tab:hover,
+    .activity-tab:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(79, 65, 35, .12);
+      outline: none;
+    }
+
+    .activity-tab.is-active {
+      color: #fffaf0;
+      background: linear-gradient(135deg, var(--brown), var(--leaf));
+      box-shadow: 0 12px 26px rgba(79, 65, 35, .16);
+    }
+
+    .activity-tab.is-featured {
+      color: #fffaf0;
+      border-color: rgba(125, 96, 56, .12);
+      background: linear-gradient(135deg, #9a5a2c, #c27a38);
+      box-shadow: 0 12px 26px rgba(125, 96, 56, .16);
+    }
+
+    .activity-panel {
+      display: none;
+      padding-top: 4px;
+    }
+
+    .activity-panel.is-active {
+      display: block;
+      animation: panelFade .18s ease-out;
+    }
+
+    .activity-heading {
+      margin: 0 0 6px;
+      color: var(--brown);
+      font-size: clamp(22px, 3vw, 31px);
+      line-height: 1.25;
+      letter-spacing: .08em;
+    }
+
+    .activity-note {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .06em;
+    }
+
+
+
+    .notice-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .notice-card {
+      position: relative;
+      min-height: 148px;
+      padding: 18px 18px 18px 20px;
+      border: 1px solid rgba(125, 96, 56, .16);
+      border-radius: 12px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, .72), rgba(255, 249, 235, .62));
+      box-shadow: 0 12px 26px rgba(79, 65, 35, .08);
+      overflow: hidden;
+    }
+
+    .notice-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 7px;
+      background: linear-gradient(180deg, var(--brown), var(--leaf));
+      opacity: .86;
+    }
+
+    .notice-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      margin-bottom: 10px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      color: #fffaf0;
+      background: linear-gradient(135deg, var(--brown), var(--leaf));
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .notice-title {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 19px;
+      line-height: 1.35;
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+
+    .notice-copy {
+      margin: 0;
+      color: var(--muted);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+
+    .activity-tab.is-featured.is-active {
+      outline: 3px solid rgba(194, 122, 56, .22);
+      outline-offset: 2px;
+    }
+
+    @keyframes panelFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .activity-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .activity-list li {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 12px 14px;
+      border: 1px solid rgba(125, 96, 56, .16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .58);
+    }
+
+    .activity-date {
+      color: var(--leaf);
+      font-size: 17px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .activity-name {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 767px) {
+      body { cursor: auto; }
+      .page { width: calc(100% - 20px); padding-top: 16px; }
+      .deadline-countdown {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+        white-space: normal;
+        text-align: center;
+      }
+      .deadline-label { font-size: 13px; }
+      .deadline-time { font-size: 14px; }
+      .activity-list { grid-template-columns: 1fr; }
+      .notice-list { grid-template-columns: 1fr; }
+      .notice-card { min-height: auto; }
+      .activity-list li { grid-template-columns: 86px 1fr; }
+      .activity-date { font-size: 15px; }
+      .activity-name { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="top-links" aria-label="頁面導覽">
+      <a class="pill" href="/" data-footstep-transition data-transition-label="返回首頁">返回首頁</a>
+      <div class="deadline-countdown" aria-live="polite">
+        <span class="deadline-label">9/30 活動截止倒數</span>
+        <span class="deadline-time" id="deadline-countdown">計算中</span>
+      </div>
+    </nav>
+
+    <section class="hero" aria-label="活動資訊">
+      <p class="kicker">EVENT NOTICE</p>
+      <h1>各類活動告知</h1>
+    </section>
+
+    <section class="activity-group" aria-label="最新活動分類">
+      <div class="activity-tabs" aria-label="活動分類">
+        <button class="activity-tab is-active" type="button" data-activity-tab="bookfair" aria-controls="bookfair-panel" aria-expanded="true">書展活動</button>
+        <button class="activity-tab is-featured" type="button" data-activity-tab="notice" aria-controls="notice-panel" aria-expanded="false">重點活動</button>
+        <a class="activity-tab" href="/zoo-map/" data-footstep-transition data-transition-label="前往書本特價">書本特價</a>
+      </div>
+
+      <div class="activity-panel is-active" id="bookfair-panel" data-activity-panel="bookfair">
+        <h2 class="activity-heading">暑期書展活動</h2>
+        <p class="activity-note">歡迎就近前往</p>
+        <ul class="activity-list">
+          <li><span class="activity-date">7/25</span><span class="activity-name">彰興書展</span></li>
+          <li><span class="activity-date">8/1</span><span class="activity-name">伸港書展</span></li>
+          <li><span class="activity-date">8/2</span><span class="activity-name">聖樂營音樂會</span></li>
+          <li><span class="activity-date">8/14-15</span><span class="activity-name">松山書展</span></li>
+          <li><span class="activity-date">8/28-29</span><span class="activity-name">十全書展</span></li>
+          <li><span class="activity-date">8/29</span><span class="activity-name">斗六書展</span></li>
+          <li><span class="activity-date">9/5</span><span class="activity-name">花壇書展</span></li>
+          <li><span class="activity-date">9/19-20</span><span class="activity-name">山佳書展</span></li>
+        </ul>
+      </div>
+
+      <div class="activity-panel" id="notice-panel" data-activity-panel="notice">
+        <h2 class="activity-heading">重點活動公告</h2>
+        <p class="activity-note">近期消息、場次異動與重要提醒</p>
+        <ul class="notice-list">
+          <li class="notice-card">
+            <span class="notice-tag">重要提醒</span>
+            <h3 class="notice-title">9/30 活動截止倒數</h3>
+            <p class="notice-copy">請留意活動截止時間，並於期限前完成相關報名、選購或確認事項。</p>
+          </li>
+          <li class="notice-card">
+            <span class="notice-tag">書展消息</span>
+            <h3 class="notice-title">暑期書展陸續展開</h3>
+            <p class="notice-copy">各地書展將依日期進行，歡迎就近前往，也請留意最新場次安排。</p>
+          </li>
+          <li class="notice-card">
+            <span class="notice-tag">現場提醒</span>
+            <h3 class="notice-title">活動當日請留意現場公告</h3>
+            <p class="notice-copy">若遇時間、地點、攤位或服務內容調整，將以現場公告為準。</p>
+          </li>
+          <li class="notice-card">
+            <span class="notice-tag">優惠提醒</span>
+            <h3 class="notice-title">特價活動同步進行</h3>
+            <p class="notice-copy">活動期間將推出書本特價與重點優惠，歡迎把握選購機會。</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.querySelectorAll('[data-activity-tab]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.activityTab;
+
+        document.querySelectorAll('[data-activity-tab]').forEach((item) => {
+          const isActive = item === tab;
+          item.classList.toggle('is-active', isActive);
+          if (item.hasAttribute('aria-expanded')) {
+            item.setAttribute('aria-expanded', String(isActive));
+          }
+        });
+
+        document.querySelectorAll('[data-activity-panel]').forEach((panel) => {
+          panel.classList.toggle('is-active', panel.dataset.activityPanel === target);
+        });
+      });
+    });
+
+    const countdownEl = document.getElementById('deadline-countdown');
+    const deadline = new Date('2026-09-30T23:59:59+08:00').getTime();
+
+    function padNumber(value) {
+      return String(value).padStart(2, '0');
+    }
+
+    function updateCountdown() {
+      if (!countdownEl) return;
+
+      const now = Date.now();
+      const distance = deadline - now;
+
+      if (distance <= 0) {
+        countdownEl.textContent = '活動已截止';
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((distance / (1000 * 60)) % 60);
+      const seconds = Math.floor((distance / 1000) % 60);
+
+      countdownEl.textContent = `${days}天 ${padNumber(hours)}小時 ${padNumber(minutes)}分鐘 ${padNumber(seconds)}秒`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+  <script src="assets/common/footstep-transition.js"></script>
+</body>
+</html>

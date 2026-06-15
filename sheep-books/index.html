@@ -1,0 +1,682 @@
+﻿<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <!-- Cleaned deploy package: assets reorganized under /assets and /data. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
+  <link rel="icon" type="image/png" href="assets/common/favicon.png">
+    <link rel="stylesheet" href="assets/common/bear-cursor.css">
+  <title>小羊童書區</title>
+  <link rel="stylesheet" href="assets/common/footstep-transition.css">
+  <style>
+    :root {
+      --ink: #3b3424;
+      --muted: #766845;
+      --paper: rgba(255, 253, 239, .9);
+      --line: rgba(119, 139, 72, .26);
+      --leaf: #6f8843;
+      --accent: #647d32;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: #edf1d7;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    .page {
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 239, .18), rgba(237, 241, 215, .74)),
+        url("assets/books/sheep/bg-desktop.png") center top / cover fixed;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px clamp(18px, 4vw, 44px);
+      border-bottom: 1px solid rgba(112, 129, 70, .18);
+      background: rgba(255, 253, 239, .76);
+      backdrop-filter: blur(10px);
+      transform: translateY(0);
+      transition: transform .22s ease;
+    }
+    .topbar.is-hidden { transform: translateY(calc(-100% - 2px)); }
+    .topbar.is-visible, .topbar:focus-within, .topbar:hover { transform: translateY(0); }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .home-link {
+      display: inline-grid;
+      place-items: center;
+      width: 64px;
+      height: 64px;
+      flex: 0 0 auto;
+    }
+
+    .home-logo {
+      display: block;
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+    .brand strong {
+      display: block;
+      font-size: clamp(24px, 3vw, 40px);
+      line-height: 1.05;
+      letter-spacing: .04em;
+    }
+    .brand span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: .08em;
+    }
+    .nav {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 15px;
+      border-radius: 999px;
+      color: #fffdf0;
+      background: var(--leaf);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .layout {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: clamp(28px, 5vw, 64px) 0 56px;
+    }
+
+    .game-feature {
+      position: relative;
+      width: min(760px, 100%);
+      min-height: clamp(330px, 28vw, 430px);
+      margin: 0 auto clamp(10px, 2vw, 24px);
+      display: grid;
+      place-items: end center;
+    }
+
+    .game-feature .book-stand {
+      width: min(360px, 58vw);
+      min-height: clamp(300px, 25vw, 390px);
+      padding-bottom: 34px;
+    }
+
+    .game-feature .stump {
+      width: min(330px, 112%);
+    }
+
+    .game-feature .book-label {
+      width: min(280px, 112%);
+    }
+
+    .sign-sheep {
+      position: absolute;
+      left: clamp(-18px, 5vw, 44px);
+      bottom: clamp(42px, 4.8vw, 72px);
+      z-index: 4;
+      width: clamp(150px, 18vw, 235px);
+      height: auto;
+      pointer-events: none;
+      filter: drop-shadow(0 16px 18px rgba(63, 52, 25, .2));
+    }
+
+    .pg16-countdown {
+      position: absolute;
+      left: 50%;
+      top: clamp(18px, 2vw, 30px);
+      z-index: 5;
+      min-width: 78px;
+      padding: 8px 14px;
+      border: 2px solid rgba(119, 139, 72, .28);
+      border-radius: 999px;
+      color: #4d6029;
+      background: rgba(255, 253, 239, .95);
+      box-shadow: 0 12px 24px rgba(63, 52, 25, .18);
+      font-size: clamp(22px, 2.6vw, 34px);
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+      opacity: 0;
+      transform: translate(-50%, 8px) scale(.82);
+      pointer-events: none;
+    }
+
+    .pg16-countdown.is-visible {
+      animation: countPop .48s ease both;
+    }
+
+    .stump-stage {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: end;
+      gap: clamp(6px, 1.2vw, 14px) clamp(14px, 2vw, 26px);
+      padding: clamp(24px, 4vw, 48px) 0 0;
+    }
+
+    .book-stand {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      align-items: end;
+      min-height: clamp(310px, 34vw, 470px);
+      padding-bottom: 34px;
+    }
+
+    .feature-book {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(94px, 9.8vw, 112px);
+      z-index: 3;
+      width: var(--w);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      transform: translateX(-50%);
+      transform-origin: 50% 92%;
+      transition: transform .18s ease, filter .18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .feature-book:hover,
+    .feature-book:focus-visible {
+      filter: drop-shadow(0 18px 18px rgba(63, 52, 25, .24));
+      transform: translateX(-50%) translateY(-7px);
+      outline: none;
+    }
+
+    .feature-book.is-pressed {
+      animation: bookPress .22s ease;
+    }
+
+    .feature-book img {
+      display: block;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      filter: drop-shadow(0 18px 16px rgba(63, 52, 25, .22));
+    }
+
+    .stump {
+      position: relative;
+      z-index: 1;
+      width: min(285px, 108%);
+      height: auto;
+      pointer-events: none;
+      filter: drop-shadow(0 20px 26px rgba(63, 52, 25, .2));
+    }
+
+    .book-label {
+      position: absolute;
+      left: 50%;
+      bottom: 16px;
+      z-index: 2;
+      width: min(245px, 108%);
+      padding: 9px 16px;
+      border: 1px solid rgba(119, 139, 72, .24);
+      border-radius: 999px;
+      color: #4d6029;
+      background: rgba(255, 253, 239, .9);
+      box-shadow: 0 10px 20px rgba(77, 86, 47, .14);
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.25;
+      text-align: center;
+      transform: translateX(-50%);
+    }
+
+    .book-c011,
+    .book-c243,
+    .book-c263,
+    .book-c280,
+    .book-c286 {
+      --w: clamp(88px, 9.5vw, 138px);
+    }
+
+    .book-c253 {
+      bottom: clamp(82px, 8.6vw, 100px);
+      --w: clamp(116px, 12.4vw, 184px);
+    }
+
+    .book-pg16 {
+      bottom: clamp(96px, 9.8vw, 120px);
+      --w: clamp(150px, 16vw, 238px);
+    }
+
+    .book-d009 {
+      --w: clamp(72px, 7.5vw, 110px);
+    }
+
+    @keyframes bookPress {
+      0% { transform: translateX(-50%) scale(1, 1); }
+      45% { transform: translateX(-50%) translateY(10px) scale(1.08, .82); }
+      100% { transform: translateX(-50%) scale(1, 1); }
+    }
+
+    @keyframes countPop {
+      0% { opacity: 0; transform: translate(-50%, 10px) scale(.78); }
+      28% { opacity: 1; transform: translate(-50%, -6px) scale(1.12); }
+      70% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -14px) scale(.92); }
+    }
+
+    .book-dialog {
+      width: min(420px, calc(100% - 34px));
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      color: var(--ink);
+      background: rgba(255, 253, 239, .97);
+      box-shadow: 0 30px 70px rgba(45, 54, 28, .34);
+    }
+
+    .book-dialog::backdrop {
+      background: rgba(42, 49, 24, .38);
+      backdrop-filter: blur(3px);
+    }
+
+    .dialog-card {
+      padding: 22px;
+      border: 1px solid rgba(119, 139, 72, .24);
+      border-radius: 8px;
+    }
+
+    .dialog-code {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .dialog-title {
+      margin: 7px 0 12px;
+      font-size: 25px;
+      line-height: 1.28;
+    }
+
+    .dialog-price {
+      display: grid;
+      gap: 5px;
+      margin: 0 0 18px;
+      color: #5c6f2f;
+      font-weight: 900;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .dialog-button {
+      min-height: 38px;
+      padding: 8px 15px;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .dialog-close {
+      color: var(--muted);
+      background: rgba(119, 139, 72, .16);
+    }
+
+    .dialog-buy {
+      color: #fffdf0;
+      background: var(--leaf);
+    }
+    @media (max-width: 767px) {
+      .page {
+        background:
+          linear-gradient(180deg, rgba(255, 253, 239, .06), rgba(237, 241, 215, .72)),
+          url("assets/books/sheep/bg-mobile.png") center top / cover fixed;
+      }
+      .topbar { align-items: flex-start; padding: 12px 14px; }
+      .brand-wrap {
+        gap: 9px;
+      }
+
+      .home-link {
+        width: 54px;
+        height: 54px;
+      }
+
+      .home-logo {
+        width: 46px;
+        height: 46px;
+      }
+      .brand strong { font-size: 24px; }
+      .brand span { font-size: 12px; }
+      .layout { width: calc(100% - 20px); padding-top: min(12vh, 120px); }
+      .game-feature {
+        min-height: clamp(250px, 66vw, 350px);
+        margin-bottom: 6px;
+      }
+      .game-feature .book-stand {
+        width: min(260px, 74vw);
+        min-height: clamp(230px, 60vw, 310px);
+        padding-bottom: 30px;
+      }
+      .game-feature .stump {
+        width: min(190px, 100%);
+      }
+      .sign-sheep {
+        left: 50%;
+        bottom: clamp(146px, 42vw, 184px);
+        z-index: 2;
+        width: clamp(106px, 30vw, 146px);
+        transform: translateX(-50%);
+      }
+      .pg16-countdown {
+        top: 8px;
+        min-width: 58px;
+        padding: 7px 11px;
+        font-size: 22px;
+      }
+      .stump-stage {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 6px;
+      }
+      .book-stand {
+        min-height: clamp(220px, 55vw, 320px);
+        padding-bottom: 30px;
+      }
+      .feature-book {
+        bottom: clamp(64px, 18vw, 74px);
+      }
+      .stump {
+        width: min(170px, 100%);
+      }
+      .book-c011,
+      .book-c243,
+      .book-c253,
+      .book-c263,
+      .book-c280,
+      .book-c286 {
+        bottom: clamp(64px, 18vw, 74px);
+        --w: clamp(64px, 18vw, 90px);
+      }
+      .book-d009 {
+        --w: clamp(52px, 15vw, 74px);
+      }
+      .book-pg16 {
+        bottom: clamp(72px, 19vw, 88px);
+        --w: clamp(112px, 36vw, 160px);
+      }
+      .book-label {
+        bottom: 10px;
+        width: min(160px, 108%);
+        padding: 7px 10px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <a class="home-link" href="/" data-footstep-transition data-transition-label="返回首頁" aria-label="返回首頁">
+          <img class="home-logo" src="assets/common/home-logo.png" alt="">
+        </a>
+        <div class="brand">
+          <strong>小羊童書區</strong>
+          <span>本版圖畫書／繪本</span>
+        </div>
+      </div>
+      <a class="nav" href="/zoo-map/" data-footstep-transition data-transition-label="返回地圖">返回地圖</a>
+    </header>
+
+    <section class="layout" aria-label="小羊童書區書本展示">
+      <div class="game-feature" aria-label="小羊童書區桌遊展示">
+        <img class="sign-sheep" src="assets/books/sheep/sheep-sign.png" alt="">
+        <div class="pg16-countdown" data-pg16-countdown aria-live="polite"></div>
+        <div class="book-stand">
+          <button class="feature-book book-pg16" type="button" data-book-code="PG16" aria-label="查看 PG16 童書好禮大放送">
+            <img src="assets/books/sheep/PG16.png" alt="">
+          </button>
+          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <div class="book-label">童書好禮大放送</div>
+        </div>
+      </div>
+      <div class="stump-stage" aria-label="樹樁上的童書">
+        <div class="book-stand">
+          <button class="feature-book book-c286" type="button" data-book-code="C286" aria-label="查看 C286 石頭的祈禱">
+            <img src="assets/books/sheep/C286.png" alt="">
+          </button>
+          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <div class="book-label">石頭的祈禱</div>
+        </div>
+        <div class="book-stand">
+          <button class="feature-book book-c011" type="button" data-book-code="C011" aria-label="查看 C011 綠手指的秘密">
+            <img src="assets/books/sheep/C011-1.png" alt="">
+          </button>
+          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <div class="book-label">綠手指的秘密</div>
+        </div>
+        <div class="book-stand">
+          <button class="feature-book book-c243" type="button" data-book-code="C243" aria-label="查看 C243 小不點的禱告">
+            <img src="assets/books/sheep/C243-1.png" alt="">
+          </button>
+          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <div class="book-label">小不點的禱告</div>
+        </div>
+        <div class="book-stand">
+          <button class="feature-book book-c253" type="button" data-book-code="C253" aria-label="查看 C253 王子與十大惡人">
+            <img src="assets/books/sheep/C253-1.png" alt="">
+          </button>
+          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <div class="book-label">王子與十大惡人</div>
+        </div>
+        <div class="book-stand">
+          <button class="feature-book book-c263" type="button" data-book-code="C263" aria-label="查看 C263 小不點去聚會">
+            <img src="assets/books/sheep/C263-1.png" alt="">
+          </button>
+          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <div class="book-label">小不點去聚會</div>
+        </div>
+        <div class="book-stand">
+          <button class="feature-book book-c280" type="button" data-book-code="C280" aria-label="查看 C280 155個遇見神的美好時刻">
+            <img src="assets/books/sheep/C280-1.png" alt="">
+          </button>
+          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <div class="book-label">155個遇見神的美好時刻</div>
+        </div>
+        <div class="book-stand">
+          <button class="feature-book book-d009" type="button" data-book-code="D009" aria-label="查看 D009 約拿的故事">
+            <img src="assets/books/sheep/D009.png" alt="">
+          </button>
+          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <div class="book-label">約拿的故事</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="book-dialog" data-book-dialog>
+    <div class="dialog-card">
+      <div class="dialog-code" data-dialog-code></div>
+      <h2 class="dialog-title" data-dialog-title></h2>
+      <p class="dialog-price" data-dialog-price></p>
+      <div class="dialog-actions">
+        <button class="dialog-button dialog-close" type="button" data-dialog-close>關閉</button>
+        <button class="dialog-button dialog-buy" type="button" data-dialog-buy>前往購買</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="assets/common/footstep-transition.js"></script>
+  <script>
+    (() => {
+      const topbar = document.querySelector(".topbar");
+      let timer = 0;
+      const show = () => {
+        topbar.classList.add("is-visible");
+        topbar.classList.remove("is-hidden");
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          topbar.classList.remove("is-visible");
+          topbar.classList.add("is-hidden");
+        }, 1600);
+      };
+      topbar.classList.add("is-hidden");
+      window.addEventListener("scroll", show, { passive: true });
+      window.addEventListener("pointermove", (event) => {
+        if (event.clientY <= 72) show();
+      }, { passive: true });
+      window.addEventListener("touchstart", (event) => {
+        if (event.touches[0]?.clientY <= 88) show();
+      }, { passive: true });
+      topbar.addEventListener("focusin", show);
+    })();
+
+    const books = {
+      PG16: {
+        code: "PG16",
+        title: "童書好禮大放送",
+        price: "請洽門市",
+        url: "https://www.pbooks.com.tw/products/pg16"
+      },
+      C286: {
+        code: "C286",
+        title: "石頭的祈禱",
+        price: "NT$ 350",
+        url: "https://www.pbooks.com.tw/products/c286"
+      },
+      C011: {
+        code: "C011",
+        title: "綠手指的秘密",
+        price: "NT$ 350",
+        url: "https://www.pbooks.com.tw/products/c011"
+      },
+      C243: {
+        code: "C243",
+        title: "小不點的禱告",
+        price: "NT$ 300",
+        url: "https://www.pbooks.com.tw/products/c243"
+      },
+      C253: {
+        code: "C253",
+        title: "王子與十大惡人 - 圖說救恩",
+        price: "NT$ 350",
+        url: "https://www.pbooks.com.tw/products/c253"
+      },
+      C263: {
+        code: "C263",
+        title: "小不點去聚會",
+        price: "NT$ 300",
+        url: "https://www.pbooks.com.tw/products/c263"
+      },
+      C280: {
+        code: "C280",
+        title: "155個遇見神的美好時刻",
+        price: "NT$ 300",
+        url: "https://www.pbooks.com.tw/products/c280"
+      },
+      D009: {
+        code: "D009",
+        title: "約拿的故事／注音版",
+        price: "NT$ 125",
+        url: "https://www.pbooks.com.tw/products/d009"
+      }
+    };
+
+    const dialog = document.querySelector("[data-book-dialog]");
+    const dialogCode = document.querySelector("[data-dialog-code]");
+    const dialogTitle = document.querySelector("[data-dialog-title]");
+    const dialogPrice = document.querySelector("[data-dialog-price]");
+    const closeButton = document.querySelector("[data-dialog-close]");
+    const buyButton = document.querySelector("[data-dialog-buy]");
+    let selectedButton = null;
+    let selectedBook = null;
+
+    const pressBook = (button) => {
+      button.classList.remove("is-pressed");
+      void button.offsetWidth;
+      button.classList.add("is-pressed");
+    };
+
+    const pg16Countdown = document.querySelector("[data-pg16-countdown]");
+    const pg16TargetClicks = 7;
+    let pg16Clicks = 0;
+
+    const showPg16Countdown = (count) => {
+      if (!pg16Countdown) return;
+      pg16Countdown.classList.remove("is-visible");
+      pg16Countdown.textContent = count;
+      void pg16Countdown.offsetWidth;
+      pg16Countdown.classList.add("is-visible");
+    };
+
+    document.querySelectorAll("[data-book-code]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const book = books[button.dataset.bookCode];
+        if (!book) return;
+        if (button.dataset.bookCode === "PG16") {
+          const count = Math.max(pg16TargetClicks - pg16Clicks, 1);
+          const pendingWindow = count === 1 ? window.open("about:blank", "_blank") : null;
+          pg16Clicks += 1;
+          pressBook(button);
+          showPg16Countdown(count);
+          if (pg16Clicks >= pg16TargetClicks) {
+            pg16Clicks = 0;
+            window.setTimeout(() => {
+              if (pendingWindow) {
+                pendingWindow.location.href = book.url;
+              } else {
+                window.open(book.url, "_blank");
+              }
+            }, 260);
+          }
+          return;
+        }
+        selectedButton = button;
+        selectedBook = book;
+        pressBook(button);
+        window.setTimeout(() => {
+          dialogCode.textContent = book.code;
+          dialogTitle.textContent = book.title;
+          dialogPrice.textContent = book.price;
+          if (typeof dialog.showModal === "function") {
+            dialog.showModal();
+          } else {
+            window.location.href = book.url;
+          }
+        }, 190);
+      });
+    });
+
+    closeButton.addEventListener("click", () => dialog.close());
+    buyButton.addEventListener("click", () => {
+      if (!selectedBook) return;
+      if (selectedButton) pressBook(selectedButton);
+      window.setTimeout(() => {
+        window.location.href = selectedBook.url;
+      }, 180);
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
