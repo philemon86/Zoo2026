@@ -70,7 +70,7 @@
     preloadPage(link.href);
 
     const zoneLabel = link.classList.contains("zone")
-      ? `???${link.getAttribute("aria-label") || link.textContent.trim() || "???"}`
+      ? (link.getAttribute("aria-label") || link.textContent.trim() || "")
       : "";
 
     resetTransition();
