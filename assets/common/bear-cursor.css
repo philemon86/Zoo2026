@@ -1,0 +1,25 @@
+html,
+body,
+body * {
+  cursor: url("bear-cursor-64.png") 14 2, auto;
+}
+
+a,
+button,
+summary,
+label,
+[role="button"],
+input[type="button"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+input[type="submit"],
+select {
+  cursor: url("bear-cursor-64.png") 14 2, pointer;
+}
+
+html:active,
+body:active,
+body *:active {
+  cursor: url("bear-cursor-grab-64.png") 22 14, grabbing;
+}

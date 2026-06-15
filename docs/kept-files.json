@@ -1,0 +1,562 @@
+[
+  {
+    "path": "GIFT.html",
+    "size_bytes": 5923
+  },
+  {
+    "path": "README.md",
+    "size_bytes": 2111
+  },
+  {
+    "path": "activities.html",
+    "size_bytes": 5358
+  },
+  {
+    "path": "assets/books/bear/C002-1.png",
+    "size_bytes": 3843735
+  },
+  {
+    "path": "assets/books/bear/C136-1.png",
+    "size_bytes": 2286879
+  },
+  {
+    "path": "assets/books/bear/C185.png",
+    "size_bytes": 5100646
+  },
+  {
+    "path": "assets/books/bear/C290.png",
+    "size_bytes": 1441714
+  },
+  {
+    "path": "assets/books/bear/C291-1.png",
+    "size_bytes": 3141488
+  },
+  {
+    "path": "assets/books/bear/C292.png",
+    "size_bytes": 6045278
+  },
+  {
+    "path": "assets/books/bear/C293.png",
+    "size_bytes": 5200482
+  },
+  {
+    "path": "assets/books/bear/C294.png",
+    "size_bytes": 4950548
+  },
+  {
+    "path": "assets/books/bear/bg-desktop.png",
+    "size_bytes": 2289816
+  },
+  {
+    "path": "assets/books/bear/bg-mobile.png",
+    "size_bytes": 2224896
+  },
+  {
+    "path": "assets/books/common/stump.png",
+    "size_bytes": 1710835
+  },
+  {
+    "path": "assets/books/fox/C136-1.png",
+    "size_bytes": 2218219
+  },
+  {
+    "path": "assets/books/fox/C187-1.png",
+    "size_bytes": 1272899
+  },
+  {
+    "path": "assets/books/fox/C221-1.png",
+    "size_bytes": 919056
+  },
+  {
+    "path": "assets/books/fox/C268-1.png",
+    "size_bytes": 1022384
+  },
+  {
+    "path": "assets/books/fox/C278-1.png",
+    "size_bytes": 1304193
+  },
+  {
+    "path": "assets/books/fox/bg-desktop.png",
+    "size_bytes": 2290371
+  },
+  {
+    "path": "assets/books/fox/bg-mobile.png",
+    "size_bytes": 2357493
+  },
+  {
+    "path": "assets/books/giraffe/C003-1.png",
+    "size_bytes": 1647876
+  },
+  {
+    "path": "assets/books/giraffe/C157-1.png",
+    "size_bytes": 1055934
+  },
+  {
+    "path": "assets/books/giraffe/C168-1.png",
+    "size_bytes": 3757333
+  },
+  {
+    "path": "assets/books/giraffe/C172-1.jpg",
+    "size_bytes": 526693
+  },
+  {
+    "path": "assets/books/giraffe/C183-1.png",
+    "size_bytes": 548630
+  },
+  {
+    "path": "assets/books/giraffe/C195-1.png",
+    "size_bytes": 583728
+  },
+  {
+    "path": "assets/books/giraffe/C262-1.png",
+    "size_bytes": 1556254
+  },
+  {
+    "path": "assets/books/giraffe/C266-1.png",
+    "size_bytes": 5242974
+  },
+  {
+    "path": "assets/books/giraffe/C267-1.png",
+    "size_bytes": 2501985
+  },
+  {
+    "path": "assets/books/giraffe/C269-1.png",
+    "size_bytes": 874551
+  },
+  {
+    "path": "assets/books/giraffe/C274-1.png",
+    "size_bytes": 1351004
+  },
+  {
+    "path": "assets/books/giraffe/C276-1.png",
+    "size_bytes": 582075
+  },
+  {
+    "path": "assets/books/giraffe/C284.png",
+    "size_bytes": 4394785
+  },
+  {
+    "path": "assets/books/giraffe/bg-desktop.png",
+    "size_bytes": 2519685
+  },
+  {
+    "path": "assets/books/giraffe/bg-mobile.png",
+    "size_bytes": 2469581
+  },
+  {
+    "path": "assets/books/kangaroo/C182-1.png",
+    "size_bytes": 393315
+  },
+  {
+    "path": "assets/books/kangaroo/C264-1.png",
+    "size_bytes": 570832
+  },
+  {
+    "path": "assets/books/kangaroo/C288-1.png",
+    "size_bytes": 4062321
+  },
+  {
+    "path": "assets/books/kangaroo/C291-1.png",
+    "size_bytes": 3141488
+  },
+  {
+    "path": "assets/books/kangaroo/C293.png",
+    "size_bytes": 5200482
+  },
+  {
+    "path": "assets/books/kangaroo/bg-desktop.png",
+    "size_bytes": 2073705
+  },
+  {
+    "path": "assets/books/kangaroo/bg-mobile.png",
+    "size_bytes": 2056002
+  },
+  {
+    "path": "assets/books/map/bear-zone.png",
+    "size_bytes": 2051061
+  },
+  {
+    "path": "assets/books/map/desktop-bg.png",
+    "size_bytes": 2382907
+  },
+  {
+    "path": "assets/books/map/fox-zone.png",
+    "size_bytes": 665256
+  },
+  {
+    "path": "assets/books/map/giraffe-zone.png",
+    "size_bytes": 1569682
+  },
+  {
+    "path": "assets/books/map/kangaroo-zone.png",
+    "size_bytes": 1248827
+  },
+  {
+    "path": "assets/books/map/mobile-bg.png",
+    "size_bytes": 2655524
+  },
+  {
+    "path": "assets/books/map/owl-zone.png",
+    "size_bytes": 880150
+  },
+  {
+    "path": "assets/books/map/sheep-zone.png",
+    "size_bytes": 1252243
+  },
+  {
+    "path": "assets/books/owl/C084-1.png",
+    "size_bytes": 1516604
+  },
+  {
+    "path": "assets/books/owl/C122-1.png",
+    "size_bytes": 3995201
+  },
+  {
+    "path": "assets/books/owl/C199N.png",
+    "size_bytes": 4823211
+  },
+  {
+    "path": "assets/books/owl/C215-1.png",
+    "size_bytes": 2343961
+  },
+  {
+    "path": "assets/books/owl/C222-1.png",
+    "size_bytes": 1260664
+  },
+  {
+    "path": "assets/books/owl/C224-1.png",
+    "size_bytes": 777014
+  },
+  {
+    "path": "assets/books/owl/C238-1.png",
+    "size_bytes": 448359
+  },
+  {
+    "path": "assets/books/owl/C240-1.png",
+    "size_bytes": 402976
+  },
+  {
+    "path": "assets/books/owl/C242-1.png",
+    "size_bytes": 1061535
+  },
+  {
+    "path": "assets/books/owl/C244-1.png",
+    "size_bytes": 854713
+  },
+  {
+    "path": "assets/books/owl/C249-1.png",
+    "size_bytes": 338993
+  },
+  {
+    "path": "assets/books/owl/C251-1.png",
+    "size_bytes": 549584
+  },
+  {
+    "path": "assets/books/owl/C254-1.png",
+    "size_bytes": 944593
+  },
+  {
+    "path": "assets/books/owl/C259-1.png",
+    "size_bytes": 384029
+  },
+  {
+    "path": "assets/books/owl/C260-1.png",
+    "size_bytes": 829879
+  },
+  {
+    "path": "assets/books/owl/C261-1.png",
+    "size_bytes": 1047501
+  },
+  {
+    "path": "assets/books/owl/C265-01.png",
+    "size_bytes": 493329
+  },
+  {
+    "path": "assets/books/owl/C279-1.png",
+    "size_bytes": 1130426
+  },
+  {
+    "path": "assets/books/owl/bg-desktop.png",
+    "size_bytes": 2411096
+  },
+  {
+    "path": "assets/books/owl/bg-mobile.png",
+    "size_bytes": 2560787
+  },
+  {
+    "path": "assets/books/sheep/C011-1.png",
+    "size_bytes": 2549243
+  },
+  {
+    "path": "assets/books/sheep/C243-1.png",
+    "size_bytes": 2778634
+  },
+  {
+    "path": "assets/books/sheep/C253-1.png",
+    "size_bytes": 1720470
+  },
+  {
+    "path": "assets/books/sheep/C263-1.png",
+    "size_bytes": 2132218
+  },
+  {
+    "path": "assets/books/sheep/C280-1.png",
+    "size_bytes": 1972168
+  },
+  {
+    "path": "assets/books/sheep/C286.png",
+    "size_bytes": 3782845
+  },
+  {
+    "path": "assets/books/sheep/D009.png",
+    "size_bytes": 598314
+  },
+  {
+    "path": "assets/books/sheep/PG16.png",
+    "size_bytes": 3032257
+  },
+  {
+    "path": "assets/books/sheep/bg-desktop.png",
+    "size_bytes": 2246300
+  },
+  {
+    "path": "assets/books/sheep/bg-mobile.png",
+    "size_bytes": 1794225
+  },
+  {
+    "path": "assets/books/sheep/sheep-sign.png",
+    "size_bytes": 1152825
+  },
+  {
+    "path": "assets/common/bear-cursor-64.png",
+    "size_bytes": 6066
+  },
+  {
+    "path": "assets/common/bear-cursor-grab-64.png",
+    "size_bytes": 7523
+  },
+  {
+    "path": "assets/common/bear-cursor.css",
+    "size_bytes": 391
+  },
+  {
+    "path": "assets/common/favicon.png",
+    "size_bytes": 965786
+  },
+  {
+    "path": "assets/common/footstep-transition.css",
+    "size_bytes": 2821
+  },
+  {
+    "path": "assets/common/footstep-transition.js",
+    "size_bytes": 3145
+  },
+  {
+    "path": "assets/common/home-logo.png",
+    "size_bytes": 1425961
+  },
+  {
+    "path": "assets/common/left-footprint.png",
+    "size_bytes": 174183
+  },
+  {
+    "path": "assets/common/logo-coffee.png",
+    "size_bytes": 34932
+  },
+  {
+    "path": "assets/common/right-footprint.png",
+    "size_bytes": 166906
+  },
+  {
+    "path": "assets/gift/banners/board-games-desktop.jpg",
+    "size_bytes": 1233051
+  },
+  {
+    "path": "assets/gift/banners/board-games-mobile.jpg",
+    "size_bytes": 1160265
+  },
+  {
+    "path": "assets/gift/banners/gift-desktop.jpg",
+    "size_bytes": 1178403
+  },
+  {
+    "path": "assets/gift/banners/gift-mobile.jpg",
+    "size_bytes": 1126533
+  },
+  {
+    "path": "assets/gift/banners/stationery-desktop.jpg",
+    "size_bytes": 1206122
+  },
+  {
+    "path": "assets/gift/banners/stationery-mobile.jpg",
+    "size_bytes": 1138586
+  },
+  {
+    "path": "assets/gift/sign-board-games.png",
+    "size_bytes": 1383442
+  },
+  {
+    "path": "assets/gift/sign-gift.png",
+    "size_bytes": 1254433
+  },
+  {
+    "path": "assets/gift/sign-stationery.png",
+    "size_bytes": 1309153
+  },
+  {
+    "path": "assets/gift/stage-desktop.png",
+    "size_bytes": 2556971
+  },
+  {
+    "path": "assets/gift/stage-mobile.png",
+    "size_bytes": 2815105
+  },
+  {
+    "path": "assets/home/bear-footprint.png",
+    "size_bytes": 262841
+  },
+  {
+    "path": "assets/home/bear-sit.png",
+    "size_bytes": 4255756
+  },
+  {
+    "path": "assets/home/bear.png",
+    "size_bytes": 3685624
+  },
+  {
+    "path": "assets/home/bg-mobile.png",
+    "size_bytes": 1959508
+  },
+  {
+    "path": "assets/home/cloud.png",
+    "size_bytes": 725743
+  },
+  {
+    "path": "assets/home/dove-footprint.png",
+    "size_bytes": 285336
+  },
+  {
+    "path": "assets/home/dove-sit.png",
+    "size_bytes": 136562
+  },
+  {
+    "path": "assets/home/dove.png",
+    "size_bytes": 184760
+  },
+  {
+    "path": "assets/home/foreground.png",
+    "size_bytes": 9754240
+  },
+  {
+    "path": "assets/home/giraffe-footprint.png",
+    "size_bytes": 554557
+  },
+  {
+    "path": "assets/home/giraffe-sit.png",
+    "size_bytes": 351821
+  },
+  {
+    "path": "assets/home/giraffe.png",
+    "size_bytes": 343823
+  },
+  {
+    "path": "assets/home/human-footprint.png",
+    "size_bytes": 497031
+  },
+  {
+    "path": "assets/home/main-title.png",
+    "size_bytes": 517839
+  },
+  {
+    "path": "assets/home/mobile-visual.png",
+    "size_bytes": 2549809
+  },
+  {
+    "path": "assets/home/sheep-sit.png",
+    "size_bytes": 222552
+  },
+  {
+    "path": "assets/home/sheep.png",
+    "size_bytes": 230798
+  },
+  {
+    "path": "assets/home/solid-bg.png",
+    "size_bytes": 4903477
+  },
+  {
+    "path": "assets/home/sun.png",
+    "size_bytes": 1220144
+  },
+  {
+    "path": "bear-books.html",
+    "size_bytes": 17617
+  },
+  {
+    "path": "board-games.html",
+    "size_bytes": 8121
+  },
+  {
+    "path": "data/board-games-data.js",
+    "size_bytes": 5357
+  },
+  {
+    "path": "data/gift-products-data.js",
+    "size_bytes": 24478
+  },
+  {
+    "path": "data/stationery-products-data.js",
+    "size_bytes": 9227
+  },
+  {
+    "path": "docs/reference-data/board-games.json",
+    "size_bytes": 5328
+  },
+  {
+    "path": "docs/reference-data/gift-products.json",
+    "size_bytes": 24447
+  },
+  {
+    "path": "docs/reference-data/stationery-products.json",
+    "size_bytes": 9190
+  },
+  {
+    "path": "docs/removed-files.md",
+    "size_bytes": 1009
+  },
+  {
+    "path": "fox-books.html",
+    "size_bytes": 15126
+  },
+  {
+    "path": "gift-products.html",
+    "size_bytes": 6195
+  },
+  {
+    "path": "giraffe-books.html",
+    "size_bytes": 21569
+  },
+  {
+    "path": "index.html",
+    "size_bytes": 26960
+  },
+  {
+    "path": "kangaroo-books.html",
+    "size_bytes": 15400
+  },
+  {
+    "path": "owl-books.html",
+    "size_bytes": 27804
+  },
+  {
+    "path": "sheep-books.html",
+    "size_bytes": 20336
+  },
+  {
+    "path": "stationery-products.html",
+    "size_bytes": 6225
+  },
+  {
+    "path": "zoo-map.html",
+    "size_bytes": 27744
+  }
+]

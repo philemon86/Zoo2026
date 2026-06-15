@@ -1,0 +1,143 @@
+{
+  "source": "https://www.pbooks.com.tw/collections/%E5%90%84%E9%A1%9E%E6%A1%8C%E9%81%8A/products.json?limit=250&page=1",
+  "collectionUrl": "https://www.pbooks.com.tw/collections/%E5%90%84%E9%A1%9E%E6%A1%8C%E9%81%8A",
+  "updatedAt": "2026-06-05T13:50:32+08:00",
+  "items": [
+    {
+      "index": 1,
+      "title": "亞伯拉罕的信心之旅 - 桌遊",
+      "price": "NT$ 199",
+      "compareAtPrice": "NT$ 500",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzUzNzU0LzE3NzkyODU3MjBfNWRjMGM4MGVjZDE1YzdlYjJkMTMuanBlZyJdLFsicCIsInRodW1iIiwiNDgweDQ4MCJdXQ.jpeg?sha=7a7f9967e39053d2",
+      "url": "https://www.pbooks.com.tw/products/pg16",
+      "sku": "PG16",
+      "tags": [
+        "兒童",
+        "桌遊",
+        "PG16"
+      ]
+    },
+    {
+      "index": 2,
+      "title": "大發熱心碰碰碰-桌遊",
+      "price": "NT$ 135",
+      "compareAtPrice": "NT$ 150",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0ODYyODAyLzE3NzkyODU2NjNfOTdjNjczNWM1YzgzYTM4ODgwYjMucG5nIl0sWyJwIiwidGh1bWIiLCI0ODB4NDgwIl1d.png?sha=422b34dc710b6d3d",
+      "url": "https://www.pbooks.com.tw/products/pg18",
+      "sku": "PG18",
+      "tags": [
+        "兒童",
+        "桌遊",
+        "PG18"
+      ]
+    },
+    {
+      "index": 3,
+      "title": "九N生存投資遊戲／9N - 桌遊",
+      "price": "NT$ 699",
+      "compareAtPrice": "NT$ 2,000",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzUzNzM3LzE3NzkwOTM5MjRfNWFiMDU4MTAzOWRiNmYwOGVmNTcucG5nIl0sWyJwIiwidGh1bWIiLCI0ODB4NDgwIl1d.png?sha=551d6fb90c2fdacd",
+      "url": "https://www.pbooks.com.tw/products/d006",
+      "sku": "D006",
+      "tags": [
+        "兒童",
+        "桌遊",
+        "D006"
+      ]
+    },
+    {
+      "index": 4,
+      "title": "心田破冰卡 - 桌遊",
+      "price": "NT$ 225",
+      "compareAtPrice": "NT$ 250",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzUzNzE1LzE3NzkzNTM3NDVfY2ZhZWU0MDEwNTc2OTExM2E0NTQuanBlZyJdLFsicCIsInRodW1iIiwiNDgweDQ4MCJdXQ.jpeg?sha=06e177f7903d20ca",
+      "url": "https://www.pbooks.com.tw/products/abh001",
+      "sku": "ABH001",
+      "tags": [
+        "兒童",
+        "桌遊",
+        "ABH001"
+      ]
+    },
+    {
+      "index": 5,
+      "title": "破冰HOLY HIGH - 桌遊",
+      "price": "NT$ 270",
+      "compareAtPrice": "NT$ 300",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzUzNzY5LzE3NzkzNTY4OTBfMzdmOTE1YzVmZWI4MTQ0NWQ1OWIucG5nIl0sWyJwIiwidGh1bWIiLCI0ODB4NDgwIl1d.png?sha=4c553968c9338a60",
+      "url": "https://www.pbooks.com.tw/products/n001",
+      "sku": "N001",
+      "tags": [
+        "桌遊",
+        "N001"
+      ]
+    },
+    {
+      "index": 6,
+      "title": "認識耶穌接龍卡 - 桌遊",
+      "price": "NT$ 315",
+      "compareAtPrice": "NT$ 350",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzUzNzA0LzE3NzkwODY4ODNfZWQwOGNiMTgzYTRhZWRiNjU3M2QuanBlZyJdLFsicCIsInRodW1iIiwiNDgweDQ4MCJdXQ.jpeg?sha=63f71d7147148afd",
+      "url": "https://www.pbooks.com.tw/products/8855",
+      "sku": "8855",
+      "tags": [
+        "兒童",
+        "桌遊",
+        "8855"
+      ]
+    },
+    {
+      "index": 7,
+      "title": "聖經故事記憶卡 - 桌遊",
+      "price": "NT$ 315",
+      "compareAtPrice": "NT$ 350",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzUzNjg1LzE3MDcyMDMyMzJfNzkxZDAxYTNhODVjZGY3MmJkMjYuanBlZyJdLFsicCIsInRodW1iIiwiNDgweDQ4MCJdXQ.jpeg?sha=1f836afa63bab9e8",
+      "url": "https://www.pbooks.com.tw/products/8854",
+      "sku": "8854",
+      "tags": [
+        "兒童",
+        "桌遊",
+        "8854"
+      ]
+    },
+    {
+      "index": 8,
+      "title": "通天塔 THE CITY AND THE TOWER - 桌遊",
+      "price": "NT$ 792",
+      "compareAtPrice": "NT$ 880",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzU0MDg2LzE3MDcyMDQ3NjlfOTI2ZmM3MGU1MjEzNWE2OTE1Y2EucG5nIl0sWyJwIiwidGh1bWIiLCI0ODB4NDgwIl1d.png?sha=0c7a0ad6e33d8894",
+      "url": "https://www.pbooks.com.tw/products/n028",
+      "sku": "N028",
+      "tags": [
+        "桌遊",
+        "N028"
+      ]
+    },
+    {
+      "index": 9,
+      "title": "伯利恆之星 THE STAR OF BETHLEHEM - 桌遊",
+      "price": "NT$ 882",
+      "compareAtPrice": "NT$ 980",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzU0MjIwLzE3MDcyMDQ5ODRfYzYyNzBkMWEwYTc1MzYyMzcxMjcucG5nIl0sWyJwIiwidGh1bWIiLCI0ODB4NDgwIl1d.png?sha=274b981977ebbfb9",
+      "url": "https://www.pbooks.com.tw/products/n029",
+      "sku": "N029",
+      "tags": [
+        "桌遊",
+        "N029"
+      ]
+    },
+    {
+      "index": 10,
+      "title": "五十二日 52 DAYS - 桌遊",
+      "price": "NT$ 972",
+      "compareAtPrice": "NT$ 1,080",
+      "cover": "https://www.pbooks.com.tw/media/W1siZiIsIjI3Mjk1L3Byb2R1Y3RzLzQ0NzU0MjM0LzE3MDcyMDUzMDhfZWM4MzQwZDgxNDZiMDhhYjNjNjQucG5nIl0sWyJwIiwidGh1bWIiLCI0ODB4NDgwIl1d.png?sha=77dc2cf3c8058a8b",
+      "url": "https://www.pbooks.com.tw/products/n030",
+      "sku": "N030",
+      "tags": [
+        "桌遊",
+        "N030"
+      ]
+    }
+  ]
+}

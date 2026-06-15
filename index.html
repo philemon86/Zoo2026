@@ -1,0 +1,1175 @@
+﻿<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <!-- Cleaned deploy package: assets reorganized under /assets and /data. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="assets/common/favicon.png">
+    <link rel="stylesheet" href="assets/common/bear-cursor.css">
+  <link rel="stylesheet" href="assets/common/footstep-transition.css">
+  <title>閱讀動物園首頁</title>
+  <style>
+    :root {
+      --ink: #263d34;
+      --muted: #5e715c;
+      --leaf: #617654;
+      --leaf-dark: #40583f;
+      --gold: #d9a93d;
+      --brown: #7d6038;
+      --cream: #fffaf0;
+      --paper: rgba(255, 250, 239, .9);
+      --shadow: 0 16px 36px rgba(80, 63, 33, .14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Noto Serif TC", "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", serif;
+      background: #f8f0df;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      overflow: hidden;
+      background: #fff9ee;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 930px;
+      max-width: 1672px;
+      margin: 0 auto;
+      padding: 76px 40px 0;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-bg,
+    .hero-foreground {
+      position: absolute;
+      inset: 0;
+      display: block;
+      pointer-events: none;
+    }
+
+    .hero-bg {
+      z-index: 0;
+    }
+
+    .hero-foreground {
+      z-index: 3;
+    }
+
+    .hero-bg img,
+    .hero-foreground img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    .mobile-visual {
+      display: none;
+    }
+
+    .sky-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: auto;
+      overflow: hidden;
+    }
+
+    .sky-layer::before,
+    .sky-layer::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255, 250, 239, .74);
+      filter: blur(18px);
+      pointer-events: none;
+    }
+
+    .sky-layer::before {
+      top: 82px;
+      right: 19%;
+      width: 230px;
+      height: 150px;
+    }
+
+    .sky-layer::after {
+      top: 205px;
+      left: 17%;
+      width: 160px;
+      height: 84px;
+    }
+
+    .sun-group,
+    .cloud {
+      position: absolute;
+      display: block;
+      height: auto;
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .sun-group {
+      top: 68px;
+      left: 0;
+      width: clamp(86px, 8.4vw, 140px);
+      z-index: 2;
+      cursor: pointer;
+      pointer-events: auto;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+      animation: sunArc 60s linear infinite;
+    }
+
+    .sun-group::before {
+      content: "";
+      position: absolute;
+      inset: -34px -42px;
+      z-index: 4;
+      border-radius: 50%;
+    }
+
+    .sun-group.is-paused,
+    .sun-group.is-paused .cloud-follow {
+      animation-play-state: paused;
+    }
+
+    .sun-group .sun {
+      display: block;
+      width: 100%;
+      height: auto;
+      -webkit-user-drag: none;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .sun-group .cloud-follow {
+      position: absolute;
+      left: -22%;
+      bottom: -7%;
+      width: 84%;
+      height: auto;
+      -webkit-user-drag: none;
+      user-select: none;
+      filter:
+        drop-shadow(0 0 1px rgba(90, 105, 85, .38))
+        drop-shadow(0 7px 10px rgba(90, 105, 85, .16));
+      animation: followCloud 11s ease-in-out infinite;
+    }
+
+    .sky-label {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      z-index: 3;
+      min-width: max-content;
+      padding: 7px 12px;
+      border: 2px solid rgba(82, 105, 74, .16);
+      border-radius: 999px;
+      color: #4c5f35;
+      background: rgba(255, 253, 244, .92);
+      box-shadow: 0 8px 14px rgba(82, 105, 74, .12);
+      font-size: clamp(14px, 1.3vw, 18px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: .04em;
+      text-align: center;
+      transform: translateX(-50%);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .sun-label {
+      opacity: 0;
+      transform: translateX(-50%) translateY(6px) scale(.92);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .sun-group.is-paused .sun-label {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    .cloud {
+      filter:
+        drop-shadow(0 0 1px rgba(90, 105, 85, .38))
+        drop-shadow(0 7px 10px rgba(90, 105, 85, .16));
+    }
+
+    .cloud-one {
+      top: 185px;
+      left: 0;
+      width: clamp(112px, 11vw, 188px);
+      z-index: 1;
+      animation: cloudArcA 60s linear infinite;
+      animation-delay: -20s;
+      opacity: .98;
+    }
+
+    .cloud-two {
+      top: 245px;
+      left: 0;
+      width: clamp(124px, 12vw, 204px);
+      z-index: 1;
+      animation: cloudArcB 60s linear infinite;
+      animation-delay: -40s;
+      opacity: .96;
+    }
+
+    .cloud img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @keyframes sunArc {
+      0% { transform: translate3d(calc(100vw + 160px), 120px, 0); }
+      10% { transform: translate3d(88vw, 70px, 0); }
+      20% { transform: translate3d(76vw, 30px, 0); }
+      30% { transform: translate3d(64vw, 0, 0); }
+      40% { transform: translate3d(52vw, -18px, 0); }
+      50% { transform: translate3d(40vw, -24px, 0); }
+      60% { transform: translate3d(28vw, -16px, 0); }
+      70% { transform: translate3d(16vw, 8px, 0); }
+      80% { transform: translate3d(6vw, 44px, 0); }
+      90% { transform: translate3d(-90px, 84px, 0); }
+      100% { transform: translate3d(-220px, 120px, 0); }
+    }
+
+    @keyframes followCloud {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(-7px, 4px, 0); }
+    }
+
+    @keyframes cloudArcA {
+      0% { transform: translate3d(calc(100vw + 190px), 42px, 0); }
+      20% { transform: translate3d(76vw, 0, 0); }
+      40% { transform: translate3d(54vw, -24px, 0); }
+      60% { transform: translate3d(32vw, -24px, 0); }
+      80% { transform: translate3d(10vw, 0, 0); }
+      100% { transform: translate3d(-230px, 42px, 0); }
+    }
+
+    @keyframes cloudArcB {
+      0% { transform: translate3d(calc(100vw + 220px), 20px, 0); }
+      20% { transform: translate3d(80vw, -12px, 0); }
+      40% { transform: translate3d(58vw, -36px, 0); }
+      60% { transform: translate3d(34vw, -34px, 0); }
+      80% { transform: translate3d(12vw, -10px, 0); }
+      100% { transform: translate3d(-250px, 20px, 0); }
+    }
+
+    .brand {
+      display: grid;
+      justify-items: center;
+      gap: 0;
+      text-align: center;
+      color: #263b35;
+      position: relative;
+      z-index: 4;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      cursor: pointer;
+      transform-origin: 50% 50%;
+      transition: transform .18s cubic-bezier(.2, .8, .2, 1.25), filter .18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .brand-link:hover,
+    .brand-link:focus-visible {
+      transform: translateY(-2px) scale(1.04);
+      filter: drop-shadow(0 8px 12px rgba(68, 52, 25, .18));
+      outline: none;
+    }
+
+    .brand-link:focus-visible {
+      box-shadow: 0 0 0 4px rgba(217, 169, 61, .22);
+    }
+
+    .brand-link.is-jelly {
+      animation: logoJelly .58s cubic-bezier(.22, 1.1, .32, 1.1);
+    }
+
+    @keyframes logoJelly {
+      0% { transform: scale(1, 1); }
+      18% { transform: scale(1.18, .82) translateY(3px); }
+      36% { transform: scale(.88, 1.14) translateY(-6px); }
+      56% { transform: scale(1.08, .94) translateY(2px); }
+      76% { transform: scale(.98, 1.04) translateY(-1px); }
+      100% { transform: scale(1, 1); }
+    }
+
+    .brand-logo {
+      display: block;
+      width: 80px;
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .title-wrap {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      justify-items: center;
+      margin-top: 44px;
+      text-align: center;
+    }
+
+    .main-title {
+      width: min(680px, 70vw);
+      height: auto;
+      display: block;
+    }
+
+    .event-copy {
+      margin: 12px 0 0;
+      font-size: clamp(24px, 2.55vw, 42px);
+      line-height: 1.32;
+      letter-spacing: .14em;
+      font-weight: 700;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, .7);
+    }
+
+    .date {
+      margin-top: 12px;
+      color: #718460;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: clamp(24px, 2.5vw, 40px);
+      letter-spacing: .06em;
+      font-weight: 500;
+    }
+
+    .date small {
+      font-size: .58em;
+      font-weight: 700;
+      margin-left: .1em;
+    }
+
+    .animal {
+      position: absolute;
+      z-index: 8;
+      display: block;
+      left: var(--current-x, var(--x));
+      right: auto;
+      bottom: var(--current-y, var(--y));
+      width: var(--w, var(--sit-w));
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      line-height: 0;
+      filter: drop-shadow(0 10px 10px rgba(68, 52, 25, .14));
+      transition: translate .26s ease, filter .26s ease;
+      transform-origin: 50% 100%;
+      transform: scaleX(var(--mirror, 1));
+    }
+
+    .animal:hover,
+    .animal:focus-visible {
+      translate: 0 -4px;
+      filter: drop-shadow(0 14px 14px rgba(68, 52, 25, .18));
+      outline: none;
+    }
+
+    .animal img {
+      display: block;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+    }
+
+    .animal-giraffe {
+      --x: 3.63%;
+      --stand-x: 1.37%;
+      --y: 178px;
+      --stand-y: 173px;
+      --sit-w: 293px;
+      --stand-w: 251px;
+      --w: var(--sit-w);
+      --mirror: 1;
+      z-index: 8;
+    }
+
+    .animal-sheep {
+      --x: 15.53%;
+      --stand-x: 17.95%;
+      --y: 86px;
+      --stand-y: 82px;
+      --sit-w: 332px;
+      --stand-w: 216px;
+      --w: var(--sit-w);
+      --mirror: 1;
+      z-index: 9;
+    }
+
+    .animal-bear {
+      --x: 62.79%;
+      --stand-x: 59.79%;
+      --y: 40px;
+      --stand-y: 54px;
+      --sit-w: 358px;
+      --stand-w: 387px;
+      --w: var(--sit-w);
+      --mirror: 1;
+      z-index: 8;
+    }
+
+    .animal-pigeon {
+      --x: 6%;
+      --stand-x: 6.05%;
+      --y: 756px;
+      --stand-y: 747px;
+      --sit-w: 129px;
+      --stand-w: 109px;
+      --w: var(--sit-w);
+      --mirror: -1;
+      z-index: 8;
+    }
+
+    .promo-badge {
+      position: relative;
+      z-index: 99;
+      display: grid;
+      place-items: center;
+      width: clamp(142px, 15vw, 210px);
+      aspect-ratio: 1;
+      margin: -126px auto 0;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #e8bf58, #d8a33a);
+      color: #203d37;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(126, 89, 29, .2);
+    }
+
+    .promo-badge .months {
+      font-size: clamp(18px, 1.7vw, 26px);
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: .05em;
+    }
+
+    .promo-badge .discount {
+      margin-top: 4px;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: clamp(48px, 5.8vw, 74px);
+      line-height: .86;
+      font-weight: 500;
+      letter-spacing: -.02em;
+    }
+
+    .promo-badge .discount span {
+      font-size: .34em;
+      margin-left: .08em;
+      font-weight: 700;
+    }
+
+    .selection {
+      position: relative;
+      z-index: 7;
+      margin-top: -34px;
+      padding: 116px 40px 72px;
+      background: #fff9ee;
+      overflow: visible;
+    }
+
+    .selection::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -132px;
+      z-index: -1;
+      width: 150vw;
+      height: 264px;
+      transform: translateX(-50%);
+      background: #fff9ee;
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+
+    .selection-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      font-size: clamp(34px, 4vw, 52px);
+      line-height: 1.1;
+      letter-spacing: .16em;
+      text-align: center;
+    }
+
+    .section-title::before,
+    .section-title::after {
+      content: "??;
+      color: #7a8b68;
+      font-size: .72em;
+      letter-spacing: 0;
+    }
+
+    .section-subtitle {
+      margin: 22px 0 44px;
+      color: #4f5c50;
+      text-align: center;
+      font-size: clamp(17px, 2vw, 26px);
+      line-height: 1.4;
+      letter-spacing: .12em;
+      font-weight: 600;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      min-height: 215px;
+      display: grid;
+      grid-template-columns: 135px 1fr;
+      align-items: center;
+      gap: 22px;
+      padding: 30px 34px;
+      border-radius: 8px;
+      background: var(--paper);
+      border: 1px solid rgba(107, 87, 47, .08);
+      box-shadow: var(--shadow);
+    }
+
+    .footprint {
+      width: 118px;
+      height: 118px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      opacity: .95;
+    }
+
+    .footprint-bear {
+      width: 80px;
+      height: 80px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: clamp(25px, 2.4vw, 34px);
+      line-height: 1.26;
+      letter-spacing: .08em;
+    }
+
+    .card-title-compact {
+      font-size: clamp(21px, 1.85vw, 28px);
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    .card p {
+      margin: 0 0 22px;
+      color: #34463d;
+      font-size: clamp(16px, 1.55vw, 22px);
+      line-height: 1.7;
+      letter-spacing: .08em;
+      font-weight: 700;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 8px 24px;
+      border-radius: 999px;
+      color: #fffdf4;
+      background: linear-gradient(135deg, #718661, #526949);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 18px;
+      letter-spacing: .12em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25);
+    }
+
+    .btn.gold {
+      background: linear-gradient(135deg, #d7ad42, #bf8d31);
+    }
+
+    .btn.brown {
+      background: linear-gradient(135deg, #8b6b3e, #6e532f);
+    }
+
+    .btn.blue {
+      background: linear-gradient(135deg, #7799a0, #587b84);
+    }
+
+    .btn::after {
+      content: "??;
+      font-size: 25px;
+      line-height: 1;
+      margin-top: -2px;
+    }
+
+    .activity-section {
+      position: relative;
+      z-index: 7;
+      padding: 0 40px 84px;
+      background: #fff9ee;
+    }
+
+    .activity-panel {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: clamp(24px, 3vw, 38px);
+      border: 1px solid rgba(97, 118, 84, .18);
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(255, 252, 242, .98), rgba(242, 232, 205, .92));
+      box-shadow: 0 18px 42px rgba(79, 65, 35, .13);
+    }
+
+    .activity-kicker {
+      margin: 0 0 8px;
+      color: #6e7d56;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .22em;
+      text-align: center;
+    }
+
+    .activity-title {
+      margin: 0;
+      color: #33473d;
+      font-size: clamp(28px, 3.2vw, 42px);
+      line-height: 1.2;
+      letter-spacing: .08em;
+      text-align: center;
+    }
+
+    .activity-group {
+      margin-top: 28px;
+    }
+
+    .activity-group h3 {
+      margin: 0 0 16px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      color: #fffaf0;
+      background: #7d6038;
+      font-size: 18px;
+      letter-spacing: .08em;
+    }
+
+    .activity-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .activity-list li {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 12px 14px;
+      border: 1px solid rgba(125, 96, 56, .16);
+      border-radius: 8px;
+      background: rgba(255, 250, 239, .84);
+      box-shadow: 0 8px 18px rgba(79, 65, 35, .08);
+    }
+
+    .activity-date {
+      color: #5f704c;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+
+    .activity-name {
+      color: #34463d;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .footer {
+      padding: 21px 20px 24px;
+      color: #fff8e9;
+      background: #647852;
+      text-align: center;
+      font-size: clamp(16px, 1.7vw, 24px);
+      letter-spacing: .14em;
+      font-weight: 600;
+    }
+
+    .layout-editor {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 999;
+      display: none;
+      width: min(360px, calc(100vw - 32px));
+      max-height: min(680px, calc(100vh - 32px));
+      overflow: auto;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255, 250, 239, .96);
+      border: 1px solid rgba(68, 82, 56, .18);
+      box-shadow: 0 16px 42px rgba(42, 38, 28, .22);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    body.is-editing .layout-editor {
+      display: block;
+    }
+
+    body.is-editing .animal {
+      outline: 2px dashed rgba(38, 61, 52, .45);
+      outline-offset: 8px;
+      cursor: move;
+      touch-action: none;
+    }
+
+    body.is-editing .animal.is-selected {
+      outline-color: #b56d28;
+    }
+
+    .layout-editor h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: .08em;
+    }
+
+    .editor-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .editor-tabs button,
+    .editor-actions button {
+      min-height: 34px;
+      border: 0;
+      border-radius: 6px;
+      color: #fffaf0;
+      background: #607554;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .editor-tabs button.is-active {
+      background: #263d34;
+    }
+
+    .editor-field {
+      display: grid;
+      grid-template-columns: 62px 1fr 58px;
+      align-items: center;
+      gap: 8px;
+      margin: 9px 0;
+      font-size: 14px;
+    }
+
+    .editor-field input[type="range"] {
+      width: 100%;
+    }
+
+    .editor-field output {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .editor-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+
+    .editor-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .editor-actions button:nth-child(3) {
+      grid-column: 1 / -1;
+      background: #8a6a3c;
+    }
+
+    .editor-note {
+      margin: 10px 0 0;
+      color: #5e715c;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 767px) {
+      .hero {
+        min-height: 980px;
+        padding: 62px 18px 0;
+      }
+
+      .hero-bg,
+      .hero-foreground,
+      .sky-layer,
+      .animal {
+        display: none;
+      }
+
+      .mobile-visual {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+      }
+
+      .brand {
+        z-index: 4;
+      }
+
+      .title-wrap {
+        z-index: 4;
+        margin-top: 14px;
+      }
+
+      .main-title {
+        width: min(410px, 54vw);
+      }
+
+      .promo-badge {
+        margin-top: -112px;
+      }
+
+      .selection {
+        margin-top: -28px;
+        padding: 92px 18px 58px;
+      }
+
+      .selection::before {
+        top: -96px;
+        width: 170vw;
+        height: 192px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .activity-section {
+        padding: 0 18px 58px;
+      }
+
+      .activity-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        min-height: 820px;
+      }
+
+      .brand-logo {
+        width: 50px;
+      }
+
+      .title-wrap {
+        margin-top: 10px;
+      }
+
+      .event-copy {
+        margin-top: 0;
+        font-size: 16px;
+        line-height: 1.2;
+      }
+
+      .date {
+        margin-top: 2px;
+        font-size: 17px;
+      }
+
+      .card {
+        min-height: 184px;
+        grid-template-columns: 92px 1fr;
+        gap: 16px;
+        padding: 24px 20px;
+      }
+
+      .footprint {
+        width: 86px;
+        height: 86px;
+      }
+
+      .footprint-bear {
+        width: 50px;
+        height: 50px;
+      }
+
+      .card h3 {
+        font-size: 25px;
+      }
+
+      .card-title-compact {
+        font-size: 21px;
+      }
+
+      .card p {
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+
+      .activity-panel {
+        padding: 22px 16px;
+      }
+
+      .activity-list li {
+        grid-template-columns: 86px 1fr;
+        gap: 10px;
+        padding: 11px 12px;
+      }
+
+      .activity-date {
+        font-size: 15px;
+      }
+
+      .activity-name {
+        font-size: 16px;
+      }
+
+      .btn {
+        min-height: 38px;
+        padding: 7px 18px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-label="閱讀動物園主視覺">
+      <picture class="hero-bg" aria-hidden="true">
+        <source media="(max-width: 767px)" srcset="assets/home/bg-mobile.png">
+        <img src="assets/home/solid-bg.png" alt="">
+      </picture>
+      <img class="mobile-visual" src="assets/home/mobile-visual.png" alt="">
+
+      <div class="sky-layer">
+        <div class="sun-group" role="button" tabindex="0" aria-label="雙擊太陽暫停或繼續">
+          <div class="sky-label sun-label">快來買書！</div>
+          <img class="sun" src="assets/home/sun.png" alt="">
+          <img class="cloud-follow" src="assets/home/cloud.png" alt="">
+        </div>
+        <div class="cloud cloud-one">
+          <img src="assets/home/cloud.png" alt="">
+        </div>
+        <div class="cloud cloud-two">
+          <img src="assets/home/cloud.png" alt="">
+        </div>
+      </div>
+
+      <picture class="hero-foreground" aria-hidden="true">
+        <img src="assets/home/foreground.png" alt="">
+      </picture>
+
+      <header class="brand">
+        <a class="brand-link" href="https://www.pbooks.com.tw/" aria-label="前往腓利門書房官方網站">
+          <img class="brand-logo" src="assets/common/logo-coffee.png" alt="PHILEMON 腓利門書房">
+        </a>
+      </header>
+
+      <div class="title-wrap">
+        <img class="main-title" src="assets/home/main-title.png" alt="閱讀動物園">
+        <p class="event-copy">腓利門書房宗教教育季</p>
+        <div class="date">7.1<small>TUE</small> - 9.30<small>TUE</small></div>
+      </div>
+
+      <button class="animal animal-giraffe" type="button" aria-label="切換長頸鹿姿勢" data-sit="assets/home/giraffe-sit.png" data-stand="assets/home/giraffe.png">
+        <img src="assets/home/giraffe-sit.png" alt="">
+      </button>
+      <button class="animal animal-sheep" type="button" aria-label="切換小羊姿勢" data-sit="assets/home/sheep-sit.png" data-stand="assets/home/sheep.png">
+        <img src="assets/home/sheep-sit.png" alt="">
+      </button>
+      <button class="animal animal-bear" type="button" aria-label="切換小熊姿勢" data-sit="assets/home/bear-sit.png" data-stand="assets/home/bear.png">
+        <img src="assets/home/bear-sit.png" alt="">
+      </button>
+      <button class="animal animal-pigeon" type="button" aria-label="切換鴿子姿勢" data-sit="assets/home/dove-sit.png" data-stand="assets/home/dove.png">
+        <img src="assets/home/dove-sit.png" alt="">
+      </button>
+    </section>
+
+    <div class="promo-badge" aria-label="7到9月活動優惠">
+      <div>
+        <div class="months">多樣商品<br>買一送一</div>
+        <div class="discount">79<span>折起</span></div>
+      </div>
+    </div>
+
+    <section class="selection">
+      <div class="selection-inner">
+        <p class="section-subtitle">每一個人，都有他的閱讀路線；<br>每一段成長，都有一本書同行。</p>
+
+        <div class="cards">
+          <article class="card">
+            <img class="footprint" src="assets/home/human-footprint.png" alt="">
+            <div>
+              <h3>本會出版書</h3>
+              <p>信仰扎根 × 生命建造<br>陪伴你每一天</p>
+              <a class="btn" href="zoo-map.html">探索更多</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <img class="footprint footprint-bear" src="assets/home/bear-footprint.png" alt="">
+            <div>
+              <h3 class="card-title-compact">禮品／文具／桌遊</h3>
+              <p>讓生活的每一刻<br>都能想起祢</p>
+              <a class="btn brown" href="GIFT.html">探索更多</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <img class="footprint" src="assets/home/giraffe-footprint.png" alt="">
+            <div>
+              <h3>各類活動告知</h3>
+              <p>書展、音樂會與活動資訊<br>即時更新</p>
+              <a class="btn gold" href="activities.html">查看活動</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <img class="footprint" src="assets/home/dove-footprint.png" alt="">
+            <div>
+              <h3>隱藏商品</h3>
+              <p>書裡有驚喜<br>等你來發現</p>
+              <a class="btn blue" href="#">探索更多</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>`r`n<footer class="footer">閱讀動物園陪你一起走進更美好的閱讀世界。</footer>
+  </main>  <script>
+    (() => {
+      const sun = document.querySelector(".sun-group");
+      const sunLabel = document.querySelector(".sun-label");
+      if (!sun || !sunLabel) return;
+      const sunCloud = sun.querySelector(".cloud-follow");
+
+      const sunMessages = [
+        "快來買書！",
+        "快來買禮物！",
+        "快來找便宜！",
+        "你好厲害，我被發現了！"
+      ];
+      let sunResumeTimer = 0;
+
+      const setSunPaused = (paused) => {
+        sun.classList.toggle("is-paused", paused);
+        sun.style.animationPlayState = paused ? "paused" : "running";
+        if (sunCloud) sunCloud.style.animationPlayState = paused ? "paused" : "running";
+        sun.setAttribute("aria-pressed", String(paused));
+      };
+
+      const pauseSunBriefly = () => {
+        window.clearTimeout(sunResumeTimer);
+        sunLabel.textContent = sunMessages[Math.floor(Math.random() * sunMessages.length)];
+        setSunPaused(true);
+        sunResumeTimer = window.setTimeout(() => {
+          setSunPaused(false);
+        }, 2000);
+      };
+
+      sun.addEventListener("click", (event) => {
+        event.preventDefault();
+        pauseSunBriefly();
+      });
+      sun.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        pauseSunBriefly();
+      });
+    })();
+
+    document.querySelectorAll(".animal[data-sit][data-stand]").forEach((animal) => {
+      animal.dataset.state = "sit";
+      animal.addEventListener("click", () => {
+        const image = animal.querySelector("img");
+        const standing = animal.dataset.state === "stand";
+        image.src = standing ? animal.dataset.sit : animal.dataset.stand;
+        animal.dataset.state = standing ? "sit" : "stand";
+        animal.style.setProperty("--w", standing ? "var(--sit-w)" : "var(--stand-w)");
+        animal.style.setProperty("--current-x", standing ? "var(--x)" : "var(--stand-x, var(--x))");
+        animal.style.setProperty("--current-y", standing ? "var(--y)" : "var(--stand-y, var(--y))");
+        animal.setAttribute("aria-pressed", String(!standing));
+      });
+    });
+
+    (() => {
+      const brandLink = document.querySelector(".brand-link");
+      if (!brandLink) return;
+
+      brandLink.addEventListener("animationend", () => {
+        brandLink.classList.remove("is-jelly");
+      });
+
+      brandLink.addEventListener("click", (event) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const targetUrl = brandLink.href;
+        event.preventDefault();
+        brandLink.classList.remove("is-jelly");
+        void brandLink.offsetWidth;
+        brandLink.classList.add("is-jelly");
+        window.setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 520);
+      });
+    })();
+  </script>
+  <script src="assets/common/footstep-transition.js"></script>
+</body>
+</html>
+
+
+
+
+
+
