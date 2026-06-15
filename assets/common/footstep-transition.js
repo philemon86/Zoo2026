@@ -33,6 +33,13 @@
   const label = transition.querySelector("[data-transition-label]");
   const preloaded = new Set();
   const isFileProtocol = window.location.protocol === "file:";
+  let navigationTimer = 0;
+
+  const resetTransition = () => {
+    window.clearTimeout(navigationTimer);
+    transition.classList.remove("is-active", "is-reverse");
+    label.textContent = "Loading";
+  };
 
   const preloadPage = (href) => {
     if (isFileProtocol) return;
@@ -58,13 +65,13 @@
     const zoneLabel = link.classList.contains("zone")
       ? `前往${link.getAttribute("aria-label") || link.textContent.trim() || "書區"}`
       : "";
+    resetTransition();
     label.textContent = link.dataset.transitionLabel || zoneLabel || link.textContent.trim() || "Loading";
-    transition.classList.remove("is-active");
     transition.classList.toggle("is-reverse", isReverse);
     void transition.offsetWidth;
     transition.classList.add("is-active");
 
-    window.setTimeout(() => {
+    navigationTimer = window.setTimeout(() => {
       window.location.assign(link.href);
     }, 1220);
   };
@@ -84,5 +91,13 @@
       if (event.target.closest("a, button")) return;
       link.click();
     });
+  });
+
+  window.addEventListener("pagehide", resetTransition);
+  window.addEventListener("pageshow", resetTransition);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      resetTransition();
+    }
   });
 })();
