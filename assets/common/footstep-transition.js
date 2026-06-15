@@ -56,15 +56,23 @@
   const activateTransition = (link, event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target === "_blank") return;
     event.preventDefault();
-    preloadPage(link.href);
 
     const targetPath = new URL(link.href, window.location.href).pathname.replace(/\\/g, "/");
     const isReverse =
       targetPath === "/" || targetPath.endsWith("/zoo-map/") || targetPath.endsWith("/index.html");
 
+    if (isReverse) {
+      resetTransition();
+      window.location.assign(link.href);
+      return;
+    }
+
+    preloadPage(link.href);
+
     const zoneLabel = link.classList.contains("zone")
-      ? `前往${link.getAttribute("aria-label") || link.textContent.trim() || "書區"}`
+      ? `???${link.getAttribute("aria-label") || link.textContent.trim() || "???"}`
       : "";
+
     resetTransition();
     label.textContent = link.dataset.transitionLabel || zoneLabel || link.textContent.trim() || "Loading";
     transition.classList.toggle("is-reverse", isReverse);
