@@ -4,15 +4,15 @@
   <!-- Cleaned deploy package: assets reorganized under /assets and /data. -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="/">
+  
   <title>禮品區</title>
-  <link rel="icon" type="image/png" href="assets/common/favicon.png">
-  <link rel="stylesheet" href="assets/common/bear-cursor.css">
-  <link rel="stylesheet" href="assets/common/footstep-transition.css">
+  <link rel="icon" type="image/png" href="../assets/common/favicon.png">
+  <link rel="stylesheet" href="../assets/common/bear-cursor.css">
+  <link rel="stylesheet" href="../assets/common/footstep-transition.css">
   <style>
     :root { --sand: #f7efdf; --card: rgba(255, 252, 245, 0.94); --ink: #3f2d1f; --muted: #7a6247; --line: rgba(95, 70, 41, 0.16); --accent: #8b5e34; --accent-deep: #5e7a44; --shadow: 0 24px 50px rgba(70, 49, 25, 0.16); }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; color: var(--ink); font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif; background: radial-gradient(circle at top, rgba(255, 252, 245, 0.92), rgba(247, 239, 223, 0.82) 42%, rgba(237, 224, 198, 0.96) 100%), #f1e2c6; cursor: url("assets/common/bear-cursor-64.png") 14 2, auto; }
+    body { margin: 0; min-height: 100vh; color: var(--ink); font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif; background: radial-gradient(circle at top, rgba(255, 252, 245, 0.92), rgba(247, 239, 223, 0.82) 42%, rgba(237, 224, 198, 0.96) 100%), #f1e2c6; cursor: url("../assets/common/bear-cursor-64.png") 14 2, auto; }
     a { color: inherit; text-decoration: none; }
     .page { width: min(1180px, calc(100vw - 28px)); margin: 0 auto; padding: 24px 0 56px; }
     .hero { padding: 24px 28px; border: 1px solid var(--line); border-radius: 8px; background: linear-gradient(135deg, rgba(255, 250, 240, 0.96), rgba(245, 236, 216, 0.92)), var(--card); box-shadow: var(--shadow); }
@@ -43,20 +43,20 @@
   <main class="page">
     <section class="hero">
       <div class="top-links">
-        <a class="pill" href="/">返回首頁</a>
-        <a class="pill" href="/gift/">返回禮品區</a>
+        <a class="pill" href="../index.html">返回首頁</a>
+        <a class="pill" href="../gift/index.html">返回禮品區</a>
         <a class="pill primary" href="https://www.pbooks.com.tw/collections/zoogift" target="_blank" rel="noopener">前往下單</a>
       </div>
       <picture class="hero-banner">
-        <source media="(max-width: 767px)" srcset="assets/gift/banners/gift-mobile.jpg">
-        <img src="assets/gift/banners/gift-desktop.jpg" alt="禮品區">
+        <source media="(max-width: 767px)" srcset="../assets/gift/banners/gift-mobile.jpg">
+        <img src="../assets/gift/banners/gift-desktop.jpg" alt="禮品區">
       </picture>
 </section>
     <section id="board" class="board" aria-live="polite"></section>
     <div id="empty" class="empty" hidden>目前沒有商品資料</div>
   </main>
-  <script src="assets/common/footstep-transition.js?v=20260615"></script>
-  <script src="data/gift-products-data.js"></script>
+  <script src="../assets/common/footstep-transition.js?v=20260615"></script>
+  <script src="../data/gift-products-data.js"></script>
   <script>
     (function () {
       const root = document.getElementById("board");

@@ -4,11 +4,11 @@
   <!-- Cleaned deploy package: assets reorganized under /assets and /data. -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="/">
-  <link rel="icon" type="image/png" href="assets/common/favicon.png">
-    <link rel="stylesheet" href="assets/common/bear-cursor.css">
+  
+  <link rel="icon" type="image/png" href="../assets/common/favicon.png">
+    <link rel="stylesheet" href="../assets/common/bear-cursor.css">
   <title>小羊童書區</title>
-  <link rel="stylesheet" href="assets/common/footstep-transition.css">
+  <link rel="stylesheet" href="../assets/common/footstep-transition.css">
   <style>
     :root {
       --ink: #3b3424;
@@ -31,7 +31,7 @@
       min-height: 100vh;
       background:
         linear-gradient(180deg, rgba(255, 253, 239, .18), rgba(237, 241, 215, .74)),
-        url("assets/books/sheep/bg-desktop.png") center top / cover fixed;
+        url("../assets/books/sheep/bg-desktop.png") center top / cover fixed;
     }
     .topbar {
       position: sticky;
@@ -319,6 +319,10 @@
       font-weight: 900;
     }
 
+    .book-discount { position: absolute; left: 50%; bottom: -4px; z-index: 2; display: inline-grid; grid-auto-flow: column; gap: 6px; align-items: center; justify-content: center; width: min(245px, 108%); transform: translateX(-50%); font-size: 13px; font-weight: 900; line-height: 1; }
+    .book-discount span { display: inline-flex; align-items: center; justify-content: center; min-height: 26px; padding: 6px 10px; border-radius: 999px; color: #fff8eb; background: var(--accent); box-shadow: 0 9px 18px rgba(69, 45, 22, .14); white-space: nowrap; }
+    .book-stand:has(.book-discount) { margin-bottom: 28px; }
+
     .dialog-actions {
       display: flex;
       justify-content: flex-end;
@@ -347,7 +351,7 @@
       .page {
         background:
           linear-gradient(180deg, rgba(255, 253, 239, .06), rgba(237, 241, 215, .72)),
-          url("assets/books/sheep/bg-mobile.png") center top / cover fixed;
+          url("../assets/books/sheep/bg-mobile.png") center top / cover fixed;
       }
       .topbar { align-items: flex-start; padding: 12px 14px; }
       .brand-wrap {
@@ -434,77 +438,101 @@
   <main class="page">
     <header class="topbar">
       <div class="brand-wrap">
-        <a class="home-link" href="/" data-footstep-transition data-transition-label="返回首頁" aria-label="返回首頁">
-          <img class="home-logo" src="assets/common/home-logo.png" alt="">
+        <a class="home-link" href="../index.html" data-footstep-transition data-transition-label="返回首頁" aria-label="返回首頁">
+          <img class="home-logo" src="../assets/common/home-logo.png" alt="">
         </a>
         <div class="brand">
           <strong>小羊童書區</strong>
           <span>本版圖畫書／繪本</span>
         </div>
       </div>
-      <a class="nav" href="/zoo-map/" data-footstep-transition data-transition-label="返回地圖">返回地圖</a>
+      <a class="nav" href="../zoo-map/index.html" data-footstep-transition data-transition-label="返回地圖">返回地圖</a>
     </header>
 
     <section class="layout" aria-label="小羊童書區書本展示">
       <div class="game-feature" aria-label="小羊童書區桌遊展示">
-        <img class="sign-sheep" src="assets/books/sheep/sheep-sign.png" alt="">
+        <img class="sign-sheep" src="../assets/books/sheep/sheep-sign.png" alt="">
         <div class="pg16-countdown" data-pg16-countdown aria-live="polite"></div>
         <div class="book-stand">
           <button class="feature-book book-pg16" type="button" data-book-code="PG16" aria-label="查看 PG16 童書好禮大放送">
-            <img src="assets/books/sheep/PG16.png" alt="">
+            <img src="../assets/books/sheep/PG16.png" alt="">
           </button>
-          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">童書好禮大放送</div>
         </div>
       </div>
       <div class="stump-stage" aria-label="樹樁上的童書">
         <div class="book-stand">
           <button class="feature-book book-c286" type="button" data-book-code="C286" aria-label="查看 C286 石頭的祈禱">
-            <img src="assets/books/sheep/C286.png" alt="">
+            <img src="../assets/books/sheep/C286.png" alt="">
           </button>
-          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">石頭的祈禱</div>
+          <div class="book-discount" aria-label="九折特價 NT$ 315">
+            <span>九折</span>
+            <span>特價 NT$ 315</span>
+          </div>
         </div>
         <div class="book-stand">
           <button class="feature-book book-c011" type="button" data-book-code="C011" aria-label="查看 C011 綠手指的秘密">
-            <img src="assets/books/sheep/C011-1.png" alt="">
+            <img src="../assets/books/sheep/C011-1.png" alt="">
           </button>
-          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">綠手指的秘密</div>
+          <div class="book-discount" aria-label="九折特價 NT$ 315">
+            <span>九折</span>
+            <span>特價 NT$ 315</span>
+          </div>
         </div>
         <div class="book-stand">
           <button class="feature-book book-c243" type="button" data-book-code="C243" aria-label="查看 C243 小不點的禱告">
-            <img src="assets/books/sheep/C243-1.png" alt="">
+            <img src="../assets/books/sheep/C243-1.png" alt="">
           </button>
-          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">小不點的禱告</div>
+          <div class="book-discount" aria-label="九折特價 NT$ 270">
+            <span>九折</span>
+            <span>特價 NT$ 270</span>
+          </div>
         </div>
         <div class="book-stand">
           <button class="feature-book book-c253" type="button" data-book-code="C253" aria-label="查看 C253 王子與十大惡人">
-            <img src="assets/books/sheep/C253-1.png" alt="">
+            <img src="../assets/books/sheep/C253-1.png" alt="">
           </button>
-          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">王子與十大惡人</div>
+          <div class="book-discount" aria-label="九折特價 NT$ 315">
+            <span>九折</span>
+            <span>特價 NT$ 315</span>
+          </div>
         </div>
         <div class="book-stand">
           <button class="feature-book book-c263" type="button" data-book-code="C263" aria-label="查看 C263 小不點去聚會">
-            <img src="assets/books/sheep/C263-1.png" alt="">
+            <img src="../assets/books/sheep/C263-1.png" alt="">
           </button>
-          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">小不點去聚會</div>
+          <div class="book-discount" aria-label="九折特價 NT$ 270">
+            <span>九折</span>
+            <span>特價 NT$ 270</span>
+          </div>
         </div>
         <div class="book-stand">
           <button class="feature-book book-c280" type="button" data-book-code="C280" aria-label="查看 C280 155個遇見神的美好時刻">
-            <img src="assets/books/sheep/C280-1.png" alt="">
+            <img src="../assets/books/sheep/C280-1.png" alt="">
           </button>
-          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">155個遇見神的美好時刻</div>
+          <div class="book-discount" aria-label="九折特價 NT$ 270">
+            <span>九折</span>
+            <span>特價 NT$ 270</span>
+          </div>
         </div>
         <div class="book-stand">
           <button class="feature-book book-d009" type="button" data-book-code="D009" aria-label="查看 D009 約拿的故事">
-            <img src="assets/books/sheep/D009.png" alt="">
+            <img src="../assets/books/sheep/D009.png" alt="">
           </button>
-          <img class="stump" src="assets/books/common/stump.png" alt="">
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">約拿的故事</div>
         </div>
       </div>
@@ -523,7 +551,7 @@
     </div>
   </dialog>
 
-  <script src="assets/common/footstep-transition.js?v=20260615"></script>
+  <script src="../assets/common/footstep-transition.js?v=20260615"></script>
   <script>
     (() => {
       const topbar = document.querySelector(".topbar");
