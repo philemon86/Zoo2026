@@ -226,7 +226,7 @@
     .book-label {
       position: absolute;
       left: 50%;
-      bottom: 16px;
+      bottom: 24px;
       z-index: 2;
       width: min(245px, 108%);
       padding: 9px 16px;
@@ -319,7 +319,7 @@
       font-weight: 900;
     }
 
-    .book-discount { position: absolute; left: 50%; bottom: -4px; z-index: 2; display: inline-grid; grid-auto-flow: column; gap: 6px; align-items: center; justify-content: center; width: min(245px, 108%); transform: translateX(-50%); font-size: 13px; font-weight: 900; line-height: 1; }
+    .book-discount { position: absolute; left: 50%; bottom: -12px; z-index: 2; display: inline-grid; grid-auto-flow: column; gap: 6px; align-items: center; justify-content: center; width: min(245px, 108%); transform: translateX(-50%); font-size: 13px; font-weight: 900; line-height: 1; }
     .book-discount span { display: inline-flex; align-items: center; justify-content: center; min-height: 26px; padding: 6px 10px; border-radius: 999px; color: #fff8eb; background: var(--accent); box-shadow: 0 9px 18px rgba(69, 45, 22, .14); white-space: nowrap; }
     .book-stand:has(.book-discount) { margin-bottom: 28px; }
 
@@ -404,7 +404,7 @@
         padding-bottom: 30px;
       }
       .feature-book {
-        bottom: clamp(64px, 18vw, 74px);
+        bottom: clamp(78px, 21vw, 90px);
       }
       .stump {
         width: min(170px, 100%);
@@ -415,7 +415,7 @@
       .book-c263,
       .book-c280,
       .book-c286 {
-        bottom: clamp(64px, 18vw, 74px);
+        bottom: clamp(78px, 21vw, 90px);
         --w: clamp(64px, 18vw, 90px);
       }
       .book-d009 {
@@ -426,10 +426,13 @@
         --w: clamp(112px, 36vw, 160px);
       }
       .book-label {
-        bottom: 10px;
+        bottom: 18px;
         width: min(160px, 108%);
         padding: 7px 10px;
         font-size: 12px;
+      }
+      .book-discount {
+        bottom: -10px;
       }
     }
   </style>
@@ -703,7 +706,6 @@
   </script>
 </body>
 </html>
-
 
 
 
