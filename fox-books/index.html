@@ -203,6 +203,11 @@
             "url": "https://www.pbooks.com.tw/products/c136"
       }
 };
+    const giftChoiceFrom = "末世教會的覺醒、擇一贈送";
+    const giftChoiceTo = "末世教會的覺醒、基督徒的投資與理財擇一贈送";
+    Object.values(books).forEach((book) => {
+      book.price = book.price.replace(giftChoiceFrom, giftChoiceTo);
+    });
     const dialog = document.querySelector("[data-book-dialog]");
     const dialogCode = dialog.querySelector("[data-dialog-code]");
     const dialogTitle = dialog.querySelector("[data-dialog-title]");

@@ -57,9 +57,10 @@
     .promo-banner { width: min(980px, 100%); margin: 14px auto 0; padding: 12px 18px; border: 1px solid rgba(126, 87, 50, .24); border-radius: 999px; color: #5f3d21; background: rgba(255, 249, 235, .92); box-shadow: 0 12px 24px rgba(69, 45, 22, .14); font-size: 16px; font-weight: 900; line-height: 1.45; text-align: center; }
     .book-stand.has-price .book-label { bottom: 34px; }
     .book-price { position: absolute; left: 50%; bottom: -4px; z-index: 2; display: inline-flex; align-items: center; justify-content: center; min-height: 26px; width: min(245px, 108%); padding: 6px 10px; border-radius: 999px; color: #fff8eb; background: #5f704c; box-shadow: 0 9px 18px rgba(69, 45, 22, .14); transform: translateX(-50%); font-size: 13px; font-weight: 900; line-height: 1; white-space: nowrap; }
-    .book-gift { position: absolute; left: 50%; bottom: -38px; z-index: 2; width: max-content; max-width: min(178px, 118%); padding: 7px 10px; border-radius: 8px; color: #5f3d21; background: rgba(255, 249, 235, .95); box-shadow: 0 9px 18px rgba(69, 45, 22, .12); transform: translateX(-50%); font-size: 12px; font-weight: 900; line-height: 1.35; text-align: center; }
+    .book-gift { position: absolute; left: 50%; bottom: -54px; z-index: 2; width: max-content; max-width: min(178px, 118%); padding: 7px 10px; border-radius: 8px; color: #5f3d21; background: rgba(255, 249, 235, .95); box-shadow: 0 9px 18px rgba(69, 45, 22, .12); transform: translateX(-50%); font-size: 12px; font-weight: 900; line-height: 1.35; text-align: center; }
+    .book-stand:has(.book-gift) { margin-bottom: 44px; }
     @media (max-width: 1180px) { .stump-stage { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (max-width: 767px) { body { cursor: auto; } :root { --book-cover-height: clamp(110px, 39.5vw, 150px); } .promo-banner { margin-top: 8px; border-radius: 8px; font-size: 13px; } .book-price { bottom: 0; width: max-content; max-width: min(170px, 112%); min-height: 22px; padding: 5px 7px; font-size: 11px; } .book-gift { position: absolute; left: 50%; bottom: -38px; z-index: 2; width: max-content; max-width: min(178px, 118%); padding: 7px 10px; border-radius: 8px; color: #5f3d21; background: rgba(255, 249, 235, .95); box-shadow: 0 9px 18px rgba(69, 45, 22, .12); transform: translateX(-50%); font-size: 12px; font-weight: 900; line-height: 1.35; text-align: center; } .book-stand:has(.book-gift) { margin-bottom: 28px; } .page { background: linear-gradient(180deg, rgba(255, 249, 233, .16), rgba(239, 225, 199, .88)), url("../assets/books/owl/bg-mobile.png") center top / cover fixed; } .topbar { align-items: flex-start; padding: 12px 14px; } .brand-wrap { gap: 9px; } .home-link { width: 54px; height: 54px; } .home-logo { width: 46px; height: 46px; } .brand strong { font-size: 24px; } .brand span { font-size: 12px; } .nav { min-height: 34px; padding: 7px 12px; font-size: 14px; } .layout { width: calc(100% - 20px); padding: 6px 0 32px; } .stump-stage { width: 100%; margin: -8px auto 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 8px; } .book-stand { min-height: clamp(250px, 72vw, 330px); padding-bottom: 26px; } .feature-book { bottom: clamp(70px, 22vw, 96px); width: auto; height: var(--book-cover-height); } .stump { width: min(180px, 116%); } .book-label { bottom: 28px; width: max-content; max-width: min(170px, 112%); padding: 7px 9px; font-size: 12px; line-height: 1.22; } .book-discount { bottom: 0; width: max-content; max-width: min(170px, 112%); gap: 4px; font-size: 11px; } .book-discount span { min-height: 22px; padding: 5px 7px; } .book-price { width: max-content; max-width: min(170px, 112%); } .book-gift { width: max-content; max-width: min(178px, 118%); } }
+    @media (max-width: 767px) { body { cursor: auto; } :root { --book-cover-height: clamp(110px, 39.5vw, 150px); } .promo-banner { margin-top: 8px; border-radius: 8px; font-size: 13px; } .book-price { bottom: 0; width: max-content; max-width: min(170px, 112%); min-height: 22px; padding: 5px 7px; font-size: 11px; } .book-gift { position: absolute; left: 50%; bottom: -54px; z-index: 2; width: max-content; max-width: min(178px, 118%); padding: 7px 10px; border-radius: 8px; color: #5f3d21; background: rgba(255, 249, 235, .95); box-shadow: 0 9px 18px rgba(69, 45, 22, .12); transform: translateX(-50%); font-size: 12px; font-weight: 900; line-height: 1.35; text-align: center; } .book-stand:has(.book-gift) { margin-bottom: 44px; } .page { background: linear-gradient(180deg, rgba(255, 249, 233, .16), rgba(239, 225, 199, .88)), url("../assets/books/owl/bg-mobile.png") center top / cover fixed; } .topbar { align-items: flex-start; padding: 12px 14px; } .brand-wrap { gap: 9px; } .home-link { width: 54px; height: 54px; } .home-logo { width: 46px; height: 46px; } .brand strong { font-size: 24px; } .brand span { font-size: 12px; } .nav { min-height: 34px; padding: 7px 12px; font-size: 14px; } .layout { width: calc(100% - 20px); padding: 6px 0 32px; } .stump-stage { width: 100%; margin: -8px auto 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 8px; } .book-stand { min-height: clamp(250px, 72vw, 330px); padding-bottom: 26px; } .feature-book { bottom: clamp(70px, 22vw, 96px); width: auto; height: var(--book-cover-height); } .stump { width: min(180px, 116%); } .book-label { bottom: 28px; width: max-content; max-width: min(170px, 112%); padding: 7px 9px; font-size: 12px; line-height: 1.22; } .book-discount { bottom: 0; width: max-content; max-width: min(170px, 112%); gap: 4px; font-size: 11px; } .book-discount span { min-height: 22px; padding: 5px 7px; } .book-price { width: max-content; max-width: min(170px, 112%); } .book-gift { width: max-content; max-width: min(178px, 118%); } }
     @media (max-width: 420px) { .book-label { font-size: 11px; } .book-discount { font-size: 10px; } .book-discount span { padding: 5px 6px; } }
   </style>
 </head>
@@ -426,6 +427,11 @@
             "url": "https://www.pbooks.com.tw/products/c222"
       }
 };
+    const giftChoiceFrom = "末世教會的覺醒、擇一贈送";
+    const giftChoiceTo = "末世教會的覺醒、基督徒的投資與理財擇一贈送";
+    Object.values(books).forEach((book) => {
+      book.price = book.price.replace(giftChoiceFrom, giftChoiceTo);
+    });
     const dialog = document.querySelector("[data-book-dialog]");
     const dialogCode = dialog.querySelector("[data-dialog-code]");
     const dialogTitle = dialog.querySelector("[data-dialog-title]");
@@ -453,7 +459,5 @@
   </script>
 </body>
 </html>
-
-
 
 
