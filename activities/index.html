@@ -266,6 +266,138 @@
       outline-offset: 2px;
     }
 
+    .activity-tab.is-sale {
+      color: #fffaf0;
+      border-color: rgba(95, 112, 76, .14);
+      background: linear-gradient(135deg, #5f704c, #82934d);
+      box-shadow: 0 12px 26px rgba(79, 65, 35, .14);
+    }
+
+    .sale-intro {
+      margin: 0 0 20px;
+      padding: 14px 16px;
+      border-left: 5px solid var(--leaf);
+      border-radius: 0 10px 10px 0;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .56);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-weight: 800;
+      line-height: 1.65;
+    }
+
+    .zone-shortcuts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 18px;
+    }
+
+    .zone-shortcut,
+    .zone-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 7px 12px;
+      border: 1px solid rgba(95, 112, 76, .22);
+      border-radius: 999px;
+      color: var(--leaf);
+      background: rgba(255, 255, 255, .64);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .zone-shortcut:hover,
+    .zone-shortcut:focus-visible,
+    .zone-link:hover,
+    .zone-link:focus-visible {
+      transform: translateY(-1px);
+      background: #fffdf6;
+      box-shadow: 0 8px 18px rgba(79, 65, 35, .1);
+      outline: none;
+    }
+
+    .sale-zones {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .sale-zone {
+      scroll-margin-top: 18px;
+      padding: 17px;
+      border: 1px solid rgba(125, 96, 56, .16);
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .7), rgba(255, 249, 235, .65));
+      box-shadow: 0 10px 22px rgba(79, 65, 35, .07);
+    }
+
+    .sale-zone-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .sale-zone h3 {
+      margin: 0;
+      color: var(--brown);
+      font-size: 20px;
+      line-height: 1.3;
+      letter-spacing: .04em;
+    }
+
+    .sale-rule {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .sale-zone details {
+      border-top: 1px solid rgba(125, 96, 56, .13);
+      padding-top: 10px;
+    }
+
+    .sale-zone summary {
+      color: var(--ink);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .sale-list {
+      display: grid;
+      gap: 7px;
+      margin: 11px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .sale-list li {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: baseline;
+      padding: 7px 0;
+      border-bottom: 1px dashed rgba(125, 96, 56, .15);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .sale-list li:last-child { border-bottom: 0; }
+    .sale-code { color: var(--brown); font-weight: 900; }
+    .sale-title { font-weight: 800; }
+    .sale-price { color: var(--leaf); font-size: 13px; font-weight: 900; white-space: nowrap; }
+
     @keyframes panelFade {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
@@ -319,6 +451,7 @@
       .deadline-time { font-size: 14px; }
       .activity-list { grid-template-columns: 1fr; }
       .notice-list { grid-template-columns: 1fr; }
+      .sale-zones { grid-template-columns: 1fr; }
       .notice-card { min-height: auto; }
       .activity-list li { grid-template-columns: 86px 1fr; }
       .activity-date { font-size: 15px; }
@@ -345,7 +478,7 @@
       <div class="activity-tabs" aria-label="活動分類">
         <button class="activity-tab is-active" type="button" data-activity-tab="bookfair" aria-controls="bookfair-panel" aria-expanded="true">書展活動</button>
         <button class="activity-tab is-featured" type="button" data-activity-tab="notice" aria-controls="notice-panel" aria-expanded="false">重點活動</button>
-        <a class="activity-tab" href="../zoo-map/index.html" data-footstep-transition data-transition-label="前往書本特價">書本特價</a>
+        <button class="activity-tab is-sale" type="button" data-activity-tab="sale" aria-controls="sale-panel" aria-expanded="false">重點特價</button>
       </div>
 
       <div class="activity-panel is-active" id="bookfair-panel" data-activity-panel="bookfair">
@@ -388,6 +521,107 @@
             <p class="notice-copy">活動期間將推出書本特價與重點優惠，歡迎把握選購機會。</p>
           </li>
         </ul>
+      </div>
+
+      <div class="activity-panel" id="sale-panel" data-activity-panel="sale">
+        <h2 class="activity-heading">重點特價</h2>
+        <p class="activity-note">依動物分區整理，點選分區即可前往對應書區選購</p>
+        <p class="sale-intro">優惠內容依 <strong>書本廣告.xlsx</strong> 整理。每一區先呈現活動規則；展開「查看書單」即可查看指定書籍與優惠價格。</p>
+        <nav class="zone-shortcuts" aria-label="重點特價分區導覽">
+          <a class="zone-shortcut" href="#fox-sale">狐狸少年區</a>
+          <a class="zone-shortcut" href="#giraffe-sale">長頸鹿大人區</a>
+          <a class="zone-shortcut" href="#kangaroo-sale">袋鼠家長區</a>
+          <a class="zone-shortcut" href="#owl-sale">貓頭鷹教員區</a>
+          <a class="zone-shortcut" href="#sheep-sale">小羊童書區</a>
+          <a class="zone-shortcut" href="#bear-sale">熊新書區</a>
+        </nav>
+        <div class="sale-zones">
+          <section class="sale-zone" id="fox-sale">
+            <div class="sale-zone-head"><h3>狐狸少年區</h3><a class="zone-link" href="../fox-books/" data-footstep-transition data-transition-label="前往狐狸少年區">前往書區</a></div>
+            <p class="sale-rule">指定書籍多買多送書；《進入聖經的世界》79 折，買就送實用釋經學。</p>
+            <details><summary>查看書單（5 本）</summary><ul class="sale-list">
+              <li><span class="sale-code">C187</span><span class="sale-title">天國數學的學思行</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C268</span><span class="sale-title">青心吐義1</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C278</span><span class="sale-title">青心吐義2</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C221</span><span class="sale-title">青春，溫柔以對</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C136</span><span class="sale-title">進入聖經的世界</span><span class="sale-price">79折 NT$632</span></li>
+            </ul></details>
+          </section>
+          <section class="sale-zone" id="giraffe-sale">
+            <div class="sale-zone-head"><h3>長頸鹿大人區</h3><a class="zone-link" href="../giraffe-books/" data-footstep-transition data-transition-label="前往長頸鹿大人區">前往書區</a></div>
+            <p class="sale-rule">指定書籍多買多送書；另有 5 本大特價 NT$99。</p>
+            <details><summary>查看書單（12 本）</summary><ul class="sale-list">
+              <li><span class="sale-code">C003</span><span class="sale-title">末世教會的覺醒</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C276</span><span class="sale-title">如何戰勝苦難</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C157</span><span class="sale-title">我親眼看見神增訂版</span><span class="sale-price">定價 NT$350</span></li>
+              <li><span class="sale-code">C284</span><span class="sale-title">走入信仰的深處</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C269</span><span class="sale-title">來自天國的 WIFI</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C267</span><span class="sale-title">神蹟的教訓</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C266</span><span class="sale-title">婚姻，相疼正好</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C168</span><span class="sale-title">以色列的戰車馬兵</span><span class="sale-price">大特價 NT$99</span></li>
+              <li><span class="sale-code">C172</span><span class="sale-title">暮蟬低語</span><span class="sale-price">大特價 NT$99</span></li>
+              <li><span class="sale-code">C183</span><span class="sale-title">洞裏乾坤</span><span class="sale-price">大特價 NT$99</span></li>
+              <li><span class="sale-code">C262</span><span class="sale-title">唯一的救主耶穌</span><span class="sale-price">大特價 NT$99</span></li>
+              <li><span class="sale-code">C274</span><span class="sale-title">信仰的奧秘</span><span class="sale-price">大特價 NT$99</span></li>
+            </ul></details>
+          </section>
+          <section class="sale-zone" id="kangaroo-sale">
+            <div class="sale-zone-head"><h3>袋鼠家長區</h3><a class="zone-link" href="../kangaroo-books/" data-footstep-transition data-transition-label="前往袋鼠家長區">前往書區</a></div>
+            <p class="sale-rule">指定書籍多買多送書。</p>
+            <details><summary>查看書單（2 本）</summary><ul class="sale-list">
+              <li><span class="sale-code">C182</span><span class="sale-title">給爸媽的12堂聖經教養課</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C288</span><span class="sale-title">連線卻失聯</span><span class="sale-price">定價 NT$350</span></li>
+            </ul></details>
+          </section>
+          <section class="sale-zone" id="owl-sale">
+            <div class="sale-zone-head"><h3>貓頭鷹教員區</h3><a class="zone-link" href="../owl-books/" data-footstep-transition data-transition-label="前往貓頭鷹教員區">前往書區</a></div>
+            <p class="sale-rule">15 本指定書籍多買多送書；《舊約聖經中的戰爭》買就送 C122 瑪拉基書。</p>
+            <details><summary>查看書單（17 本）</summary><ul class="sale-list">
+              <li><span class="sale-code">C259</span><span class="sale-title">杏樹枝10 四福音書</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C260</span><span class="sale-title">杏樹枝11 徒-腓</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C261</span><span class="sale-title">杏樹枝12 西-啟</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C224</span><span class="sale-title">杏樹枝1 創-出</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C238</span><span class="sale-title">杏樹枝3 書-士-得-撒上下</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C240</span><span class="sale-title">杏樹枝4 王上下-代上下</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C242</span><span class="sale-title">杏樹枝5 拉-詩30</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C244</span><span class="sale-title">杏樹枝6 詩31-150</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C249</span><span class="sale-title">杏樹枝7 箴-傳-歌-賽</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C251</span><span class="sale-title">杏樹枝8 耶-哀-結</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C254</span><span class="sale-title">杏樹枝9 但以理書-小先知書</span><span class="sale-price">定價 NT$300</span></li>
+              <li><span class="sale-code">C279</span><span class="sale-title">會幕的傳承</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C084</span><span class="sale-title">禱告的壇</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C199</span><span class="sale-title">靈界辨正</span><span class="sale-price">定價 NT$250</span></li>
+              <li><span class="sale-code">C265</span><span class="sale-title">刀出鞘</span><span class="sale-price">定價 NT$350</span></li>
+              <li><span class="sale-code">C215</span><span class="sale-title">舊約聖經中的戰爭</span><span class="sale-price">定價 NT$800</span></li>
+              <li><span class="sale-code">C122</span><span class="sale-title">瑪拉基書中人與神爭辯</span><span class="sale-price">9折 NT$315</span></li>
+            </ul></details>
+          </section>
+          <section class="sale-zone" id="sheep-sale">
+            <div class="sale-zone-head"><h3>小羊童書區</h3><a class="zone-link" href="../sheep-books/" data-footstep-transition data-transition-label="前往小羊童書區">前往書區</a></div>
+            <p class="sale-rule">繪本全面 9 折，購買繪本即贈亞伯拉罕的桌遊一組。</p>
+            <details><summary>查看書單（6 本）</summary><ul class="sale-list">
+              <li><span class="sale-code">C011</span><span class="sale-title">綠手指的秘密</span><span class="sale-price">9折 NT$315</span></li>
+              <li><span class="sale-code">C286</span><span class="sale-title">石頭的祈禱</span><span class="sale-price">9折 NT$315</span></li>
+              <li><span class="sale-code">C253</span><span class="sale-title">王子與十大惡人</span><span class="sale-price">9折 NT$315</span></li>
+              <li><span class="sale-code">C243</span><span class="sale-title">小不點的禱告</span><span class="sale-price">9折 NT$270</span></li>
+              <li><span class="sale-code">C263</span><span class="sale-title">小不點去聚會</span><span class="sale-price">9折 NT$270</span></li>
+              <li><span class="sale-code">C280</span><span class="sale-title">155個遇見神的美好時刻</span><span class="sale-price">9折 NT$270</span></li>
+            </ul></details>
+          </section>
+          <section class="sale-zone" id="bear-sale">
+            <div class="sale-zone-head"><h3>熊新書區</h3><a class="zone-link" href="../bear-books/" data-footstep-transition data-transition-label="前往熊新書區">前往書區</a></div>
+            <p class="sale-rule">指定新書全面 79 折。</p>
+            <details><summary>查看書單（7 本）</summary><ul class="sale-list">
+              <li><span class="sale-code">C294</span><span class="sale-title">重建聖殿的勸勉</span><span class="sale-price">79折 NT$237</span></li>
+              <li><span class="sale-code">C295</span><span class="sale-title">物理學主裡學</span><span class="sale-price">79折 NT$277</span></li>
+              <li><span class="sale-code">C290</span><span class="sale-title">洗禮論-教義專論</span><span class="sale-price">79折 NT$277</span></li>
+              <li><span class="sale-code">C291</span><span class="sale-title">路得記講壇</span><span class="sale-price">79折 NT$198</span></li>
+              <li><span class="sale-code">C292</span><span class="sale-title">使徒行傳釋義</span><span class="sale-price">79折 NT$395</span></li>
+              <li><span class="sale-code">C293</span><span class="sale-title">親身體會神的大愛</span><span class="sale-price">79折 NT$277</span></li>
+              <li><span class="sale-code">C002</span><span class="sale-title">好好接住你</span><span class="sale-price">79折 NT$198</span></li>
+            </ul></details>
+          </section>
+        </div>
       </div>
     </section>
   </main>
