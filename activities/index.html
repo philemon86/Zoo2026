@@ -397,6 +397,15 @@
     .sale-price { color: var(--leaf); font-size: 13px; font-weight: 900; white-space: nowrap; }
     .sale-badge { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; padding: 4px 8px; border-radius: 999px; color: #fffaf0; background: #5f704c; font-size: 12px; font-weight: 900; white-space: nowrap; }
     .sale-badge.is-special { background: #a45e2c; }
+    button.sale-badge { border: 0; font: inherit; cursor: pointer; }
+    .sale-price.is-pill { min-height: 24px; padding: 4px 8px; border-radius: 999px; color: #fffaf0; background: #7d6038; font-size: 12px; }
+    .sale-badge.is-discount { background: #8a6332; }
+    .promo-dialog { width: min(440px, calc(100% - 32px)); padding: 0; border: 0; border-radius: 14px; background: transparent; }
+    .promo-dialog::backdrop { background: rgba(45, 31, 16, .42); }
+    .promo-dialog-card { padding: 24px; border: 1px solid rgba(125, 96, 56, .2); border-radius: 14px; color: var(--ink); background: #fffaf0; box-shadow: 0 24px 52px rgba(45, 31, 16, .26); }
+    .promo-dialog-card h2 { margin: 0 0 12px; color: var(--brown); font-size: 23px; }
+    .promo-dialog-card p { margin: 0 0 20px; color: var(--muted); font-weight: 800; line-height: 1.7; }
+    .promo-dialog-close { min-height: 38px; padding: 8px 16px; border: 0; border-radius: 999px; color: #fffaf0; background: var(--leaf); font: inherit; font-weight: 900; cursor: pointer; }
 
     @keyframes panelFade {
       from { opacity: 0; transform: translateY(6px); }
@@ -456,6 +465,12 @@
       .activity-list li { grid-template-columns: 86px 1fr; }
       .activity-date { font-size: 15px; }
       .activity-name { font-size: 16px; }
+      .sale-list li { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; }
+      .sale-list li > .sale-code { grid-column: 1; grid-row: 1; }
+      .sale-list li > .sale-title { grid-column: 1; grid-row: 2; }
+      .sale-list li > .sale-badge { grid-column: 2; grid-row: 1; }
+      .sale-list li > .sale-price { grid-column: 2; grid-row: 2; align-self: end; }
+      .sale-list li > .sale-price:nth-child(3) { grid-row: 1 / span 2; }
     }
   </style>
 </head>
@@ -614,6 +629,14 @@
     </section>
   </main>
 
+  <dialog class="promo-dialog" data-multibuy-dialog>
+    <div class="promo-dialog-card">
+      <h2>多買多送書</h2>
+      <p>購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。</p>
+      <button class="promo-dialog-close" type="button" data-multibuy-close>關閉</button>
+    </div>
+  </dialog>
+
   <script>
     document.querySelectorAll('[data-activity-tab]').forEach((tab) => {
       tab.addEventListener('click', () => {
@@ -642,6 +665,7 @@
     };
     const multibuyCodes = new Set(["C187", "C268", "C278", "C221", "C003", "C276", "C157", "C284", "C269", "C267", "C266", "C246", "C195", "C182", "C288", "C264", "C259", "C260", "C261", "C224", "C238", "C240", "C242", "C244", "C249", "C251", "C254", "C279", "C084", "C199", "C265"]);
     const special99Codes = new Set(["C168", "C172", "C183", "C262", "C274"]);
+    const multibuyDialog = document.querySelector('[data-multibuy-dialog]');
 
     document.querySelectorAll('.sale-list li').forEach((item) => {
       const code = item.querySelector('.sale-code');
@@ -651,12 +675,22 @@
       const productCode = code.textContent.trim();
       const productUrl = productUrls[productCode] || `https://www.pbooks.com.tw/products/${productCode.toLowerCase()}`;
 
-      if (multibuyCodes.has(productCode) || special99Codes.has(productCode)) {
-        const badge = document.createElement('span');
-        badge.className = `sale-badge${special99Codes.has(productCode) ? ' is-special' : ''}`;
-        badge.textContent = special99Codes.has(productCode) ? '99元大特價' : '多買多送書';
+      const isMultibuy = multibuyCodes.has(productCode);
+      const isSpecial99 = special99Codes.has(productCode);
+      const isDiscount = item.querySelector('.sale-price').textContent.trim().startsWith('79折');
+
+      if (isMultibuy || isSpecial99 || isDiscount) {
+        const badge = document.createElement(isMultibuy ? 'button' : 'span');
+        if (isMultibuy) badge.type = 'button';
+        badge.className = `sale-badge${isSpecial99 ? ' is-special' : ''}${isDiscount ? ' is-discount' : ''}`;
+        badge.textContent = isSpecial99 ? '99元大特價' : isDiscount ? '79折特價' : '多買多送書';
+        if (isMultibuy) badge.addEventListener('click', () => multibuyDialog.showModal());
         item.querySelector('.sale-price').before(badge);
       }
+
+      const price = item.querySelector('.sale-price');
+      price.classList.add('is-pill');
+      price.textContent = price.textContent.replace(/^79折\s*/, '特價 ');
 
       [code, title].forEach((element) => {
         const link = document.createElement('a');
@@ -668,6 +702,8 @@
         element.replaceWith(link);
       });
     });
+
+    document.querySelector('[data-multibuy-close]').addEventListener('click', () => multibuyDialog.close());
 
     const countdownEl = document.getElementById('deadline-countdown');
     const deadline = new Date('2026-09-30T23:59:59+08:00').getTime();
