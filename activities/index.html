@@ -310,12 +310,17 @@
       transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
     }
 
+    .zone-shortcut { color: #fffaf0; border-color: rgba(73, 88, 57, .2); background: linear-gradient(135deg, #5f704c, #7f925a); box-shadow: 0 8px 17px rgba(79, 65, 35, .13); }
+    .zone-shortcut:nth-child(3n + 2) { background: linear-gradient(135deg, #8a6332, #aa7a3e); }
+    .zone-shortcut:nth-child(3n) { color: #5a421f; background: linear-gradient(135deg, #f1dda0, #f8eabe); }
+
     .zone-shortcut:hover,
     .zone-shortcut:focus-visible,
     .zone-link:hover,
     .zone-link:focus-visible {
       transform: translateY(-1px);
-      background: #fffdf6;
+      color: #5a421f;
+      background: #fff4ce;
       box-shadow: 0 8px 18px rgba(79, 65, 35, .1);
       outline: none;
     }
@@ -516,12 +521,12 @@
       <div class="activity-panel is-active" id="sale-panel" data-activity-panel="sale">
         <p class="sale-intro">五大重點優惠：新書79折、多買多送書、99元大特價、買後背包/聖經贈書、買繪本送桌遊</p>
         <nav class="zone-shortcuts" aria-label="重點特價分區導覽">
+          <a class="zone-shortcut" href="#bear-sale">熊新a書區</a>
           <a class="zone-shortcut" href="#fox-sale">狐狸少年區</a>
           <a class="zone-shortcut" href="#giraffe-sale">長頸鹿大人區</a>
           <a class="zone-shortcut" href="#kangaroo-sale">袋鼠家長區</a>
           <a class="zone-shortcut" href="#owl-sale">貓頭鷹教員區</a>
           <a class="zone-shortcut" href="#sheep-sale">小羊童書區</a>
-          <a class="zone-shortcut" href="#bear-sale">熊新a書區</a>
           <a class="zone-shortcut" href="#goodies-sale">精選好禮</a>
         </nav>
         <div class="sale-zones">
@@ -667,6 +672,9 @@
     const multibuyCodes = new Set(["C187", "C268", "C278", "C221", "C003", "C276", "C157", "C284", "C269", "C267", "C266", "C246", "C195", "C182", "C288", "C264", "C259", "C260", "C261", "C224", "C238", "C240", "C242", "C244", "C249", "C251", "C254", "C279", "C084", "C199", "C265"]);
     const special99Codes = new Set(["C168", "C172", "C183", "C262", "C274"]);
     const multibuyDialog = document.querySelector('[data-multibuy-dialog]');
+    const saleZones = document.querySelector('.sale-zones');
+    const bearSale = document.querySelector('#bear-sale');
+    if (saleZones && bearSale) saleZones.prepend(bearSale);
 
     document.querySelectorAll('.sale-list li').forEach((item) => {
       const code = item.querySelector('.sale-code');
