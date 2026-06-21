@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="../assets/common/favicon.png">
   <link rel="stylesheet" href="../assets/common/bear-cursor.css">
   <link rel="stylesheet" href="../assets/common/footstep-transition.css">
-  <title>各類活動告知</title>
+  <title>閱讀動物園活動內容</title>
   <style>
     :root {
       --ink: #33473d;
@@ -388,6 +388,9 @@
     .sale-list li:last-child { border-bottom: 0; }
     .sale-code { color: var(--brown); font-weight: 900; }
     .sale-title { font-weight: 800; }
+    .sale-product-link { color: inherit; text-decoration: none; }
+    .sale-product-link:hover,
+    .sale-product-link:focus-visible { color: var(--leaf); text-decoration: underline; outline: none; }
     .sale-price { color: var(--leaf); font-size: 13px; font-weight: 900; white-space: nowrap; }
 
     @keyframes panelFade {
@@ -463,17 +466,16 @@
 
     <section class="hero" aria-label="活動資訊">
       <p class="kicker">EVENT NOTICE</p>
-      <h1>各類活動告知</h1>
+      <h1>閱讀動物園活動內容</h1>
     </section>
 
     <section class="activity-group" aria-label="最新活動分類">
       <div class="activity-tabs" aria-label="活動分類">
-        <button class="activity-tab is-active" type="button" data-activity-tab="bookfair" aria-controls="bookfair-panel" aria-expanded="true">書展活動</button>
-        <button class="activity-tab is-featured" type="button" data-activity-tab="notice" aria-controls="notice-panel" aria-expanded="false">重點活動</button>
-        <button class="activity-tab is-sale" type="button" data-activity-tab="sale" aria-controls="sale-panel" aria-expanded="false">重點特價</button>
+        <button class="activity-tab is-sale is-active" type="button" data-activity-tab="sale" aria-controls="sale-panel" aria-expanded="true">重點特價</button>
+        <button class="activity-tab" type="button" data-activity-tab="bookfair" aria-controls="bookfair-panel" aria-expanded="false">書展活動</button>
       </div>
 
-      <div class="activity-panel is-active" id="bookfair-panel" data-activity-panel="bookfair">
+      <div class="activity-panel" id="bookfair-panel" data-activity-panel="bookfair">
         <h2 class="activity-heading">暑期書展活動</h2>
         <p class="activity-note">歡迎就近前往</p>
         <ul class="activity-list">
@@ -488,37 +490,10 @@
         </ul>
       </div>
 
-      <div class="activity-panel" id="notice-panel" data-activity-panel="notice">
-        <h2 class="activity-heading">重點活動公告</h2>
-        <p class="activity-note">近期消息、場次異動與重要提醒</p>
-        <ul class="notice-list">
-          <li class="notice-card">
-            <span class="notice-tag">重要提醒</span>
-            <h3 class="notice-title">9/30 活動截止倒數</h3>
-            <p class="notice-copy">請留意活動截止時間，並於期限前完成相關報名、選購或確認事項。</p>
-          </li>
-          <li class="notice-card">
-            <span class="notice-tag">書展消息</span>
-            <h3 class="notice-title">暑期書展陸續展開</h3>
-            <p class="notice-copy">各地書展將依日期進行，歡迎就近前往，也請留意最新場次安排。</p>
-          </li>
-          <li class="notice-card">
-            <span class="notice-tag">現場提醒</span>
-            <h3 class="notice-title">活動當日請留意現場公告</h3>
-            <p class="notice-copy">若遇時間、地點、攤位或服務內容調整，將以現場公告為準。</p>
-          </li>
-          <li class="notice-card">
-            <span class="notice-tag">優惠提醒</span>
-            <h3 class="notice-title">特價活動同步進行</h3>
-            <p class="notice-copy">活動期間將推出書本特價與重點優惠，歡迎把握選購機會。</p>
-          </li>
-        </ul>
-      </div>
-
-      <div class="activity-panel" id="sale-panel" data-activity-panel="sale">
+      <div class="activity-panel is-active" id="sale-panel" data-activity-panel="sale">
         <h2 class="activity-heading">重點特價</h2>
         <p class="activity-note">依動物分區整理，點選分區即可前往對應書區選購</p>
-        <p class="sale-intro">優惠內容依 <strong>書本廣告.xlsx</strong> 整理。每一區完整列出指定書籍與優惠價格。多買多送書可任選贈送 <strong>C264 新歌背後的樂章、C246 響起福音的號角、C003 末世教會的覺醒、C195 基督徒的投資與理財</strong>，可累計贈送。</p>
+        <p class="sale-intro">五大重點優惠：新書79折、多買多送書、99元大特價、買後背包/聖經贈書、買繪本送桌遊</p>
         <nav class="zone-shortcuts" aria-label="重點特價分區導覽">
           <a class="zone-shortcut" href="#fox-sale">狐狸少年區</a>
           <a class="zone-shortcut" href="#giraffe-sale">長頸鹿大人區</a>
@@ -531,7 +506,7 @@
         <div class="sale-zones">
           <section class="sale-zone" id="fox-sale">
             <div class="sale-zone-head"><h3>狐狸少年區</h3><a class="zone-link" href="../fox-books/" data-footstep-transition data-transition-label="前往狐狸少年區">前往書區</a></div>
-            <p class="sale-rule">指定書籍多買多送書；《進入聖經的世界》79 折，買就送實用釋經學。</p>
+            <p class="sale-rule">讓孩子從青少年就開始多看書，指定書籍買一送一；《進入聖經的世界》79 折，買再送實用釋經學。</p>
             <div class="sale-book-list"><ul class="sale-list">
               <li><span class="sale-code">C187</span><span class="sale-title">天國數學的學思行</span><span class="sale-price">定價 NT$250</span></li>
               <li><span class="sale-code">C268</span><span class="sale-title">青心吐義1</span><span class="sale-price">定價 NT$250</span></li>
@@ -542,7 +517,7 @@
           </section>
           <section class="sale-zone" id="giraffe-sale">
             <div class="sale-zone-head"><h3>長頸鹿大人區</h3><a class="zone-link" href="../giraffe-books/" data-footstep-transition data-transition-label="前往長頸鹿大人區">前往書區</a></div>
-            <p class="sale-rule">指定書籍多買多送書；另有 5 本大特價 NT$99。</p>
+            <p class="sale-rule">成年人也要多讀書，指定書籍買一送一，多本書籍大特價99元。</p>
             <div class="sale-book-list"><ul class="sale-list">
               <li><span class="sale-code">C003</span><span class="sale-title">末世教會的覺醒</span><span class="sale-price">定價 NT$250</span></li>
               <li><span class="sale-code">C276</span><span class="sale-title">如何戰勝苦難</span><span class="sale-price">定價 NT$300</span></li>
@@ -562,7 +537,7 @@
           </section>
           <section class="sale-zone" id="kangaroo-sale">
             <div class="sale-zone-head"><h3>袋鼠家長區</h3><a class="zone-link" href="../kangaroo-books/" data-footstep-transition data-transition-label="前往袋鼠家長區">前往書區</a></div>
-            <p class="sale-rule">C182、C288、C264 多買多送書；C293、C291 79 折。</p>
+            <p class="sale-rule">家長推薦好書，指定書籍買一送一。</p>
             <div class="sale-book-list"><ul class="sale-list">
               <li><span class="sale-code">C182</span><span class="sale-title">給爸媽的12堂聖經教養課</span><span class="sale-price">定價 NT$250</span></li>
               <li><span class="sale-code">C288</span><span class="sale-title">連線卻失聯</span><span class="sale-price">定價 NT$350</span></li>
@@ -573,7 +548,7 @@
           </section>
           <section class="sale-zone" id="owl-sale">
             <div class="sale-zone-head"><h3>貓頭鷹教員區</h3><a class="zone-link" href="../owl-books/" data-footstep-transition data-transition-label="前往貓頭鷹教員區">前往書區</a></div>
-            <p class="sale-rule">15 本指定書籍多買多送書；《舊約聖經中的戰爭》買就送 C122 瑪拉基書。</p>
+            <p class="sale-rule">針對教員推薦好書，指定書籍買一送一；購買《舊約聖經中的戰爭》買就送 瑪拉基書中人與神爭辯。</p>
             <div class="sale-book-list"><ul class="sale-list">
               <li><span class="sale-code">C259</span><span class="sale-title">杏樹枝10 四福音書</span><span class="sale-price">定價 NT$300</span></li>
               <li><span class="sale-code">C260</span><span class="sale-title">杏樹枝11 徒-腓</span><span class="sale-price">定價 NT$300</span></li>
@@ -621,7 +596,7 @@
           </section>
           <section class="sale-zone" id="goodies-sale">
             <div class="sale-zone-head"><h3>精選好禮</h3></div>
-            <p class="sale-rule">購買以下指定背包或聖經，即可任選贈送 C288《連線卻失聯》或 C157《我親眼看見神》。</p>
+            <p class="sale-rule">購買以下指定背包或聖經，即可任選贈送《連線卻失聯》或《我親眼看見神》。</p>
             <div class="sale-book-list"><ul class="sale-list">
               <li><span class="sale-code">PB31</span><span class="sale-title">雙背喜樂包－奶油酥</span><span class="sale-price">售價 NT$799</span></li>
               <li><span class="sale-code">PB32</span><span class="sale-title">雙背喜樂包－芝麻糊</span><span class="sale-price">售價 NT$799</span></li>
@@ -649,6 +624,31 @@
         document.querySelectorAll('[data-activity-panel]').forEach((panel) => {
           panel.classList.toggle('is-active', panel.dataset.activityPanel === target);
         });
+      });
+    });
+
+    const productUrls = {
+      PB31: "https://www.pbooks.com.tw/products/pb31-pb32",
+      PB32: "https://www.pbooks.com.tw/products/pb31-pb32",
+      CBT7915: "https://www.pbooks.com.tw/products/cbt7915"
+    };
+
+    document.querySelectorAll('.sale-list li').forEach((item) => {
+      const code = item.querySelector('.sale-code');
+      const title = item.querySelector('.sale-title');
+      if (!code || !title) return;
+
+      const productCode = code.textContent.trim();
+      const productUrl = productUrls[productCode] || `https://www.pbooks.com.tw/products/${productCode.toLowerCase()}`;
+
+      [code, title].forEach((element) => {
+        const link = document.createElement('a');
+        link.className = `sale-product-link ${element.className}`;
+        link.href = productUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = element.textContent;
+        element.replaceWith(link);
       });
     });
 
