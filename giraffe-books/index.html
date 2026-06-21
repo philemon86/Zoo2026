@@ -191,9 +191,9 @@
           </button>
           <img class="stump" src="../assets/books/common/stump.png" alt="">
           <div class="book-label">基督徒的投資與理財</div>
-          <div class="book-discount" aria-label="大特價 NT$ 99">
-            <span>大特價</span>
-            <span>特價 NT$ 99</span>
+          <div class="book-discount" aria-label="多買多送書 定價 NT$ 250">
+            <span>多買多送書</span>
+            <span>定價 NT$ 250</span>
           </div>
         </div>
         <div class="book-stand has-discount">
@@ -216,6 +216,17 @@
           <div class="book-discount" aria-label="大特價 NT$ 99">
             <span>大特價</span>
             <span>特價 NT$ 99</span>
+          </div>
+        </div>
+        <div class="book-stand has-discount">
+          <button class="feature-book book-c246" type="button" data-book-code="C246" aria-label="查看 C246 響起福音的號角">
+            <img src="../assets/books/giraffe/C246-1.png" alt="">
+          </button>
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
+          <div class="book-label">響起福音的號角</div>
+          <div class="book-discount" aria-label="多買多送書 定價 NT$ 250">
+            <span>多買多送書</span>
+            <span>定價 NT$ 250</span>
           </div>
         </div>
       </div>
@@ -319,8 +330,14 @@
       "C195": {
             "code": "C195",
             "title": "基督徒的投資與理財",
-            "price": "定價 NT$ 250 / 大特價 NT$ 99",
+            "price": "定價 NT$ 250\n購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、擇一贈送，可累計贈送，一起分享閱讀的喜悅！",
             "url": "https://www.pbooks.com.tw/products/c195"
+      },
+      "C246": {
+            "code": "C246",
+            "title": "響起福音的號角",
+            "price": "定價 NT$ 250\n購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、擇一贈送，可累計贈送，一起分享閱讀的喜悅！",
+            "url": "https://www.pbooks.com.tw/products/c246"
       },
       "C262": {
             "code": "C262",
@@ -335,6 +352,11 @@
             "url": "https://www.pbooks.com.tw/products/c274"
       }
 };
+    const giftChoiceFrom = "末世教會的覺醒、擇一贈送";
+    const giftChoiceTo = "末世教會的覺醒、基督徒的投資與理財擇一贈送";
+    Object.values(books).forEach((book) => {
+      book.price = book.price.replace(giftChoiceFrom, giftChoiceTo);
+    });
     const dialog = document.querySelector("[data-book-dialog]");
     const dialogCode = dialog.querySelector("[data-dialog-code]");
     const dialogTitle = dialog.querySelector("[data-dialog-title]");
@@ -362,4 +384,3 @@
   </script>
 </body>
 </html>
-
