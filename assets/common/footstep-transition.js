@@ -1,4 +1,8 @@
 (() => {
+  if (window.location.protocol !== "file:" && window.location.pathname.endsWith("/index.html")) {
+    window.history.replaceState(null, "", window.location.pathname.slice(0, -10) + window.location.search + window.location.hash);
+  }
+
   const selector = [
     "[data-footstep-transition]",
     ".zone[href]",
