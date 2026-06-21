@@ -321,12 +321,15 @@
     }
 
     .sale-zones {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      column-count: 2;
+      column-gap: 14px;
     }
 
     .sale-zone {
+      display: inline-block;
+      width: 100%;
+      margin: 0 0 14px;
+      break-inside: avoid;
       scroll-margin-top: 18px;
       padding: 17px;
       border: 1px solid rgba(125, 96, 56, .16);
@@ -375,7 +378,7 @@
 
     .sale-list li {
       display: grid;
-      grid-template-columns: 46px minmax(0, 1fr) auto;
+      grid-template-columns: max-content minmax(0, 1fr) auto;
       gap: 8px;
       align-items: baseline;
       padding: 7px 0;
@@ -446,7 +449,7 @@
       .deadline-time { font-size: 14px; }
       .activity-list { grid-template-columns: 1fr; }
       .notice-list { grid-template-columns: 1fr; }
-      .sale-zones { grid-template-columns: 1fr; }
+      .sale-zones { column-count: 1; }
       .notice-card { min-height: auto; }
       .activity-list li { grid-template-columns: 86px 1fr; }
       .activity-date { font-size: 15px; }
