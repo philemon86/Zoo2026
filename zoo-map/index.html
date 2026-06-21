@@ -270,6 +270,8 @@
       margin-top: -4px;
     }
 
+    .buy-one-get-one-link { display: none; }
+
     @media (max-width: 767px) {
       .topbar {
         top: 10px;
@@ -387,6 +389,26 @@
       .zone-sheep:hover img,
       .zone-sheep:focus-within img {
         transform: translateY(6px);
+      }
+
+      .buy-one-get-one-link {
+        position: absolute;
+        right: 12px;
+        bottom: 14px;
+        z-index: 12;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 8px 12px;
+        border: 2px solid #a56f37;
+        border-radius: 8px;
+        color: #6b3f18;
+        background: rgba(255, 250, 240, .96);
+        box-shadow: 0 8px 18px rgba(71, 53, 24, .18);
+        font-size: 14px;
+        font-weight: 900;
+        letter-spacing: .04em;
       }
 
       .map-editor {
@@ -790,6 +812,7 @@
           <img src="../assets/books/map/kangaroo-zone.png" alt="">
           <div class="zone-name">袋鼠家長區</div>
         </a>
+        <a class="buy-one-get-one-link" href="../buy-one-get-one/" data-footstep-transition data-transition-label="前往精選買一送一">精選買一送一</a>
       </section>
     </div>
 
@@ -1083,4 +1106,3 @@
   <script src="../assets/common/footstep-transition.js?v=20260615"></script>
 </body>
 </html>
-

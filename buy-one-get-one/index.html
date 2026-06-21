@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="../assets/common/favicon.png">
+  <link rel="stylesheet" href="../assets/common/footstep-transition.css">
+  <title>精選買一送一</title>
+  <style>
+    :root { --leaf: #5f704c; --ink: #5a361b; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f8efd9; font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+    a { color: inherit; text-decoration: none; }
+    .actions { position: fixed; left: 50%; z-index: 10; display: flex; gap: 10px; width: min(720px, calc(100% - 28px)); transform: translateX(-50%); }
+    .actions-top { top: 16px; justify-content: flex-end; }
+    .actions-bottom { bottom: 16px; justify-content: center; }
+    .action { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 18px; border: 1px solid rgba(90, 54, 27, .18); border-radius: 999px; color: #fffaf0; background: var(--leaf); box-shadow: 0 9px 20px rgba(68, 48, 23, .22); font-weight: 900; letter-spacing: .05em; }
+    .action.secondary { color: var(--ink); background: rgba(255, 250, 239, .95); }
+    .poster { display: block; width: min(100%, 1672px); min-height: 100vh; margin: 0 auto; object-fit: contain; }
+    .poster-mobile { display: none; }
+    @media (max-width: 767px) { .actions { width: calc(100% - 20px); gap: 7px; } .actions-top { top: 10px; } .actions-bottom { bottom: 10px; } .action { min-height: 42px; flex: 1; padding: 8px 10px; font-size: 14px; } .poster-desktop { display: none; } .poster-mobile { display: block; width: 100%; min-height: 100vh; } }
+  </style>
+</head>
+<body>
+  <nav class="actions actions-top" aria-label="頁面導覽"><a class="action secondary" href="../zoo-map/" data-footstep-transition data-transition-label="返回地圖">返回地圖</a><a class="action" href="https://www.pbooks.com.tw/products/pb31-pb32">購買後背包</a><a class="action" href="https://www.pbooks.com.tw/products/cbt7915">購買聖經</a></nav>
+  <main><picture><source media="(max-width: 767px)" srcset="../assets/promotions/buy-one-get-one-mobile.png"><img class="poster poster-desktop" src="../assets/promotions/buy-one-get-one-desktop.png" alt="買指定背包／聖經，送你一本好書"></picture></main>
+  <nav class="actions actions-bottom" aria-label="購買選項"><a class="action" href="https://www.pbooks.com.tw/products/pb31-pb32">購買後背包</a><a class="action" href="https://www.pbooks.com.tw/products/cbt7915">購買聖經</a></nav>
+  <script src="../assets/common/footstep-transition.js?v=20260615"></script>
+</body>
+</html>
