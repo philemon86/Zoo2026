@@ -1,749 +1,1100 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <link rel="icon" type="image/png" href="../assets/common/favicon.png">
-  <link rel="stylesheet" href="../assets/common/bear-cursor.css">
-  <link rel="stylesheet" href="../assets/common/footstep-transition.css">
-  <title>閱讀動物園活動內容</title>
-  <style>
-    :root {
-      --ink: #33473d;
-      --muted: #6e7d56;
-      --paper: rgba(255, 252, 242, .96);
-      --line: rgba(97, 118, 84, .18);
-      --brown: #7d6038;
-      --leaf: #5f704c;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>閱讀動物園｜暑期書展</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-paper: #F5F2EB;
+            --text-main: #3E3A37;
+            --text-muted: #8A837C;
+            --card-bg: #FAF9F5;
+            --accent-fox: #C8795A;
+            --accent-giraffe: #D4A373;
+            --accent-green: #6B7B66;
+            --accent-red: #B85A5A;
+            --accent-sheep: #8A9A86;
+            --accent-bear: #A08060;
+            --accent-gift: #D28F5A; /* 新增好禮區專屬配色 */
+            --border-color: #E2DFD5;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+        }
 
-    * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--ink);
-      font-family: "Noto Serif TC", "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", serif;
-      background:
-        radial-gradient(circle at top, rgba(255, 252, 242, .92), rgba(255, 249, 238, .72) 44%, rgba(238, 225, 196, .9) 100%),
-        #fff9ee;
-      cursor: url("../assets/common/bear-cursor-64.png") 14 2, auto;
-    }
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background-color: var(--bg-paper);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
 
-    a { color: inherit; text-decoration: none; }
+        /* --- Hero 主視覺 & 動態倒數區塊 --- */
+        .hero {
+            padding: 60px 16px 40px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(to bottom, #EFECE3, var(--bg-paper));
+        }
 
-    .page {
-      width: min(1080px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 28px 0 64px;
-    }
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--accent-green);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
 
-    .top-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 22px;
-    }
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
 
-    .deadline-countdown {
-      margin-left: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 40px;
-      padding: 8px 16px;
-      border: 1px solid rgba(125, 96, 56, .18);
-      border-radius: 999px;
-      color: var(--brown);
-      background: rgba(255, 255, 255, .64);
-      box-shadow: 0 10px 24px rgba(79, 65, 35, .09);
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-weight: 900;
-      letter-spacing: .04em;
-      white-space: nowrap;
-    }
+        .countdown-container {
+            display: inline-flex;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            margin-bottom: 10px;
+        }
 
-    .deadline-label {
-      color: var(--leaf);
-      font-size: 14px;
-      letter-spacing: .08em;
-    }
+        .countdown-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 55px;
+        }
 
-    .deadline-time {
-      font-variant-numeric: tabular-nums;
-      font-size: 15px;
-    }
+        .countdown-num {
+            font-family: sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            line-height: 1.2;
+            display: inline-block;
+        }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 8px 16px;
-      border-radius: 999px;
-      color: #fffaf0;
-      background: linear-gradient(135deg, var(--brown), var(--leaf));
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-weight: 900;
-      letter-spacing: .08em;
-    }
+        .countdown-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 600;
+        }
 
-    .hero {
-      padding: clamp(26px, 4vw, 44px);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--paper);
-      box-shadow: 0 20px 46px rgba(79, 65, 35, .13);
-      text-align: center;
-    }
+        .countdown-divider {
+            font-size: 1.8rem;
+            color: var(--border-color);
+            line-height: 1.1;
+        }
 
-    .kicker {
-      margin: 0 0 8px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: .22em;
-    }
+        /* --- 實體書展行程 --- */
+        .schedule-section {
+            padding: 0 16px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 1.12;
-      letter-spacing: .08em;
-    }
+        .schedule-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            border: 1px dashed var(--accent-green);
+        }
 
-    .activity-group {
-      margin-top: 28px;
-      padding: clamp(22px, 3vw, 34px);
-      border: 1px solid rgba(125, 96, 56, .16);
-      border-radius: 8px;
-      background: rgba(255, 250, 239, .86);
-      box-shadow: 0 14px 34px rgba(79, 65, 35, .1);
-    }
+        .schedule-title {
+            font-size: 1.2rem;
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-    .activity-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 0 0 20px;
-    }
+        .schedule-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
 
-    .activity-tab {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 9px 18px;
-      border: 1px solid rgba(125, 96, 56, .22);
-      border-radius: 999px;
-      color: var(--brown);
-      background: rgba(255, 255, 255, .58);
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 17px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      cursor: pointer;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
-    }
+        @media (min-width: 600px) {
+            .schedule-list { grid-template-columns: 1fr 1fr; }
+            .hero-title { font-size: 3.8rem; }
+        }
 
-    .activity-tab:hover,
-    .activity-tab:focus-visible {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 22px rgba(79, 65, 35, .12);
-      outline: none;
-    }
+        .schedule-list li {
+            font-size: 0.95rem;
+            padding-left: 20px;
+            position: relative;
+        }
 
-    .activity-tab.is-active {
-      color: #fffaf0;
-      background: linear-gradient(135deg, var(--brown), var(--leaf));
-      box-shadow: 0 12px 26px rgba(79, 65, 35, .16);
-    }
+        .schedule-list li::before {
+            content: '📍';
+            position: absolute;
+            left: 0;
+            top: 1px;
+            font-size: 0.85rem;
+        }
 
-    .activity-tab.is-featured {
-      color: #fffaf0;
-      border-color: rgba(125, 96, 56, .12);
-      background: linear-gradient(135deg, #9a5a2c, #c27a38);
-      box-shadow: 0 12px 26px rgba(125, 96, 56, .16);
-    }
+        /* --- 手機版橫向滑動導覽列 --- */
+        .tab-nav-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(245, 242, 235, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 0;
+        }
 
-    .activity-panel {
-      display: none;
-      padding-top: 4px;
-    }
+        .park-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 0 16px;
+            -webkit-overflow-scrolling: touch;
+        }
 
-    .activity-panel.is-active {
-      display: block;
-      animation: panelFade .18s ease-out;
-    }
+        @media (min-width: 768px) {
+            .park-tabs {
+                justify-content: center;
+            }
+        }
 
-    .activity-heading {
-      margin: 0 0 6px;
-      color: var(--brown);
-      font-size: clamp(22px, 3vw, 31px);
-      line-height: 1.25;
-      letter-spacing: .08em;
-    }
+        .park-tabs::-webkit-scrollbar {
+            display: none;
+        }
 
-    .activity-note {
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: .06em;
-    }
+        .tab-btn {
+            font-family: 'Noto Serif TC', serif;
+            display: inline-block;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
 
+        .tab-btn.active {
+            background: var(--accent-green);
+            color: white;
+            border-color: var(--accent-green);
+            box-shadow: 0 4px 10px rgba(107, 123, 102, 0.2);
+        }
 
+        /* --- 書籍/商品清單區塊 --- */
+        .zone-content {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 16px 80px;
+        }
 
-    .notice-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
+        .zone-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
 
-    .notice-card {
-      position: relative;
-      min-height: 148px;
-      padding: 18px 18px 18px 20px;
-      border: 1px solid rgba(125, 96, 56, .16);
-      border-radius: 12px;
-      background:
-        linear-gradient(145deg, rgba(255, 255, 255, .72), rgba(255, 249, 235, .62));
-      box-shadow: 0 12px 26px rgba(79, 65, 35, .08);
-      overflow: hidden;
-    }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    .notice-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 7px;
-      background: linear-gradient(180deg, var(--brown), var(--leaf));
-      opacity: .86;
-    }
+        .zone-intro {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-green);
+        }
 
-    .notice-tag {
-      display: inline-flex;
-      align-items: center;
-      min-height: 26px;
-      margin-bottom: 10px;
-      padding: 4px 11px;
-      border-radius: 999px;
-      color: #fffaf0;
-      background: linear-gradient(135deg, var(--brown), var(--leaf));
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: .08em;
-    }
+        .zone-intro h2 {
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
 
-    .notice-title {
-      margin: 0 0 8px;
-      color: var(--ink);
-      font-size: 19px;
-      line-height: 1.35;
-      font-weight: 900;
-      letter-spacing: .04em;
-    }
+        .zone-intro p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
 
-    .notice-copy {
-      margin: 0;
-      color: var(--muted);
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 15px;
-      line-height: 1.65;
-      font-weight: 700;
-      letter-spacing: .03em;
-    }
+        .compact-book-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
 
-    .activity-tab.is-featured.is-active {
-      outline: 3px solid rgba(194, 122, 56, .22);
-      outline-offset: 2px;
-    }
+        @media (min-width: 768px) {
+            .compact-book-list {
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+        }
 
-    .activity-tab.is-sale {
-      color: #fffaf0;
-      border-color: rgba(95, 112, 76, .14);
-      background: linear-gradient(135deg, #5f704c, #82934d);
-      box-shadow: 0 12px 26px rgba(79, 65, 35, .14);
-    }
+        .compact-book-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
 
-    .sale-intro {
-      margin: 0 0 20px;
-      padding: 14px 16px;
-      border-left: 5px solid var(--leaf);
-      border-radius: 0 10px 10px 0;
-      color: var(--muted);
-      background: rgba(255, 255, 255, .56);
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-weight: 800;
-      line-height: 1.65;
-    }
+        .compact-book-item:active, .compact-book-item:hover {
+            border-color: var(--accent-green);
+            background: #FAF6EE;
+            transform: translateX(4px);
+        }
 
-    .zone-shortcuts {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 0 0 18px;
-    }
+        .book-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+        }
 
-    .zone-shortcut,
-    .zone-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 36px;
-      padding: 7px 12px;
-      border: 1px solid rgba(95, 112, 76, .22);
-      border-radius: 999px;
-      color: var(--leaf);
-      background: rgba(255, 255, 255, .64);
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing: .04em;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-    }
+        .book-badge {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #E8E5DC;
+            color: var(--text-main);
+            font-weight: 600;
+            white-space: nowrap;
+        }
 
-    .zone-shortcut { color: #fffaf0; border-color: rgba(73, 88, 57, .2); background: linear-gradient(135deg, #5f704c, #7f925a); box-shadow: 0 8px 17px rgba(79, 65, 35, .13); }
-    .zone-shortcut:nth-child(3n + 2) { background: linear-gradient(135deg, #8a6332, #aa7a3e); }
-    .zone-shortcut:nth-child(3n) { color: #5a421f; background: linear-gradient(135deg, #f1dda0, #f8eabe); }
+        .badge-discount { background: var(--accent-fox); color: white; }
+        .badge-sale { background: var(--accent-giraffe); color: white; }
 
-    .zone-shortcut:hover,
-    .zone-shortcut:focus-visible,
-    .zone-link:hover,
-    .zone-link:focus-visible {
-      transform: translateY(-1px);
-      color: #5a421f;
-      background: #fff4ce;
-      box-shadow: 0 8px 18px rgba(79, 65, 35, .1);
-      outline: none;
-    }
+        .book-meta {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-    .sale-zones {
-      column-count: 2;
-      column-gap: 14px;
-    }
+        .book-code {
+            font-size: 0.75rem;
+            color: #9A958E;
+            font-family: sans-serif;
+        }
 
-    .sale-zone {
-      display: inline-block;
-      width: 100%;
-      margin: 0 0 14px;
-      break-inside: avoid;
-      scroll-margin-top: 18px;
-      padding: 17px;
-      border: 1px solid rgba(125, 96, 56, .16);
-      border-radius: 12px;
-      background: linear-gradient(145deg, rgba(255, 255, 255, .7), rgba(255, 249, 235, .65));
-      box-shadow: 0 10px 22px rgba(79, 65, 35, .07);
-    }
+        .book-name {
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    .sale-zone-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+        .book-price {
+            font-family: sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-main);
+            margin-left: 12px;
+            white-space: nowrap;
+        }
 
-    .sale-zone h3 {
-      margin: 0;
-      color: var(--brown);
-      font-size: 20px;
-      line-height: 1.3;
-      letter-spacing: .04em;
-    }
-
-    .sale-rule {
-      margin: 0 0 12px;
-      color: var(--muted);
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      line-height: 1.55;
-    }
-
-    .sale-rule-points { margin: 0 0 12px; padding-left: 1.25em; color: var(--muted); font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; font-size: 14px; font-weight: 800; line-height: 1.65; }
-    .sale-rule-points li + li { margin-top: 4px; }
-
-    .sale-book-list {
-      border-top: 1px solid rgba(125, 96, 56, .13);
-      padding-top: 10px;
-    }
-
-    .sale-list {
-      display: grid;
-      gap: 7px;
-      margin: 11px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .sale-list li {
-      display: grid;
-      grid-template-columns: max-content minmax(0, 1fr) auto auto;
-      gap: 8px;
-      align-items: baseline;
-      padding: 7px 0;
-      border-bottom: 1px dashed rgba(125, 96, 56, .15);
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .sale-list li:last-child { border-bottom: 0; }
-    .sale-code { color: var(--brown); font-weight: 900; }
-    .sale-title { font-weight: 800; }
-    .sale-product-link { color: inherit; text-decoration: none; }
-    .sale-product-link:hover,
-    .sale-product-link:focus-visible { color: var(--leaf); text-decoration: underline; outline: none; }
-    .sale-price { color: var(--leaf); font-size: 13px; font-weight: 900; white-space: nowrap; }
-    .sale-badge { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; padding: 4px 8px; border-radius: 999px; color: #fffaf0; background: #5f704c; font-size: 12px; font-weight: 900; white-space: nowrap; }
-    .sale-badge.is-special { background: #a45e2c; }
-    button.sale-badge { border: 0; font-family: inherit; cursor: pointer; }
-    .sale-price.is-pill { min-height: 24px; padding: 4px 8px; border-radius: 999px; color: #5a421f; background: #f7e8aa; box-shadow: inset 0 0 0 1px rgba(125, 96, 56, .14); font-size: 12px; }
-    .sale-badge.is-discount { background: #8a6332; }
-    .promo-dialog { width: min(440px, calc(100% - 32px)); padding: 0; border: 0; border-radius: 14px; background: transparent; }
-    .promo-dialog::backdrop { background: rgba(45, 31, 16, .42); }
-    .promo-dialog-card { padding: 24px; border: 1px solid rgba(125, 96, 56, .2); border-radius: 14px; color: var(--ink); background: #fffaf0; box-shadow: 0 24px 52px rgba(45, 31, 16, .26); }
-    .promo-dialog-card h2 { margin: 0 0 12px; color: var(--brown); font-size: 23px; }
-    .promo-dialog-card p { margin: 0 0 20px; color: var(--muted); font-weight: 800; line-height: 1.7; }
-    .promo-dialog-close { min-height: 38px; padding: 8px 16px; border: 0; border-radius: 999px; color: #fffaf0; background: var(--leaf); font: inherit; font-weight: 900; cursor: pointer; }
-
-    @keyframes panelFade {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .activity-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .activity-list li {
-      display: grid;
-      grid-template-columns: 110px 1fr;
-      align-items: center;
-      gap: 12px;
-      min-height: 58px;
-      padding: 12px 14px;
-      border: 1px solid rgba(125, 96, 56, .16);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .58);
-    }
-
-    .activity-date {
-      color: var(--leaf);
-      font-size: 17px;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .activity-name {
-      font-size: 18px;
-      font-weight: 900;
-      line-height: 1.35;
-    }
-
-    @media (max-width: 767px) {
-      body { cursor: auto; }
-      .page { width: calc(100% - 20px); padding-top: 16px; }
-      .deadline-countdown {
-        width: 100%;
-        justify-content: center;
-        margin-left: 0;
-        white-space: normal;
-        text-align: center;
-      }
-      .deadline-label { font-size: 13px; }
-      .deadline-time { font-size: 14px; }
-      .activity-list { grid-template-columns: 1fr; }
-      .notice-list { grid-template-columns: 1fr; }
-      .sale-zones { column-count: 1; }
-      .notice-card { min-height: auto; }
-      .activity-list li { grid-template-columns: 86px 1fr; }
-      .activity-date { font-size: 15px; }
-      .activity-name { font-size: 16px; }
-      h1 span { display: block; }
-      .sale-list li { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; }
-      .sale-list li > .sale-code { grid-column: 1; grid-row: 1; }
-      .sale-list li > .sale-title { grid-column: 1; grid-row: 2; }
-      .sale-list li > .sale-badge { grid-column: 2; grid-row: 1; }
-      .sale-list li > .sale-price { grid-column: 2; grid-row: 2; align-self: end; }
-      .sale-list li > .sale-price:nth-child(3) { grid-row: 1 / span 2; }
-    }
-  </style>
+        .price-highlight { color: var(--accent-red); }
+    </style>
 </head>
 <body>
-  <main class="page">
-    <nav class="top-links" aria-label="頁面導覽">
-      <a class="pill" href="../index.html" data-footstep-transition data-transition-label="返回首頁">返回首頁</a>
-      <div class="deadline-countdown" aria-live="polite">
-        <span class="deadline-label">9/30 活動截止倒數</span>
-        <span class="deadline-time" id="deadline-countdown">計算中</span>
-      </div>
-    </nav>
 
-    <section class="hero" aria-label="活動資訊">
-      <p class="kicker">EVENT NOTICE</p>
-      <h1><span>閱讀動物園</span><span>活動內容</span></h1>
-    </section>
-
-    <section class="activity-group" aria-label="最新活動分類">
-      <div class="activity-tabs" aria-label="活動分類">
-        <button class="activity-tab is-sale is-active" type="button" data-activity-tab="sale" aria-controls="sale-panel" aria-expanded="true">重點特價</button>
-        <button class="activity-tab" type="button" data-activity-tab="bookfair" aria-controls="bookfair-panel" aria-expanded="false">書展活動</button>
-      </div>
-
-      <div class="activity-panel" id="bookfair-panel" data-activity-panel="bookfair">
-        <h2 class="activity-heading">暑期書展活動</h2>
-        <p class="activity-note">歡迎就近前往</p>
-        <ul class="activity-list">
-          <li><span class="activity-date">7/25</span><span class="activity-name">彰興書展</span></li>
-          <li><span class="activity-date">8/1</span><span class="activity-name">伸港書展</span></li>
-          <li><span class="activity-date">8/2（日）</span><span class="activity-name">聖樂營，早上十點開始，地點：臺灣總會</span></li>
-          <li><span class="activity-date">8/14-15</span><span class="activity-name">松山書展</span></li>
-          <li><span class="activity-date">8/28-29</span><span class="activity-name">十全書展</span></li>
-          <li><span class="activity-date">8/29</span><span class="activity-name">斗六書展</span></li>
-          <li><span class="activity-date">9/5</span><span class="activity-name">花壇書展</span></li>
-          <li><span class="activity-date">9/19-20</span><span class="activity-name">山佳書展</span></li>
-        </ul>
-      </div>
-
-      <div class="activity-panel is-active" id="sale-panel" data-activity-panel="sale">
-        <p class="sale-intro">五大重點優惠：新書79折、多買多送書、99元大特價、買後背包/聖經贈書、買繪本送桌遊</p>
-        <nav class="zone-shortcuts" aria-label="重點特價分區導覽">
-          <a class="zone-shortcut" href="#bear-sale">熊新a書區</a>
-          <a class="zone-shortcut" href="#fox-sale">狐狸少年區</a>
-          <a class="zone-shortcut" href="#giraffe-sale">長頸鹿大人區</a>
-          <a class="zone-shortcut" href="#kangaroo-sale">袋鼠家長區</a>
-          <a class="zone-shortcut" href="#owl-sale">貓頭鷹教員區</a>
-          <a class="zone-shortcut" href="#sheep-sale">小羊童書區</a>
-          <a class="zone-shortcut" href="#goodies-sale">精選好禮</a>
-        </nav>
-        <div class="sale-zones">
-          <section class="sale-zone" id="fox-sale">
-            <div class="sale-zone-head"><h3>狐狸少年區</h3><a class="zone-link" href="../fox-books/" data-footstep-transition data-transition-label="前往狐狸少年區">前往書區</a></div>
-            <ul class="sale-rule-points"><li>讓孩子從青少年就開始多看書。</li><li>購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。</li><li>《進入聖經的世界》79 折，買再送實用釋經學。</li></ul>
-            <div class="sale-book-list"><ul class="sale-list">
-              <li><span class="sale-code">C187</span><span class="sale-title">天國數學的學思行</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C268</span><span class="sale-title">青心吐義1</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C278</span><span class="sale-title">青心吐義2</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C221</span><span class="sale-title">青春，溫柔以對</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C136</span><span class="sale-title">進入聖經的世界</span><span class="sale-price">79折 NT$632</span></li>
-            </ul></div>
-          </section>
-          <section class="sale-zone" id="giraffe-sale">
-            <div class="sale-zone-head"><h3>長頸鹿大人區</h3><a class="zone-link" href="../giraffe-books/" data-footstep-transition data-transition-label="前往長頸鹿大人區">前往書區</a></div>
-            <ul class="sale-rule-points"><li>成年人也要多讀書。</li><li>購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。</li><li>多本書籍大特價99元。</li></ul>
-            <div class="sale-book-list"><ul class="sale-list">
-              <li><span class="sale-code">C003</span><span class="sale-title">末世教會的覺醒</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C276</span><span class="sale-title">如何戰勝苦難</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C157</span><span class="sale-title">我親眼看見神增訂版</span><span class="sale-price">定價 NT$350</span></li>
-              <li><span class="sale-code">C284</span><span class="sale-title">走入信仰的深處</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C269</span><span class="sale-title">來自天國的 WIFI</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C267</span><span class="sale-title">神蹟的教訓</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C266</span><span class="sale-title">婚姻，相疼正好</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C246</span><span class="sale-title">響起福音的號角</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C195</span><span class="sale-title">基督徒的投資與理財</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C168</span><span class="sale-title">以色列的戰車馬兵</span><span class="sale-price">大特價 NT$99</span></li>
-              <li><span class="sale-code">C172</span><span class="sale-title">暮蟬低語</span><span class="sale-price">大特價 NT$99</span></li>
-              <li><span class="sale-code">C183</span><span class="sale-title">洞裏乾坤</span><span class="sale-price">大特價 NT$99</span></li>
-              <li><span class="sale-code">C262</span><span class="sale-title">唯一的救主耶穌</span><span class="sale-price">大特價 NT$99</span></li>
-              <li><span class="sale-code">C274</span><span class="sale-title">信仰的奧秘</span><span class="sale-price">大特價 NT$99</span></li>
-            </ul></div>
-          </section>
-          <section class="sale-zone" id="kangaroo-sale">
-            <div class="sale-zone-head"><h3>袋鼠家長區</h3><a class="zone-link" href="../kangaroo-books/" data-footstep-transition data-transition-label="前往袋鼠家長區">前往書區</a></div>
-            <ul class="sale-rule-points"><li>家長推薦好書。</li><li>購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。</li></ul>
-            <div class="sale-book-list"><ul class="sale-list">
-              <li><span class="sale-code">C182</span><span class="sale-title">給爸媽的12堂聖經教養課</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C288</span><span class="sale-title">連線卻失聯</span><span class="sale-price">定價 NT$350</span></li>
-              <li><span class="sale-code">C293</span><span class="sale-title">親身體會神的大愛</span><span class="sale-price">79折 NT$277</span></li>
-              <li><span class="sale-code">C291</span><span class="sale-title">路得記講壇</span><span class="sale-price">79折 NT$198</span></li>
-              <li><span class="sale-code">C264</span><span class="sale-title">新歌背後的樂章</span><span class="sale-price">定價 NT$250</span></li>
-            </ul></div>
-          </section>
-          <section class="sale-zone" id="owl-sale">
-            <div class="sale-zone-head"><h3>貓頭鷹教員區</h3><a class="zone-link" href="../owl-books/" data-footstep-transition data-transition-label="前往貓頭鷹教員區">前往書區</a></div>
-            <ul class="sale-rule-points"><li>針對教員推薦好書。</li><li>購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。</li><li>購買《舊約聖經中的戰爭》買就送瑪拉基書中人與神爭辯。</li></ul>
-            <div class="sale-book-list"><ul class="sale-list">
-              <li><span class="sale-code">C259</span><span class="sale-title">杏樹枝10 四福音書</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C260</span><span class="sale-title">杏樹枝11 徒-腓</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C261</span><span class="sale-title">杏樹枝12 西-啟</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C224</span><span class="sale-title">杏樹枝1 創-出</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C238</span><span class="sale-title">杏樹枝3 書-士-得-撒上下</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C240</span><span class="sale-title">杏樹枝4 王上下-代上下</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C242</span><span class="sale-title">杏樹枝5 拉-詩30</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C244</span><span class="sale-title">杏樹枝6 詩31-150</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C249</span><span class="sale-title">杏樹枝7 箴-傳-歌-賽</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C251</span><span class="sale-title">杏樹枝8 耶-哀-結</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C254</span><span class="sale-title">杏樹枝9 但以理書-小先知書</span><span class="sale-price">定價 NT$300</span></li>
-              <li><span class="sale-code">C279</span><span class="sale-title">會幕的傳承</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C084</span><span class="sale-title">禱告的壇</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C199</span><span class="sale-title">靈界辨正</span><span class="sale-price">定價 NT$250</span></li>
-              <li><span class="sale-code">C265</span><span class="sale-title">刀出鞘</span><span class="sale-price">定價 NT$350</span></li>
-              <li><span class="sale-code">C215</span><span class="sale-title">舊約聖經中的戰爭</span><span class="sale-price">定價 NT$800</span></li>
-              <li><span class="sale-code">C122</span><span class="sale-title">瑪拉基書中人與神爭辯</span><span class="sale-price">9折 NT$315</span></li>
-              <li><span class="sale-code">C222</span><span class="sale-title">耶和華忿怒的杯酒</span><span class="sale-price">7折 NT$280</span></li>
-            </ul></div>
-          </section>
-          <section class="sale-zone" id="sheep-sale">
-            <div class="sale-zone-head"><h3>小羊童書區</h3><a class="zone-link" href="../sheep-books/" data-footstep-transition data-transition-label="前往小羊童書區">前往書區</a></div>
-            <p class="sale-rule">繪本全面 9 折，購買繪本即贈亞伯拉罕的桌遊一組。</p>
-            <div class="sale-book-list"><ul class="sale-list">
-              <li><span class="sale-code">C011</span><span class="sale-title">綠手指的秘密</span><span class="sale-price">9折 NT$315</span></li>
-              <li><span class="sale-code">C286</span><span class="sale-title">石頭的祈禱</span><span class="sale-price">9折 NT$315</span></li>
-              <li><span class="sale-code">C253</span><span class="sale-title">王子與十大惡人</span><span class="sale-price">9折 NT$315</span></li>
-              <li><span class="sale-code">C243</span><span class="sale-title">小不點的禱告</span><span class="sale-price">9折 NT$270</span></li>
-              <li><span class="sale-code">C263</span><span class="sale-title">小不點去聚會</span><span class="sale-price">9折 NT$270</span></li>
-              <li><span class="sale-code">C280</span><span class="sale-title">155個遇見神的美好時刻</span><span class="sale-price">9折 NT$270</span></li>
-            </ul></div>
-          </section>
-          <section class="sale-zone" id="bear-sale">
-            <div class="sale-zone-head"><h3>熊新a書區</h3><a class="zone-link" href="../bear-books/" data-footstep-transition data-transition-label="前往熊新a書區">前往書區</a></div>
-            <p class="sale-rule">指定新書全面 79 折。</p>
-            <div class="sale-book-list"><ul class="sale-list">
-              <li><span class="sale-code">C294</span><span class="sale-title">重建聖殿的勸勉</span><span class="sale-price">79折 NT$237</span></li>
-              <li><span class="sale-code">C295</span><span class="sale-title">物理學主裡學</span><span class="sale-price">79折 NT$277</span></li>
-              <li><span class="sale-code">C290</span><span class="sale-title">洗禮論-教義專論</span><span class="sale-price">79折 NT$277</span></li>
-              <li><span class="sale-code">C291</span><span class="sale-title">路得記講壇</span><span class="sale-price">79折 NT$198</span></li>
-              <li><span class="sale-code">C292</span><span class="sale-title">使徒行傳釋義</span><span class="sale-price">79折 NT$395</span></li>
-              <li><span class="sale-code">C293</span><span class="sale-title">親身體會神的大愛</span><span class="sale-price">79折 NT$277</span></li>
-              <li><span class="sale-code">C002</span><span class="sale-title">好好接住你</span><span class="sale-price">79折 NT$198</span></li>
-            </ul></div>
-          </section>
-          <section class="sale-zone" id="goodies-sale">
-            <div class="sale-zone-head"><h3>精選好禮</h3></div>
-            <p class="sale-rule">買以上商品就送C288連線卻失聯或C157我親眼看見神或C222耶和華忿怒的杯酒。</p>
-            <div class="sale-book-list"><ul class="sale-list">
-              <li><span class="sale-code">PB31</span><span class="sale-title">雙背喜樂包－奶油酥</span><span class="sale-price">售價 NT$799</span></li>
-              <li><span class="sale-code">PB32</span><span class="sale-title">雙背喜樂包－芝麻糊</span><span class="sale-price">售價 NT$799</span></li>
-              <li><span class="sale-code">CBT7915</span><span class="sale-title">中英 NKJV 皮面紅色金邊聖經</span><span class="sale-price">售價 NT$799</span></li>
-            </ul></div>
-          </section>
+    <section class="hero">
+        <h1 class="hero-title">閱讀動物園活動內容</h1>
+        <p class="hero-subtitle">暑期書展・五大重點優惠</p>
+        
+        <div class="countdown-container" id="countdown">
+            <div class="countdown-box">
+                <span class="countdown-num" id="days">00</span>
+                <span class="countdown-label">DAYS</span>
+            </div>
+            <div class="countdown-divider">:</div>
+            <div class="countdown-box">
+                <span class="countdown-num" id="hours">00</span>
+                <span class="countdown-label">HRS</span>
+            </div>
+            <div class="countdown-divider">:</div>
+            <div class="countdown-box">
+                <span class="countdown-num" id="minutes">00</span>
+                <span class="countdown-label">MINS</span>
+            </div>
+            <div class="countdown-divider">:</div>
+            <div class="countdown-box">
+                <span class="countdown-num" id="seconds">00</span>
+                <span class="countdown-label">SECS</span>
+            </div>
         </div>
-      </div>
     </section>
-  </main>
 
-  <dialog class="promo-dialog" data-multibuy-dialog>
-    <div class="promo-dialog-card">
-      <h2>多買多送書</h2>
-      <p>購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。</p>
-      <button class="promo-dialog-close" type="button" data-multibuy-close>關閉</button>
+    <section class="schedule-section">
+        <div class="schedule-card">
+            <h2 class="schedule-title">📅 暑期書展現場行程</h2>
+            <ul class="schedule-list">
+                <li>7/25 彰興書展</li>
+                <li>8/1 伸港書展</li>
+                <li>8/2（日）聖樂營，早上十點開始，地點：臺灣總會</li>
+                <li>8/14-15 松山書展</li>
+                <li>8/28-29 十全書展</li>
+                <li>8/29 斗六書展</li>
+                <li>9/5 花壇書展</li>
+                <li>9/19-20 山佳書展</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="schedule-section">
+        <div class="schedule-card">
+            <h2 class="schedule-title">📚 五大重點優惠</h2>
+            <p>五大重點優惠：新書79折、多買多送書、99元大特價、買後背包/聖經贈書、買繪本送桌遊</p>
+            <p>購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。</p>
+        </div>
+    </section>
+
+    <div class="tab-nav-wrapper">
+        <nav class="park-tabs">
+            <button class="tab-btn active" data-target="bear-zone">🐻 熊新a書</button>
+            <button class="tab-btn" data-target="fox-zone">🦊 狐狸少年</button>
+            <button class="tab-btn" data-target="giraffe-zone">🦒 長頸鹿大人</button>
+            <button class="tab-btn" data-target="kangaroo-zone">🦘 袋鼠家長</button>
+            <button class="tab-btn" data-target="owl-zone">🦉 貓頭鷹教員</button>
+            <button class="tab-btn" data-target="sheep-zone">🐑 小羊童書</button>
+            <button class="tab-btn" data-target="gift-zone">🎁 精選好禮</button>
+        </nav>
     </div>
-  </dialog>
 
-  <script>
-    document.querySelectorAll('[data-activity-tab]').forEach((tab) => {
-      tab.addEventListener('click', () => {
-        const target = tab.dataset.activityTab;
+    <section id="bear-zone" class="zone-content active">
+        <div class="zone-intro" style="border-left-color: var(--accent-bear);">
+            <h2 style="color: var(--accent-bear);">🐻 熊新a書區</h2>
+            <p>指定新書全面 79 折。</p>
+        </div>
+        <div class="compact-book-list">
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C294</span>
+                        <span class="book-name">重建聖殿的勸勉</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$237</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C295</span>
+                        <span class="book-name">物理學主裡學</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$277</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C290</span>
+                        <span class="book-name">洗禮論-教義專論</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$277</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C291</span>
+                        <span class="book-name">路得記講壇</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$198</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C292</span>
+                        <span class="book-name">使徒行傳釋義</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$395</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C293</span>
+                        <span class="book-name">親身體會神的大愛</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$277</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C002</span>
+                        <span class="book-name">好好接住你</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$198</div>
+            </div>
+        </div>
+    </section>
 
-        document.querySelectorAll('[data-activity-tab]').forEach((item) => {
-          const isActive = item === tab;
-          item.classList.toggle('is-active', isActive);
-          if (item.hasAttribute('aria-expanded')) {
-            item.setAttribute('aria-expanded', String(isActive));
-          }
+    <section id="fox-zone" class="zone-content">
+        <div class="zone-intro" style="border-left-color: var(--accent-fox);">
+            <h2 style="color: var(--accent-fox);">🦊 狐狸少年區</h2>
+            <p>讓孩子從青少年就開始多看書。購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。《進入聖經的世界》79 折，買再送實用釋經學。</p>
+        </div>
+        <div class="compact-book-list">
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C187</span>
+                        <span class="book-name">天國數學的學思行</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C268</span>
+                        <span class="book-name">青心吐義1</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C278</span>
+                        <span class="book-name">青心吐義2</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C221</span>
+                        <span class="book-name">青春，溫柔以對</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C136</span>
+                        <span class="book-name">進入聖經的世界</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$632</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="giraffe-zone" class="zone-content">
+        <div class="zone-intro" style="border-left-color: var(--accent-giraffe);">
+            <h2 style="color: var(--accent-giraffe);">🦒 長頸鹿大人區</h2>
+            <p>成年人也要多讀書。購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。多本書籍大特價99元。</p>
+        </div>
+        <div class="compact-book-list">
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C003</span>
+                        <span class="book-name">末世教會的覺醒</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C276</span>
+                        <span class="book-name">如何戰勝苦難</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C157</span>
+                        <span class="book-name">我親眼看見神增訂版</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$350</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C284</span>
+                        <span class="book-name">走入信仰的深處</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C269</span>
+                        <span class="book-name">來自天國的 WIFI</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C267</span>
+                        <span class="book-name">神蹟的教訓</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C266</span>
+                        <span class="book-name">婚姻，相疼正好</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C246</span>
+                        <span class="book-name">響起福音的號角</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C195</span>
+                        <span class="book-name">基督徒的投資與理財</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-sale">99元大特價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C168</span>
+                        <span class="book-name">以色列的戰車馬兵</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$99</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-sale">99元大特價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C172</span>
+                        <span class="book-name">暮蟬低語</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$99</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-sale">99元大特價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C183</span>
+                        <span class="book-name">洞裏乾坤</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$99</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-sale">99元大特價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C262</span>
+                        <span class="book-name">唯一的救主耶穌</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$99</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-sale">99元大特價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C274</span>
+                        <span class="book-name">信仰的奧秘</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$99</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kangaroo-zone" class="zone-content">
+        <div class="zone-intro" style="border-left-color: #A37F5D;">
+            <h2 style="color: #A37F5D;">🦘 袋鼠家長區</h2>
+            <p>家長推薦好書。購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。</p>
+        </div>
+        <div class="compact-book-list">
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C182</span>
+                        <span class="book-name">給爸媽的12堂聖經教養課</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C288</span>
+                        <span class="book-name">連線卻失聯</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$350</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C293</span>
+                        <span class="book-name">親身體會神的大愛</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$277</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">79折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C291</span>
+                        <span class="book-name">路得記講壇</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$198</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C264</span>
+                        <span class="book-name">新歌背後的樂章</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="owl-zone" class="zone-content">
+        <div class="zone-intro" style="border-left-color: #6C5B52;">
+            <h2 style="color: #6C5B52;">🦉 貓頭鷹教員區</h2>
+            <p>針對教員推薦好書。購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。購買《舊約聖經中的戰爭》買就送瑪拉基書中人與神爭辯。</p>
+        </div>
+        <div class="compact-book-list">
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C259</span>
+                        <span class="book-name">杏樹枝10 四福音書</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C260</span>
+                        <span class="book-name">杏樹枝11 徒-腓</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C261</span>
+                        <span class="book-name">杏樹枝12 西-啟</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C224</span>
+                        <span class="book-name">杏樹枝1 創-出</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C238</span>
+                        <span class="book-name">杏樹枝3 書-士-得-撒上下</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C240</span>
+                        <span class="book-name">杏樹枝4 王上下-代上下</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C242</span>
+                        <span class="book-name">杏樹枝5 拉-詩30</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C244</span>
+                        <span class="book-name">杏樹枝6 詩31-150</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C249</span>
+                        <span class="book-name">杏樹枝7 箴-傳-歌-賽</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C251</span>
+                        <span class="book-name">杏樹枝8 耶-哀-結</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C254</span>
+                        <span class="book-name">杏樹枝9 但以理書-小先知書</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$300</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C279</span>
+                        <span class="book-name">會幕的傳承</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C084</span>
+                        <span class="book-name">禱告的壇</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C199</span>
+                        <span class="book-name">靈界辨正</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$250</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C265</span>
+                        <span class="book-name">刀出鞘</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$350</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge">定價</span>
+                    <div class="book-meta">
+                        <span class="book-code">C215</span>
+                        <span class="book-name">舊約聖經中的戰爭</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$800</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">9折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C122</span>
+                        <span class="book-name">瑪拉基書中人與神爭辯</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$315</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">7折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C222</span>
+                        <span class="book-name">耶和華忿怒的杯酒</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$280</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sheep-zone" class="zone-content">
+        <div class="zone-intro" style="border-left-color: var(--accent-sheep);">
+            <h2 style="color: var(--accent-sheep);">🐑 小羊童書區</h2>
+            <p>繪本全面 9 折，購買繪本即贈亞伯拉罕的桌遊一組。</p>
+        </div>
+        <div class="compact-book-list">
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">9折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C011</span>
+                        <span class="book-name">綠手指的秘密</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$315</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">9折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C286</span>
+                        <span class="book-name">石頭的祈禱</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$315</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">9折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C253</span>
+                        <span class="book-name">王子與十大惡人</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$315</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">9折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C243</span>
+                        <span class="book-name">小不點的禱告</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$270</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">9折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C263</span>
+                        <span class="book-name">小不點去聚會</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$270</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge badge-discount">9折</span>
+                    <div class="book-meta">
+                        <span class="book-code">C280</span>
+                        <span class="book-name">155個遇見神的美好時刻</span>
+                    </div>
+                </div>
+                <div class="book-price price-highlight">NT$270</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gift-zone" class="zone-content">
+        <div class="zone-intro" style="border-left-color: var(--accent-gift);">
+            <h2 style="color: var(--accent-gift);">🎁 精選好禮</h2>
+            <p>買以上商品就送C288連線卻失聯或C157我親眼看見神或C222耶和華忿怒的杯酒。</p>
+        </div>
+        <div class="compact-book-list">
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge" style="background: var(--accent-gift); color: white;">特選</span>
+                    <div class="book-meta">
+                        <span class="book-code">PB31</span>
+                        <span class="book-name">雙背喜樂包－奶油酥</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$799</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge" style="background: var(--accent-gift); color: white;">特選</span>
+                    <div class="book-meta">
+                        <span class="book-code">PB32</span>
+                        <span class="book-name">雙背喜樂包－芝麻糊</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$799</div>
+            </div>
+            <div class="compact-book-item">
+                <div class="book-left">
+                    <span class="book-badge" style="background: var(--accent-gift); color: white;">特選</span>
+                    <div class="book-meta">
+                        <span class="book-code">CBT7915</span>
+                        <span class="book-name">中英 NKJV 皮面紅色金邊聖經</span>
+                    </div>
+                </div>
+                <div class="book-price">NT$799</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- 1. 自動倒數計時邏輯 ---
+        function startCountdown() {
+            const targetDate = new Date("September 30, 2026 23:59:59").getTime();
+
+            const timer = setInterval(function() {
+                const now = new Date().getTime();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    clearInterval(timer);
+                    document.getElementById("countdown").innerHTML = "<b style='color:var(--text-muted)'>活動已截止</b>";
+                    return;
+                }
+
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                updateNum("days", d);
+                updateNum("hours", h);
+                updateNum("minutes", m);
+                updateNum("seconds", s);
+
+            }, 1000);
+        }
+
+        function updateNum(id, value) {
+            const el = document.getElementById(id);
+            const formattedValue = value < 10 ? "0" + value : value;
+            
+            if (el.innerText !== String(formattedValue)) {
+                el.innerText = formattedValue;
+                gsap.fromTo(el, { y: -6, opacity: 0.6 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" });
+            }
+        }
+
+        // --- 2. 響應式 Tabs 切換邏輯 ---
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const zoneContents = document.querySelectorAll('.zone-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                zoneContents.forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                const targetId = btn.getAttribute('data-target');
+                const targetContent = document.getElementById(targetId);
+                
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
+
+                const navTop = document.querySelector('.tab-nav-wrapper').offsetTop;
+                window.scrollTo({
+                    top: navTop - 10,
+                    behavior: 'smooth'
+                });
+            });
         });
 
-        document.querySelectorAll('[data-activity-panel]').forEach((panel) => {
-          panel.classList.toggle('is-active', panel.dataset.activityPanel === target);
-        });
-      });
-    });
-
-    const productUrls = {
-      PB31: "https://www.pbooks.com.tw/products/pb31-pb32",
-      PB32: "https://www.pbooks.com.tw/products/pb31-pb32",
-      CBT7915: "https://www.pbooks.com.tw/products/cbt7915",
-      C268: "https://www.pbooks.com.tw/products/c268c278",
-      C278: "https://www.pbooks.com.tw/products/c268c278"
-    };
-    const multibuyCodes = new Set(["C187", "C268", "C278", "C221", "C003", "C276", "C157", "C284", "C269", "C267", "C266", "C246", "C195", "C182", "C288", "C264", "C259", "C260", "C261", "C224", "C238", "C240", "C242", "C244", "C249", "C251", "C254", "C279", "C084", "C199", "C265"]);
-    const special99Codes = new Set(["C168", "C172", "C183", "C262", "C274"]);
-    const multibuyDialog = document.querySelector('[data-multibuy-dialog]');
-    const saleZones = document.querySelector('.sale-zones');
-    const bearSale = document.querySelector('#bear-sale');
-    if (saleZones && bearSale) saleZones.prepend(bearSale);
-
-    document.querySelectorAll('.sale-list li').forEach((item) => {
-      const code = item.querySelector('.sale-code');
-      const title = item.querySelector('.sale-title');
-      if (!code || !title) return;
-
-      const productCode = code.textContent.trim();
-      const productUrl = productUrls[productCode] || `https://www.pbooks.com.tw/products/${productCode.toLowerCase()}`;
-
-      const isMultibuy = multibuyCodes.has(productCode);
-      const isSpecial99 = special99Codes.has(productCode);
-      const isDiscount = item.querySelector('.sale-price').textContent.trim().startsWith('79折');
-
-      if (isMultibuy || isSpecial99 || isDiscount) {
-        const badge = document.createElement(isMultibuy ? 'button' : 'span');
-        if (isMultibuy) badge.type = 'button';
-        badge.className = `sale-badge${isSpecial99 ? ' is-special' : ''}${isDiscount ? ' is-discount' : ''}`;
-        badge.textContent = isSpecial99 ? '99元大特價' : isDiscount ? '79折特價' : '多買多送書';
-        if (isMultibuy) badge.addEventListener('click', () => multibuyDialog.showModal());
-        item.querySelector('.sale-price').before(badge);
-      }
-
-      const price = item.querySelector('.sale-price');
-      price.classList.add('is-pill');
-      price.textContent = price.textContent.replace(/^79折\s*/, '特價 ').replace(/^大特價\s*/, '');
-
-      [code, title].forEach((element) => {
-        const link = document.createElement('a');
-        link.className = `sale-product-link ${element.className}`;
-        link.href = productUrl;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = element.textContent;
-        element.replaceWith(link);
-      });
-    });
-
-    document.querySelector('[data-multibuy-close]').addEventListener('click', () => multibuyDialog.close());
-
-    const countdownEl = document.getElementById('deadline-countdown');
-    const deadline = new Date('2026-09-30T23:59:59+08:00').getTime();
-
-    function padNumber(value) {
-      return String(value).padStart(2, '0');
-    }
-
-    function updateCountdown() {
-      if (!countdownEl) return;
-
-      const now = Date.now();
-      const distance = deadline - now;
-
-      if (distance <= 0) {
-        countdownEl.textContent = '活動已截止';
-        return;
-      }
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((distance / (1000 * 60)) % 60);
-      const seconds = Math.floor((distance / 1000) % 60);
-
-      countdownEl.textContent = `${days}天 ${padNumber(hours)}小時 ${padNumber(minutes)}分鐘 ${padNumber(seconds)}秒`;
-    }
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-  </script>
-  <script src="../assets/common/footstep-transition.js?v=20260615"></script>
+        startCountdown();
+    </script>
 </body>
 </html>
