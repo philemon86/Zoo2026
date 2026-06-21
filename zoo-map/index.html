@@ -270,7 +270,27 @@
       margin-top: -4px;
     }
 
-    .buy-one-get-one-link { display: none; }
+    .buy-one-get-one-link {
+      position: absolute;
+      left: 86%;
+      top: 70.3%;
+      z-index: 12;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 8px 18px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      color: #6b3f18;
+      background: rgba(255, 250, 240, .96);
+      box-shadow: var(--shadow);
+      font-size: clamp(16px, 1.4vw, 22px);
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
 
     @media (max-width: 767px) {
       .topbar {
@@ -392,23 +412,15 @@
       }
 
       .buy-one-get-one-link {
-        position: absolute;
         right: 12px;
-        bottom: 14px;
-        z-index: 12;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        bottom: auto;
+        left: auto;
+        top: 82.2%;
         min-height: 44px;
         padding: 8px 12px;
-        border: 2px solid #a56f37;
-        border-radius: 8px;
-        color: #6b3f18;
-        background: rgba(255, 250, 240, .96);
         box-shadow: 0 8px 18px rgba(71, 53, 24, .18);
         font-size: 14px;
-        font-weight: 900;
-        letter-spacing: .04em;
+        transform: translateY(-50%);
       }
 
       .map-editor {
