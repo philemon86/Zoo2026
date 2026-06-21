@@ -288,6 +288,44 @@
             white-space: nowrap;
         }
 
+        @property --badge-trace-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        .badge-glowing-trace {
+            --badge-trace-angle: 0deg;
+            position: relative;
+            isolation: isolate;
+            box-sizing: border-box;
+        }
+
+        .badge-glowing-trace::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.5px;
+            background: conic-gradient(
+                from var(--badge-trace-angle),
+                transparent 0deg 300deg,
+                #ffb52e 322deg,
+                #fff4b0 338deg,
+                #ff8a1f 350deg,
+                transparent 360deg
+            );
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: badge-trace-spin 1s linear infinite;
+        }
+
+        @keyframes badge-trace-spin {
+            to { --badge-trace-angle: 360deg; }
+        }
+
         .badge-discount { background: var(--accent-fox); color: white; }
         .badge-sale { background: var(--accent-giraffe); color: white; }
 
@@ -1105,6 +1143,7 @@
 
         document.querySelectorAll('.book-badge').forEach(badge => {
             if (badge.textContent.trim() !== '多買多送書') return;
+            badge.classList.add('badge-glowing-trace');
             badge.dataset.multibuyInfo = '';
             badge.setAttribute('role', 'button');
             badge.setAttribute('tabindex', '0');
