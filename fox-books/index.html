@@ -37,6 +37,7 @@
     .feature-book:hover, .feature-book:focus-visible { filter: drop-shadow(0 18px 18px rgba(61, 37, 15, .28)); transform: translateX(-50%) translateY(-7px); outline: none; }
     .feature-book.is-pressed { animation: bookPress .22s ease; }
     .feature-book img { display: block; width: 100%; height: auto; pointer-events: none; filter: drop-shadow(0 20px 18px rgba(61, 37, 15, .24)); }
+    .feature-book.product-item { width: clamp(104px, 10vw, 148px); }
     .book-c136 { width: clamp(136px, 13.5vw, 212px); }
 
     .stump { position: relative; z-index: 1; width: min(330px, 112%); height: auto; pointer-events: none; filter: drop-shadow(0 22px 28px rgba(66, 38, 14, .22)); }
@@ -57,7 +58,7 @@
     .dialog-close { background: rgba(95, 112, 76, .16); color: #4d583d; }
     .dialog-buy { background: #5f704c; color: #fffaf0; }
     @media (max-width: 1180px) { .stump-stage { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (max-width: 767px) { body { cursor: auto; } .page { background: linear-gradient(180deg, rgba(255, 249, 233, .16), rgba(239, 225, 199, .88)), url("../assets/books/fox/bg-mobile.png") center top / cover fixed; } .topbar { align-items: flex-start; padding: 12px 14px; } .brand-wrap { gap: 9px; } .home-link { width: 54px; height: 54px; } .home-logo { width: 46px; height: 46px; } .brand strong { font-size: 24px; } .brand span { font-size: 12px; } .nav { min-height: 34px; padding: 7px 12px; font-size: 14px; } .layout { width: calc(100% - 20px); padding: 6px 0 32px; } .stump-stage { width: 100%; margin: -8px auto 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 8px; } .book-stand { min-height: clamp(250px, 72vw, 330px); padding-bottom: 26px; } .feature-book { bottom: clamp(70px, 22vw, 96px); width: clamp(86px, 31vw, 124px); } .book-c136 { width: clamp(104px, 38vw, 148px); } .stump { width: min(180px, 116%); } .book-label { bottom: 28px; width: min(170px, 112%); padding: 7px 9px; font-size: 12px; line-height: 1.22; } .book-discount { bottom: 0; width: min(170px, 112%); gap: 4px; font-size: 11px; } .book-discount span { min-height: 22px; padding: 5px 7px; } }
+    @media (max-width: 767px) { body { cursor: auto; } .page { background: linear-gradient(180deg, rgba(255, 249, 233, .16), rgba(239, 225, 199, .88)), url("../assets/books/fox/bg-mobile.png") center top / cover fixed; } .topbar { align-items: flex-start; padding: 12px 14px; } .brand-wrap { gap: 9px; } .home-link { width: 54px; height: 54px; } .home-logo { width: 46px; height: 46px; } .brand strong { font-size: 24px; } .brand span { font-size: 12px; } .nav { min-height: 34px; padding: 7px 12px; font-size: 14px; } .layout { width: calc(100% - 20px); padding: 6px 0 32px; } .stump-stage { width: 100%; margin: -8px auto 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 8px; } .book-stand { min-height: clamp(250px, 72vw, 330px); padding-bottom: 26px; } .feature-book { bottom: clamp(70px, 22vw, 96px); width: clamp(86px, 31vw, 124px); } .book-c136 { width: clamp(104px, 38vw, 148px); } .feature-book.product-item { width: clamp(80px, 27vw, 108px); } .stump { width: min(180px, 116%); } .book-label { bottom: 28px; width: min(170px, 112%); padding: 7px 9px; font-size: 12px; line-height: 1.22; } .book-discount { bottom: 0; width: min(170px, 112%); gap: 4px; font-size: 11px; } .book-discount span { min-height: 22px; padding: 5px 7px; } }
     @media (max-width: 420px) { .book-label { font-size: 11px; } .book-discount { font-size: 10px; } .book-discount span { padding: 5px 6px; } }
   </style>
 </head>
@@ -134,6 +135,24 @@
           </div>
           <div class="book-gift">買就送實用釋經學</div>
         </div>
+        <div class="book-stand has-discount">
+          <button class="feature-book product-item" type="button" data-book-code="PB31" aria-label="查看 PB31 雙背喜樂包－奶油酥"><img src="../assets/books/fox/PB31.png" alt=""></button>
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
+          <div class="book-label"><span class="book-label-main">雙背喜樂包</span><span class="book-label-sub">奶油酥</span></div>
+          <div class="book-discount" aria-label="買就送書 售價 NT$ 799"><span>買就送書</span><span>售價 NT$ 799</span></div>
+        </div>
+        <div class="book-stand has-discount">
+          <button class="feature-book product-item" type="button" data-book-code="PB32" aria-label="查看 PB32 雙背喜樂包－芝麻糊"><img src="../assets/books/fox/PB32.png" alt=""></button>
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
+          <div class="book-label"><span class="book-label-main">雙背喜樂包</span><span class="book-label-sub">芝麻糊</span></div>
+          <div class="book-discount" aria-label="買就送書 售價 NT$ 799"><span>買就送書</span><span>售價 NT$ 799</span></div>
+        </div>
+        <div class="book-stand has-discount">
+          <button class="feature-book product-item" type="button" data-book-code="CBT7915" aria-label="查看 CBT7915 中英 NKJV 皮面紅色金邊聖經"><img src="../assets/books/fox/CBT7915.png" alt=""></button>
+          <img class="stump" src="../assets/books/common/stump.png" alt="">
+          <div class="book-label"><span class="book-label-main">中英 NKJV</span><span class="book-label-sub">皮面紅色金邊聖經</span></div>
+          <div class="book-discount" aria-label="買就送書 售價 NT$ 799"><span>買就送書</span><span>售價 NT$ 799</span></div>
+        </div>
       </div>
     </section>
   </main>
@@ -182,13 +201,13 @@
             "code": "C268",
             "title": "青心吐義1",
             "price": "定價 NT$ 250\n購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、擇一贈送，可累計贈送，一起分享閱讀的喜悅！",
-            "url": "https://www.pbooks.com.tw/products/c268"
+            "url": "https://www.pbooks.com.tw/products/c268c278"
       },
       "C278": {
             "code": "C278",
             "title": "青心吐義2",
             "price": "定價 NT$ 250\n購買本書即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、擇一贈送，可累計贈送，一起分享閱讀的喜悅！",
-            "url": "https://www.pbooks.com.tw/products/c278"
+            "url": "https://www.pbooks.com.tw/products/c268c278"
       },
       "C221": {
             "code": "C221",
@@ -201,6 +220,24 @@
             "title": "進入聖經的世界",
             "price": "定價 NT$ 800 / 79折特價 NT$ 632\n買就送實用釋經學",
             "url": "https://www.pbooks.com.tw/products/c136"
+      },
+      "PB31": {
+            "code": "PB31",
+            "title": "雙背喜樂包－奶油酥",
+            "price": "售價 NT$ 799\n買以上商品就送 C288連線卻失聯或C157我親眼看見神或C222耶和華忿怒的杯酒",
+            "url": "https://www.pbooks.com.tw/products/pb31-pb32"
+      },
+      "PB32": {
+            "code": "PB32",
+            "title": "雙背喜樂包－芝麻糊",
+            "price": "售價 NT$ 799\n買以上商品就送 C288連線卻失聯或C157我親眼看見神或C222耶和華忿怒的杯酒",
+            "url": "https://www.pbooks.com.tw/products/pb31-pb32"
+      },
+      "CBT7915": {
+            "code": "CBT7915",
+            "title": "中英 NKJV 皮面紅色金邊聖經",
+            "price": "售價 NT$ 799\n買以上商品就送 C288連線卻失聯或C157我親眼看見神或C222耶和華忿怒的杯酒",
+            "url": "https://www.pbooks.com.tw/products/cbt7915"
       }
 };
     const giftChoiceFrom = "末世教會的覺醒、擇一贈送";

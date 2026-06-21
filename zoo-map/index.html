@@ -103,6 +103,21 @@
       white-space: nowrap;
     }
 
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .sale-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 7px 14px;
+      border: 1px solid rgba(99, 122, 79, .32);
+      border-radius: 999px;
+      color: var(--leaf-dark);
+      background: rgba(255, 255, 255, .66);
+      font-weight: 700;
+      letter-spacing: .08em;
+      white-space: nowrap;
+    }
+
     .map-shell {
       width: 100%;
       margin: 0 auto;
@@ -283,9 +298,11 @@
         text-overflow: ellipsis;
       }
 
-      .home-link {
+      .top-actions .home-link {
         display: none;
       }
+
+      .sale-link { min-height: 34px; padding: 6px 11px; font-size: 13px; }
 
       body.is-editing .map-shell {
         width: var(--map-edit-width, 100%);
@@ -731,7 +748,10 @@
       <div class="brand">
         <strong>閱讀動物園平面圖</strong>
       </div>
-      <a class="home-link" href="../index.html">回首頁</a>
+      <div class="top-actions">
+        <a class="sale-link" href="../activities/" data-footstep-transition data-transition-label="前往特價表">特價表</a>
+        <a class="home-link" href="../index.html">回首頁</a>
+      </div>
     </nav>
 
     <div class="map-shell">
@@ -1063,5 +1083,4 @@
   <script src="../assets/common/footstep-transition.js?v=20260615"></script>
 </body>
 </html>
-
 
