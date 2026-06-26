@@ -576,10 +576,11 @@
       }
 
       .scene {
-        min-height: 1980px;
-        height: 1980px;
+        min-height: 100vh;
+        height: auto;
         background-image: url("assets/草地手機板.png");
         background-position: center top;
+        touch-action: pan-y;
       }
 
       .home-link {
@@ -986,6 +987,7 @@
     ];
 
     const map = document.getElementById("map");
+    const scene = document.querySelector(".scene");
     const overlay = document.getElementById("overlay");
     const viewer = document.getElementById("viewer");
     const viewerGallery = document.getElementById("viewerGallery");
@@ -1007,17 +1009,21 @@
     const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
     const formatPrice = (value) => `NT$ ${value}`;
 
+    function isMobileLayout() {
+      return window.innerWidth < 860;
+    }
+
     function getColumns() {
-      return window.innerWidth < 860 ? 4 : 7;
+      return isMobileLayout() ? 4 : 7;
     }
 
     function getSceneBounds(sprite) {
-      const mobile = window.innerWidth < 860;
+      const mobile = isMobileLayout();
       return {
-        left: sprite.radius + (mobile ? 24 : 30),
-        right: sprite.radius + (mobile ? 24 : 30),
-        top: sprite.radius + (mobile ? 112 : 32),
-        bottom: sprite.radius + (mobile ? 110 : 146)
+        left: sprite.radius + (mobile ? 18 : 30),
+        right: sprite.radius + (mobile ? 18 : 30),
+        top: sprite.radius + (mobile ? 84 : 32),
+        bottom: sprite.radius + (mobile ? 84 : 146)
       };
     }
 
@@ -1143,6 +1149,18 @@
     }
 
     function layoutSprites() {
+      const mobile = isMobileLayout();
+      if (scene) {
+        if (mobile) {
+          const mobileHeight = Math.max(window.innerHeight, 220 + sprites.length * 220);
+          scene.style.height = `${mobileHeight}px`;
+          scene.style.minHeight = `${mobileHeight}px`;
+        } else {
+          scene.style.height = "";
+          scene.style.minHeight = "";
+        }
+      }
+
       const rect = map.getBoundingClientRect();
       state.width = rect.width;
       state.height = rect.height;
@@ -1150,16 +1168,25 @@
       sprites.forEach((sprite, index) => {
         const bounds = getSceneBounds(sprite);
         const defaultGrid = getGridPosition(index, sprites.length);
-        const grid = {
-          x: sprite.mapX ?? defaultGrid.x,
-          y: sprite.mapY ?? defaultGrid.y
-        };
-        const jitterX = ((index % 3) - 1) * (window.innerWidth < 860 ? 12 : 20);
-        const jitterY = ((index % 4) - 1.5) * (window.innerWidth < 860 ? 16 : 18);
-        sprite.xRatio = grid.x;
-        sprite.yRatio = grid.y;
-        sprite.x = clamp(grid.x * rect.width + jitterX, bounds.left, rect.width - bounds.right);
-        sprite.y = clamp(grid.y * rect.height + jitterY, bounds.top, rect.height - bounds.bottom);
+        if (mobile) {
+          const stripeX = rect.width * 0.5;
+          const stripeY = 170 + index * 220;
+          sprite.xRatio = 0.5;
+          sprite.yRatio = stripeY / rect.height;
+          sprite.x = clamp(stripeX, bounds.left, rect.width - bounds.right);
+          sprite.y = clamp(stripeY, bounds.top, rect.height - bounds.bottom);
+        } else {
+          const grid = {
+            x: sprite.mapX ?? defaultGrid.x,
+            y: sprite.mapY ?? defaultGrid.y
+          };
+          const jitterX = ((index % 3) - 1) * 20;
+          const jitterY = ((index % 4) - 1.5) * 18;
+          sprite.xRatio = grid.x;
+          sprite.yRatio = grid.y;
+          sprite.x = clamp(grid.x * rect.width + jitterX, bounds.left, rect.width - bounds.right);
+          sprite.y = clamp(grid.y * rect.height + jitterY, bounds.top, rect.height - bounds.bottom);
+        }
         sprite.vx = 0;
         sprite.vy = 0;
         applyTransform(sprite);
