@@ -1020,10 +1020,10 @@
     function getSceneBounds(sprite) {
       const mobile = isMobileLayout();
       return {
-        left: sprite.radius + (mobile ? 18 : 30),
-        right: sprite.radius + (mobile ? 18 : 30),
-        top: sprite.radius + (mobile ? 84 : 32),
-        bottom: sprite.radius + (mobile ? 84 : 146)
+        left: sprite.radius + (mobile ? 14 : 30),
+        right: sprite.radius + (mobile ? 14 : 30),
+        top: sprite.radius + (mobile ? 44 : 32),
+        bottom: sprite.radius + (mobile ? 56 : 146)
       };
     }
 
@@ -1035,6 +1035,18 @@
       return {
         x: (col + 0.5) / columns,
         y: (row + 0.68) / rows
+      };
+    }
+
+    function getMobileClusterPosition(index, total) {
+      const columns = 3;
+      const rows = Math.ceil(total / columns);
+      const col = index % columns;
+      const row = Math.floor(index / columns);
+      const rowSpan = Math.max(rows - 1, 1);
+      return {
+        x: (col + 0.5) / columns,
+        y: 0.14 + (row / rowSpan) * 0.72
       };
     }
 
@@ -1080,6 +1092,7 @@
 
       const sprite = {
         ...product,
+        baseSize: product.size,
         x: 0,
         y: 0,
         vx: 0,
@@ -1152,7 +1165,8 @@
       const mobile = isMobileLayout();
       if (scene) {
         if (mobile) {
-          const mobileHeight = Math.max(window.innerHeight * 2, 220 + sprites.length * 210);
+          const rows = Math.ceil(sprites.length / 3);
+          const mobileHeight = Math.max(window.innerHeight * 1.18, 180 + rows * 170);
           scene.style.height = `${mobileHeight}px`;
           scene.style.minHeight = `${mobileHeight}px`;
         } else {
@@ -1168,17 +1182,16 @@
       sprites.forEach((sprite, index) => {
         const bounds = getSceneBounds(sprite);
         const defaultGrid = getGridPosition(index, sprites.length);
+        const sizeScale = mobile ? 0.62 : 1;
+        sprite.el.style.setProperty("--sprite-size", `${Math.max(44, Math.round(sprite.baseSize * sizeScale))}px`);
         if (mobile) {
-          const grid = {
-            x: sprite.mapX ?? defaultGrid.x,
-            y: sprite.mapY ?? defaultGrid.y
-          };
-          const jitterX = ((index % 3) - 1) * 10;
-          const jitterY = ((index % 4) - 1.5) * 14;
-          sprite.xRatio = grid.x;
-          sprite.yRatio = grid.y;
-          sprite.x = clamp(grid.x * rect.width + jitterX, bounds.left, rect.width - bounds.right);
-          sprite.y = clamp(grid.y * rect.height + jitterY, bounds.top, rect.height - bounds.bottom);
+          const cluster = getMobileClusterPosition(index, sprites.length);
+          const jitterX = ((index % 3) - 1) * 8;
+          const jitterY = ((index % 2) - 0.5) * 10;
+          sprite.xRatio = cluster.x;
+          sprite.yRatio = cluster.y;
+          sprite.x = clamp(cluster.x * rect.width + jitterX, bounds.left, rect.width - bounds.right);
+          sprite.y = clamp(cluster.y * rect.height + jitterY, bounds.top, rect.height - bounds.bottom);
         } else {
           const grid = {
             x: sprite.mapX ?? defaultGrid.x,
