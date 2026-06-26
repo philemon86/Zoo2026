@@ -118,6 +118,10 @@
       z-index: 1;
     }
 
+    .mobile-catalog {
+      display: none;
+    }
+
     .pickup {
       position: absolute;
       left: 0;
@@ -568,37 +572,188 @@
         height: 100%;
         min-height: 100%;
         overflow-x: hidden;
-        overflow-y: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       body {
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
       }
 
       .scene {
         min-height: 100vh;
-        height: 100vh;
-        overflow: hidden;
-        background-image: url("assets/草地手機板.png");
-        background-position: center top;
-        touch-action: none;
+        height: auto;
+        overflow: visible;
+        background: #f5ebca;
+        touch-action: pan-y;
+      }
+
+      .scene::before {
+        display: none;
+      }
+
+      .map {
+        display: none;
       }
 
       .home-link {
-        top: 14px;
-        left: 14px;
+        position: fixed;
+        top: calc(12px + env(safe-area-inset-top));
+        left: calc(12px + env(safe-area-inset-left));
       }
 
       .top-pills {
-        top: 68px;
-        left: 14px;
-        right: 14px;
+        position: fixed;
+        top: calc(68px + env(safe-area-inset-top));
+        left: calc(12px + env(safe-area-inset-left));
+        right: calc(12px + env(safe-area-inset-right));
       }
 
       .top-pill {
         min-height: 40px;
         padding: 9px 14px;
         font-size: 13px;
+      }
+
+      .mobile-catalog {
+        display: grid;
+        gap: 12px;
+        padding: 124px 14px 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .mobile-card {
+        display: grid;
+        grid-template-columns: 86px minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px;
+        border-radius: 20px;
+        border: 1px solid rgba(94, 110, 76, 0.15);
+        background: rgba(255, 251, 243, 0.9);
+        box-shadow: 0 14px 28px rgba(111, 94, 53, 0.12);
+        backdrop-filter: blur(10px);
+      }
+
+      .mobile-card-media {
+        width: 86px;
+        height: 86px;
+        border: 0;
+        padding: 0;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.72);
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      .mobile-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+
+      .mobile-card-body {
+        min-width: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .mobile-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .mobile-card-title {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.2;
+        color: var(--ink);
+        font-weight: 900;
+      }
+
+      .mobile-card-tag {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 28px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(104, 128, 83, 0.12);
+        color: var(--green-deep);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .mobile-card-prices {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .mobile-card-price {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 34px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(94, 110, 76, 0.12);
+        background: rgba(255, 255, 255, 0.86);
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .mobile-card-price.sale {
+        color: var(--sale);
+        background: rgba(186, 110, 78, 0.08);
+      }
+
+      .mobile-card-price-label {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+      }
+
+      .mobile-card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .mobile-card-link,
+      .mobile-card-open {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(94, 110, 76, 0.14);
+        background: rgba(255, 255, 255, 0.88);
+        color: var(--green-deep);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .mobile-card-link.primary,
+      .mobile-card-open {
+        background: rgba(104, 128, 83, 0.12);
+      }
+
+      .mobile-card-link.pending {
+        color: rgba(41, 64, 50, 0.62);
+      }
+
+      .mobile-card-link:active,
+      .mobile-card-open:active {
+        transform: translateY(1px);
       }
 
       .pickup-pill.title {
@@ -688,6 +843,7 @@
       <span class="top-pill">宗教教育週不可少的裝備</span>
     </div>
     <section class="map" id="map" aria-label="最新禮品地圖"></section>
+    <section class="mobile-catalog" id="mobileCatalog" aria-label="商品列表"></section>
 
     <div class="overlay" id="overlay" aria-hidden="true">
       <aside class="viewer" id="viewer" aria-hidden="true">
@@ -988,6 +1144,7 @@
     ];
 
     const map = document.getElementById("map");
+    const mobileCatalog = document.getElementById("mobileCatalog");
     const scene = document.querySelector(".scene");
     const overlay = document.getElementById("overlay");
     const viewer = document.getElementById("viewer");
@@ -1004,6 +1161,7 @@
       height: 0,
       activeId: null,
       dragId: null,
+      layoutMode: null,
       animationFrame: 0
     };
 
@@ -1071,6 +1229,51 @@
     function getFrameImage(sprite, index = sprite.frameIndex || 0) {
       const frame = getFrameForSprite(sprite, index);
       return frame.image || sprite.image;
+    }
+
+    function buildMobileActionMarkup(action) {
+      if (action.pending) {
+        return `<span class="mobile-card-link pending">${action.label}</span>`;
+      }
+      return `<a class="mobile-card-link primary" href="${action.href}" target="_blank" rel="noreferrer">${action.label}</a>`;
+    }
+
+    function buildMobileCard(product) {
+      const image = getFrameImage(product);
+      const code = product.id.toUpperCase();
+      const actions = product.actions.map((action) => buildMobileActionMarkup(action)).join("");
+      return `
+        <article class="mobile-card" data-id="${product.id}">
+          <button class="mobile-card-media" type="button" data-open-card="${product.id}" aria-label="開啟 ${product.fullTitle} 大圖">
+            <img src="${image}" alt="${product.fullTitle}" loading="lazy" decoding="async">
+          </button>
+          <div class="mobile-card-body">
+            <div class="mobile-card-top">
+              <h3 class="mobile-card-title">${product.title}</h3>
+              <span class="mobile-card-tag">${code}</span>
+            </div>
+            <div class="mobile-card-prices">
+              <span class="mobile-card-price">
+                <span class="mobile-card-price-label">定價</span>
+                <strong>${formatPrice(product.listPrice)}</strong>
+              </span>
+              <span class="mobile-card-price sale">
+                <span class="mobile-card-price-label">特價</span>
+                <strong>${formatPrice(product.salePrice)}</strong>
+              </span>
+            </div>
+            <div class="mobile-card-actions">
+              <button class="mobile-card-open" type="button" data-open-card="${product.id}">看大圖</button>
+              ${actions}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderMobileCatalog() {
+      if (!mobileCatalog) return;
+      mobileCatalog.innerHTML = products.map((product) => buildMobileCard(product)).join("");
     }
 
     function setSurfaceFrame(surface, frame, altText) {
@@ -1174,10 +1377,7 @@
     function layoutSprites() {
       const mobile = isMobileLayout();
       if (scene) {
-        if (mobile) {
-          scene.style.height = "100vh";
-          scene.style.minHeight = "100vh";
-        } else {
+        if (!mobile) {
           scene.style.height = "";
           scene.style.minHeight = "";
         }
@@ -1301,6 +1501,22 @@
       overlay.setAttribute("aria-hidden", "true");
       viewer.setAttribute("aria-hidden", "true");
       hud.setAttribute("aria-hidden", "true");
+    }
+
+    function openMobileCard(cardId) {
+      const product = products.find((item) => item.id === cardId);
+      if (product) {
+        openHud(product);
+      }
+    }
+
+    if (mobileCatalog) {
+      mobileCatalog.addEventListener("click", (event) => {
+        const trigger = event.target.closest("[data-open-card]");
+        if (!trigger) return;
+        event.preventDefault();
+        openMobileCard(trigger.getAttribute("data-open-card"));
+      });
     }
 
     function startDrag(event, sprite) {
@@ -1434,15 +1650,25 @@
         queueAutoFlip(sprite, index);
       });
 
+      if (isMobileLayout()) {
+        renderMobileCatalog();
+        cancelAnimationFrame(state.animationFrame);
+        state.animationFrame = 0;
+      } else if (mobileCatalog) {
+        mobileCatalog.innerHTML = "";
+      }
+
       layoutSprites();
-      cancelAnimationFrame(state.animationFrame);
-      applyPhysics();
+      if (!isMobileLayout()) {
+        cancelAnimationFrame(state.animationFrame);
+        applyPhysics();
+      }
     }
 
     hudClose.addEventListener("click", closeHud);
 
     document.addEventListener("click", (event) => {
-      if (event.target.closest(".pickup") || event.target.closest(".hud") || event.target.closest(".viewer")) return;
+      if (event.target.closest(".pickup") || event.target.closest(".hud") || event.target.closest(".viewer") || event.target.closest(".mobile-catalog")) return;
       closeHud();
     });
 
@@ -1452,7 +1678,19 @@
       }
     });
 
-    window.addEventListener("resize", layoutSprites);
+    window.addEventListener("resize", () => {
+      layoutSprites();
+      if (isMobileLayout()) {
+        renderMobileCatalog();
+        cancelAnimationFrame(state.animationFrame);
+        state.animationFrame = 0;
+      } else if (mobileCatalog) {
+        mobileCatalog.innerHTML = "";
+        if (!state.animationFrame) {
+          applyPhysics();
+        }
+      }
+    });
 
     init();
   </script>
