@@ -118,6 +118,131 @@
       z-index: 1;
     }
 
+    .mobile-list {
+      display: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    .mobile-list-inner {
+      display: grid;
+      gap: 14px;
+      padding: 0 16px 20px;
+    }
+
+    .mobile-card {
+      display: grid;
+      grid-template-columns: minmax(96px, 28vw) minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid rgba(94, 110, 76, 0.16);
+      border-radius: 22px;
+      background: rgba(255, 251, 242, 0.9);
+      box-shadow: 0 16px 34px rgba(111, 94, 54, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .mobile-card-media {
+      display: grid;
+      place-items: center;
+      min-height: 110px;
+      padding: 8px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(248, 241, 225, 0.96), rgba(239, 228, 201, 0.9));
+    }
+
+    .mobile-card-button {
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .mobile-card-image {
+      width: 100%;
+      height: 100%;
+      max-height: 180px;
+      object-fit: contain;
+      display: block;
+      filter: var(--drop-shadow);
+    }
+
+    .mobile-card-copy {
+      display: grid;
+      gap: 10px;
+      align-content: center;
+      min-width: 0;
+    }
+
+    .mobile-card-head {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .mobile-card-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.15;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      color: var(--ink);
+    }
+
+    .mobile-card-note {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .mobile-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .mobile-card-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(104, 128, 83, 0.1);
+      color: var(--green-deep);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mobile-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mobile-card-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f0f0f;
+      background: linear-gradient(135deg, #ffe9bb, #efc58f);
+      box-shadow: 0 10px 20px rgba(138, 102, 45, 0.14);
+    }
+
+    .mobile-card-link.secondary {
+      color: var(--green-deep);
+      background: rgba(104, 128, 83, 0.08);
+      border: 1px solid rgba(94, 110, 76, 0.12);
+      box-shadow: none;
+    }
+
     .pickup {
       position: absolute;
       left: 0;
@@ -304,6 +429,7 @@
       gap: 14px;
       padding: 24px;
       background: rgba(12, 12, 12, 0.74);
+      overflow: auto;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.24s ease;
@@ -373,6 +499,37 @@
     .viewer-stack.is-wide {
       width: min(360px, 46vw);
       height: min(240px, 30vh);
+    }
+
+    .viewer-group.is-gallery {
+      width: 100%;
+      max-width: min(760px, 100%);
+    }
+
+    .viewer-gallery-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .viewer-gallery-card {
+      width: 100%;
+      min-height: 180px;
+      padding: 12px;
+      border-radius: 20px;
+      background: rgba(255, 250, 241, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 18px 32px rgba(0, 0, 0, 0.22);
+    }
+
+    .viewer-gallery-card img {
+      width: 100%;
+      height: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.34));
     }
 
     .viewer-card {
@@ -576,10 +733,51 @@
       }
 
       .scene {
-        min-height: 1980px;
-        height: 1980px;
+        position: relative;
+        min-height: 100vh;
+        height: auto;
+        padding-top: 92px;
+        padding-bottom: 18px;
         background-image: url("assets/草地手機板.png");
         background-position: center top;
+        background-size: cover;
+      }
+
+      .map {
+        display: none;
+      }
+
+      .mobile-list {
+        display: block;
+      }
+
+      .mobile-list-inner {
+        padding: 0 12px 20px;
+      }
+
+      .mobile-card {
+        grid-template-columns: minmax(86px, 30vw) minmax(0, 1fr);
+        gap: 10px;
+        padding: 10px;
+        border-radius: 18px;
+      }
+
+      .mobile-card-media {
+        min-height: 104px;
+        padding: 6px;
+      }
+
+      .mobile-card-title {
+        font-size: 16px;
+      }
+
+      .mobile-card-note {
+        font-size: 12px;
+      }
+
+      .mobile-card-link {
+        min-height: 36px;
+        padding: 7px 12px;
       }
 
       .home-link {
@@ -610,13 +808,14 @@
       }
 
       .overlay {
+        align-content: start;
         padding: 16px;
         gap: 14px;
       }
 
       .viewer {
-        width: min(calc(100vw - 32px), 340px);
-        min-height: min(40vh, 340px);
+        width: min(calc(100vw - 24px), 420px);
+        min-height: min(32vh, 320px);
       }
 
       .viewer-gallery {
@@ -638,8 +837,20 @@
       }
 
       .viewer-single {
-        width: min(300px, 72vw);
-        max-height: min(38vh, 320px);
+        width: min(320px, 80vw);
+        max-height: min(36vh, 320px);
+      }
+
+      .viewer-gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .viewer-gallery-card {
+        min-height: 160px;
+      }
+
+      .viewer-gallery-card img {
+        max-height: 260px;
       }
 
       .hud {
@@ -686,6 +897,9 @@
       <span class="top-pill">宗教教育週不可少的裝備</span>
     </div>
     <section class="map" id="map" aria-label="最新禮品地圖"></section>
+    <section class="mobile-list" id="mobileList" aria-label="商品列表">
+      <div class="mobile-list-inner" id="mobileListInner"></div>
+    </section>
 
     <div class="overlay" id="overlay" aria-hidden="true">
       <aside class="viewer" id="viewer" aria-hidden="true">
@@ -824,6 +1038,7 @@
         ],
         note: "燈箱會自動每三秒翻面一次，展示正反兩面。",
         variants: ["正面", "背面"],
+        viewerLayout: "gallery",
         viewerStackMode: "wide",
         listPrice: 200,
         salePrice: 150,
@@ -938,6 +1153,7 @@
         initialFrame: 1,
         note: "S046G 會每三秒翻頁一次，點開後可一次看到四張封面。",
         variants: ["封面 1", "封面 2", "封面 3", "封面 4"],
+        viewerLayout: "gallery",
         viewerStackMode: "tall",
         listPrice: 25,
         salePrice: 25,
@@ -956,6 +1172,7 @@
         initialFrame: 0,
         note: "S046F 會每三秒翻頁一次，點開後可一次看到四張封面。",
         variants: ["封面 1", "封面 2", "封面 3", "封面 4"],
+        viewerLayout: "gallery",
         viewerStackMode: "tall",
         listPrice: 25,
         salePrice: 25,
@@ -974,6 +1191,7 @@
         initialFrame: 0,
         note: "紅包袋改用你切好的五張圖，會自動翻頁輪播，尺寸也放大一些。",
         variants: ["款式 1", "款式 2", "款式 3", "款式 4", "款式 5"],
+        viewerLayout: "gallery",
         viewerStackMode: "tall",
         listPrice: 125,
         salePrice: 99,
@@ -986,6 +1204,8 @@
     ];
 
     const map = document.getElementById("map");
+    const mobileList = document.getElementById("mobileList");
+    const mobileListInner = document.getElementById("mobileListInner");
     const overlay = document.getElementById("overlay");
     const viewer = document.getElementById("viewer");
     const viewerGallery = document.getElementById("viewerGallery");
@@ -996,6 +1216,7 @@
     const hudClose = document.getElementById("hudClose");
 
     const sprites = [];
+    const productById = new Map(products.map((product) => [product.id, product]));
     const state = {
       width: 0,
       height: 0,
@@ -1182,14 +1403,86 @@
       }).join("");
     }
 
+    function getPreviewImage(product) {
+      if (product.image) return product.image;
+      if (product.frames && product.frames.length) return product.frames[0].image;
+      return "";
+    }
+
+    function buildMobileCard(product) {
+      const previewImage = getPreviewImage(product);
+      const variants = (product.variants || []).slice(0, 4).map((variant) => `<span class="mobile-card-chip">${variant}</span>`).join("");
+      const action = product.actions && product.actions[0];
+      return `
+        <article class="mobile-card">
+          <button class="mobile-card-button" type="button" data-product-id="${product.id}" aria-label="查看 ${product.fullTitle}">
+            <div class="mobile-card-media">
+              <img class="mobile-card-image" src="${previewImage}" alt="${product.fullTitle}" loading="lazy">
+            </div>
+          </button>
+          <div class="mobile-card-copy">
+            <div class="mobile-card-head">
+              <h3 class="mobile-card-title">${product.title}</h3>
+              <p class="mobile-card-note">${product.note}</p>
+            </div>
+            <div class="mobile-card-meta">
+              <span class="mobile-card-chip">NT$ ${product.salePrice}</span>
+              ${variants}
+            </div>
+            <div class="mobile-card-actions">
+              <button class="mobile-card-link secondary" type="button" data-product-id="${product.id}">看大圖</button>
+              ${action ? `<a class="mobile-card-link" href="${action.href}" target="_blank" rel="noreferrer">${action.label}</a>` : ""}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderMobileList() {
+      if (!mobileListInner) return;
+      mobileListInner.innerHTML = products.map((product) => buildMobileCard(product)).join("");
+    }
+
+    function openProduct(product) {
+      state.activeId = product.id;
+      sprites.forEach((item) => item.el.classList.toggle("is-selected", item.id === product.id));
+      refreshHud(product);
+      overlay.classList.add("is-open");
+      overlay.setAttribute("aria-hidden", "false");
+      viewer.setAttribute("aria-hidden", "false");
+      hud.setAttribute("aria-hidden", "false");
+    }
+
     function getDisplayGroups(sprite) {
       if (sprite.viewerGroups && sprite.viewerGroups.length) {
         return sprite.viewerGroups;
       }
       if (sprite.frames && sprite.frames.length > 1) {
-        return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall" }];
+        if (sprite.viewerLayout === "gallery") {
+          return [{ frames: sprite.frames, layout: "gallery" }];
+        }
+        return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall", layout: "stack" }];
       }
       return [];
+    }
+
+    function buildGalleryMarkup(group, sprite) {
+      const cards = group.frames.map((frame, index) => {
+        const frameLabel = group.frames.length > 1 ? `${sprite.fullTitle} 圖片 ${index + 1}` : sprite.fullTitle;
+        return `
+          <div class="viewer-gallery-card">
+            <img src="${frame.image}" alt="${frameLabel}" loading="lazy">
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="viewer-group is-gallery">
+          <div class="viewer-gallery-grid">
+            ${cards}
+          </div>
+        </div>
+      `;
     }
 
     function buildStackMarkup(group) {
@@ -1219,11 +1512,11 @@
     function renderViewer(sprite) {
       const displayGroups = getDisplayGroups(sprite);
       if (!displayGroups.length) {
-        viewerGallery.innerHTML = `<img class="viewer-single" src="${getFrameImage(sprite)}" alt="${sprite.fullTitle}">`;
+        viewerGallery.innerHTML = `<img class="viewer-single" src="${getFrameImage(sprite)}" alt="${sprite.fullTitle}" loading="lazy">`;
         return;
       }
 
-      viewerGallery.innerHTML = `<div class="viewer-groups">${displayGroups.map((group) => buildStackMarkup(group)).join("")}</div>`;
+      viewerGallery.innerHTML = `<div class="viewer-groups">${displayGroups.map((group) => (group.layout === "gallery" ? buildGalleryMarkup(group, sprite) : buildStackMarkup(group))).join("")}</div>`;
     }
 
     function refreshHud(sprite) {
@@ -1234,13 +1527,8 @@
     }
 
     function openHud(sprite) {
-      state.activeId = sprite.id;
       sprites.forEach((item) => item.el.classList.toggle("is-selected", item.id === sprite.id));
-      refreshHud(sprite);
-      overlay.classList.add("is-open");
-      overlay.setAttribute("aria-hidden", "false");
-      viewer.setAttribute("aria-hidden", "false");
-      hud.setAttribute("aria-hidden", "false");
+      openProduct(sprite);
     }
 
     function closeHud() {
@@ -1378,6 +1666,10 @@
         queueAutoFlip(sprite, index);
       });
 
+      if (window.matchMedia("(max-width: 860px)").matches) {
+        renderMobileList();
+      }
+
       layoutSprites();
       cancelAnimationFrame(state.animationFrame);
       applyPhysics();
@@ -1385,8 +1677,19 @@
 
     hudClose.addEventListener("click", closeHud);
 
+    if (mobileList) {
+      mobileList.addEventListener("click", (event) => {
+        const trigger = event.target.closest("[data-product-id]");
+        if (!trigger) return;
+        const product = productById.get(trigger.dataset.productId);
+        if (product) {
+          openProduct(product);
+        }
+      });
+    }
+
     document.addEventListener("click", (event) => {
-      if (event.target.closest(".pickup") || event.target.closest(".hud") || event.target.closest(".viewer")) return;
+      if (event.target.closest(".pickup") || event.target.closest(".mobile-list") || event.target.closest(".hud") || event.target.closest(".viewer")) return;
       closeHud();
     });
 
@@ -1396,7 +1699,12 @@
       }
     });
 
-    window.addEventListener("resize", layoutSprites);
+    window.addEventListener("resize", () => {
+      layoutSprites();
+      if (window.matchMedia("(max-width: 860px)").matches && mobileListInner && !mobileListInner.children.length) {
+        renderMobileList();
+      }
+    });
 
     init();
   </script>
