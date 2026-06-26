@@ -1152,7 +1152,7 @@
       const mobile = isMobileLayout();
       if (scene) {
         if (mobile) {
-          const mobileHeight = Math.max(window.innerHeight, 220 + sprites.length * 220);
+          const mobileHeight = Math.max(window.innerHeight * 2, 220 + sprites.length * 210);
           scene.style.height = `${mobileHeight}px`;
           scene.style.minHeight = `${mobileHeight}px`;
         } else {
@@ -1169,12 +1169,16 @@
         const bounds = getSceneBounds(sprite);
         const defaultGrid = getGridPosition(index, sprites.length);
         if (mobile) {
-          const stripeX = rect.width * 0.5;
-          const stripeY = 170 + index * 220;
-          sprite.xRatio = 0.5;
-          sprite.yRatio = stripeY / rect.height;
-          sprite.x = clamp(stripeX, bounds.left, rect.width - bounds.right);
-          sprite.y = clamp(stripeY, bounds.top, rect.height - bounds.bottom);
+          const grid = {
+            x: sprite.mapX ?? defaultGrid.x,
+            y: sprite.mapY ?? defaultGrid.y
+          };
+          const jitterX = ((index % 3) - 1) * 10;
+          const jitterY = ((index % 4) - 1.5) * 14;
+          sprite.xRatio = grid.x;
+          sprite.yRatio = grid.y;
+          sprite.x = clamp(grid.x * rect.width + jitterX, bounds.left, rect.width - bounds.right);
+          sprite.y = clamp(grid.y * rect.height + jitterY, bounds.top, rect.height - bounds.bottom);
         } else {
           const grid = {
             x: sprite.mapX ?? defaultGrid.x,
@@ -1321,6 +1325,7 @@
 
     function applyPhysics() {
       const now = performance.now();
+      const mobile = isMobileLayout();
 
       for (let i = 0; i < sprites.length; i += 1) {
         const a = sprites[i];
@@ -1328,6 +1333,10 @@
         if (a.frames && a.frames.length > 1 && !a.isPointerDown && now >= a.nextFlipAt) {
           runFlip(a);
           a.nextFlipAt = now + a.flipInterval;
+        }
+
+        if (mobile) {
+          continue;
         }
 
         if (!a.isPointerDown) {
