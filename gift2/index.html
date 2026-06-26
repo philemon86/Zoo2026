@@ -1,0 +1,1404 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>最新禮品地圖</title>
+  <style>
+    :root {
+      --ink: #294032;
+      --ink-soft: rgba(41, 64, 50, 0.8);
+      --hud: rgba(255, 250, 239, 0.94);
+      --hud-2: rgba(250, 242, 220, 0.92);
+      --line: rgba(94, 110, 76, 0.16);
+      --green: #688053;
+      --green-deep: #4f6540;
+      --sale: #ba6e4e;
+      --cream: #fffaf1;
+      --shadow: 0 18px 46px rgba(112, 94, 50, 0.2);
+      --drop-shadow: drop-shadow(0 16px 22px rgba(108, 90, 53, 0.18));
+      --hud-shadow: 0 28px 64px rgba(87, 75, 43, 0.26);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #f5ebca;
+      color: var(--ink);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      isolation: isolate;
+      user-select: none;
+      touch-action: none;
+      background: url("assets/草地電腦板.png") center / cover no-repeat;
+    }
+
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.32), transparent 24%),
+        radial-gradient(circle at 84% 10%, rgba(255, 255, 255, 0.22), transparent 20%),
+        linear-gradient(180deg, rgba(255, 251, 241, 0.16), rgba(255, 248, 231, 0.08) 32%, rgba(248, 238, 207, 0.22));
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .home-link {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 251, 243, 0.88);
+      color: var(--green-deep);
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(109, 93, 54, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .top-pills {
+      position: absolute;
+      top: 18px;
+      left: 128px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(94, 110, 76, 0.16);
+      background: rgba(255, 251, 243, 0.88);
+      color: var(--green-deep);
+      box-shadow: 0 10px 30px rgba(109, 93, 54, 0.12);
+      backdrop-filter: blur(12px);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .map {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .pickup {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      z-index: 2;
+      will-change: transform;
+    }
+
+    .pickup.is-selected {
+      z-index: 7;
+    }
+
+    .pickup.is-dragging {
+      z-index: 9;
+    }
+
+    .pickup-body {
+      position: relative;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+    }
+
+    .pickup-button {
+      position: relative;
+      width: var(--sprite-size);
+      height: var(--sprite-size);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .pickup.is-dragging .pickup-button {
+      cursor: grabbing;
+    }
+
+    .pickup-button::before {
+      content: "";
+      position: absolute;
+      inset: 15%;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0));
+      filter: blur(14px);
+      pointer-events: none;
+    }
+
+    .pickup-button::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      width: 76%;
+      height: 18px;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      background: rgba(103, 88, 52, 0.18);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .pickup-core {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      transform: translateY(var(--float-shift));
+      transition: transform 0.24s ease;
+    }
+
+    .pickup:hover .pickup-core {
+      transform: translateY(calc(var(--float-shift) - 7px)) scale(1.03);
+    }
+
+    .pickup.is-selected .pickup-core {
+      transform: translateY(calc(var(--float-shift) - 10px)) scale(1.18);
+    }
+
+    .pickup-surface {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      filter: var(--drop-shadow);
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .pickup-surface.face-back {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: rotateY(180deg);
+    }
+
+    .pickup.is-flipping .pickup-surface.face-front {
+      opacity: 0;
+      transform: rotateY(180deg);
+    }
+
+    .pickup.is-flipping .pickup-surface.face-back {
+      opacity: 1;
+      transform: rotateY(0deg);
+    }
+
+    .pickup.is-resetting-flip .pickup-surface {
+      transition: none;
+    }
+
+    .pickup-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      pointer-events: none;
+    }
+
+    .pickup-capsules {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .pickup.is-selected .pickup-capsules {
+      opacity: 1;
+    }
+
+    .pickup-pill {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(96, 110, 75, 0.14);
+      background: rgba(255, 252, 245, 0.92);
+      box-shadow: 0 10px 26px rgba(104, 92, 53, 0.14);
+      backdrop-filter: blur(10px);
+      font-weight: 900;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .pickup-pill.title {
+      top: 0;
+      left: 50%;
+      max-width: 180px;
+      transform: translate(-50%, -100%);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: clamp(12px, 0.95vw, 14px);
+    }
+
+    .pickup-pill.price {
+      right: -2%;
+      bottom: 9%;
+      color: var(--sale);
+      background: rgba(255, 246, 240, 0.94);
+      font-size: clamp(12px, 0.9vw, 13px);
+    }
+
+    .pickup-pill.price strong {
+      margin-left: 6px;
+      font-size: 1.08em;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 18;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 14px;
+      padding: 24px;
+      background: rgba(12, 12, 12, 0.74);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+    }
+
+    .overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .viewer {
+      width: min(52vw, 520px);
+      min-height: min(52vh, 520px);
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
+      transition: opacity 0.24s ease, transform 0.24s ease;
+    }
+
+    .overlay.is-open .viewer {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .viewer-frame {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+    }
+
+    .viewer-gallery {
+      width: 100%;
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+    }
+
+    .viewer-groups {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .viewer-group {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+    }
+
+    .viewer-group-title {
+      color: rgba(255, 248, 236, 0.92);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .viewer-stack {
+      position: relative;
+      width: min(260px, 36vw);
+      height: min(330px, 42vh);
+    }
+
+    .viewer-stack.is-wide {
+      width: min(360px, 46vw);
+      height: min(240px, 30vh);
+    }
+
+    .viewer-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--card-width, 78%);
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: var(--card-aspect, 1 / 1);
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
+      transform:
+        translate(-50%, -50%)
+        translate(var(--offset-x, 0px), var(--offset-y, 0px))
+        rotate(var(--card-rotate, 0deg));
+    }
+
+    .viewer-single {
+      width: min(440px, 46vw);
+      max-height: min(52vh, 500px);
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.42));
+    }
+
+    .viewer-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.42));
+    }
+
+    .hud {
+      width: min(900px, calc(100vw - 48px));
+      border-radius: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(17, 17, 17, 0.82);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(18px);
+      opacity: 0;
+      transform: translateY(22px);
+      pointer-events: none;
+      transition: opacity 0.24s ease, transform 0.24s ease;
+    }
+
+    .overlay.is-open .hud {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .hud-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 18px;
+    }
+
+    .hud-main {
+      min-width: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .hud-topline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .hud-title-wrap {
+      min-width: 0;
+    }
+
+    .hud-title {
+      margin: 0;
+      font-size: clamp(22px, 2vw, 30px);
+      line-height: 1.08;
+      letter-spacing: 0.04em;
+      font-weight: 900;
+      color: #fff8ec;
+    }
+
+    .hud-close {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff8ec;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .hud-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hud-chip,
+    .hud-price {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(94, 110, 76, 0.12);
+      background: rgba(255, 250, 241, 0.92);
+      font-weight: 800;
+    }
+
+    .hud-chip {
+      color: #55684a;
+      font-size: 13px;
+    }
+
+    .hud-price {
+      color: #f4ead6;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .hud-price.sale {
+      color: #ffbb96;
+      background: rgba(186, 110, 78, 0.16);
+      border-color: rgba(255, 187, 150, 0.18);
+    }
+
+    .hud-price-label {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+
+    .hud-price-value {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .hud-actions {
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+      align-content: center;
+    }
+
+    .hud-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .hud-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      text-decoration: none;
+      color: #f7f2e6;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+    }
+
+    .hud-link.primary {
+      color: #0e0e0e;
+      background: linear-gradient(135deg, #fff3d0, #f0c993);
+    }
+
+    .hud-link.pending {
+      color: #cab8a0;
+      background: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    @media (max-width: 860px) {
+      html,
+      body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      body {
+        overflow-x: hidden;
+      }
+
+      .scene {
+        min-height: 1980px;
+        height: 1980px;
+        background-image: url("assets/草地手機板.png");
+        background-position: center top;
+      }
+
+      .home-link {
+        top: 14px;
+        left: 14px;
+      }
+
+      .top-pills {
+        top: 68px;
+        left: 14px;
+        right: 14px;
+      }
+
+      .top-pill {
+        min-height: 40px;
+        padding: 9px 14px;
+        font-size: 13px;
+      }
+
+      .pickup-pill.title {
+        max-width: 136px;
+      }
+
+      .pickup-pill.price {
+        right: 50%;
+        bottom: -4px;
+        transform: translateX(50%);
+      }
+
+      .overlay {
+        padding: 16px;
+        gap: 14px;
+      }
+
+      .viewer {
+        width: min(calc(100vw - 32px), 340px);
+        min-height: min(40vh, 340px);
+      }
+
+      .viewer-gallery {
+        gap: 12px;
+      }
+
+      .viewer-groups {
+        gap: 12px;
+      }
+
+      .viewer-stack {
+        width: min(210px, 48vw);
+        height: min(270px, 30vh);
+      }
+
+      .viewer-stack.is-wide {
+        width: min(280px, 72vw);
+        height: min(190px, 22vh);
+      }
+
+      .viewer-single {
+        width: min(300px, 72vw);
+        max-height: min(38vh, 320px);
+      }
+
+      .hud {
+        width: min(calc(100vw - 32px), 720px);
+        border-radius: 22px;
+      }
+
+      .hud-inner {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 14px;
+      }
+
+      .hud-main {
+        gap: 8px;
+      }
+
+      .hud-topline {
+        gap: 8px;
+      }
+
+      .hud-title {
+        font-size: 20px;
+      }
+
+      .hud-price-value {
+        font-size: 18px;
+      }
+
+      .hud-actions {
+        justify-items: start;
+      }
+
+      .hud-links {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <a class="home-link" href="https://zoo.pbooks.com.tw/" target="_blank" rel="noreferrer">回首頁</a>
+    <div class="top-pills" aria-hidden="true">
+      <span class="top-pill">宗教教育週不可少的裝備</span>
+    </div>
+    <section class="map" id="map" aria-label="最新禮品地圖"></section>
+
+    <div class="overlay" id="overlay" aria-hidden="true">
+      <aside class="viewer" id="viewer" aria-hidden="true">
+        <div class="viewer-frame">
+          <div class="viewer-gallery" id="viewerGallery"></div>
+        </div>
+      </aside>
+
+      <aside class="hud" id="hud" aria-hidden="true" aria-live="polite">
+        <div class="hud-inner">
+          <div class="hud-main">
+            <div class="hud-topline">
+              <div class="hud-title-wrap">
+                <h2 class="hud-title" id="hudTitle">最新禮品</h2>
+              </div>
+              <button class="hud-close" id="hudClose" type="button" aria-label="關閉商品資訊">×</button>
+            </div>
+            <div class="hud-meta" id="hudMeta"></div>
+          </div>
+
+          <div class="hud-actions">
+            <div class="hud-links" id="hudLinks"></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const notebookFramesG = [
+      { type: "image", image: "assets/S046G-1.png" },
+      { type: "image", image: "assets/S046G-2.png" },
+      { type: "image", image: "assets/S046G-3.png" },
+      { type: "image", image: "assets/S046G-4.png" }
+    ];
+
+    const notebookFramesF = [
+      { type: "image", image: "assets/S046F-1.png" },
+      { type: "image", image: "assets/S046F-2.png" },
+      { type: "image", image: "assets/S046F-3.png" },
+      { type: "image", image: "assets/S046F-4.png" }
+    ];
+
+    const hongbaoFrames = [
+      { type: "image", image: "assets/PG25-01.png" },
+      { type: "image", image: "assets/PG25-02.png" },
+      { type: "image", image: "assets/PG25-03.png" },
+      { type: "image", image: "assets/PG25-04.png" },
+      { type: "image", image: "assets/PG25-05.png" }
+    ];
+
+    const products = [
+      {
+        id: "cup10",
+        title: "臺灣傳教百年紀念保溫瓶",
+        fullTitle: "臺灣傳教百年紀念保溫瓶",
+        image: "assets/CUP10.png",
+        note: "四款花色保溫杯，點開後可先看到價格與款式，再直接前往商品頁。",
+        variants: ["淺紫", "淺藍", "米白", "灰綠"],
+        listPrice: 500,
+        salePrice: 399,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/CUP10" }],
+        size: 146,
+        radius: 98,
+        mapX: 0.14,
+        mapY: 0.23
+      },
+      {
+        id: "p5p6p7",
+        title: "臺灣傳教百年鋼珠筆",
+        fullTitle: "臺灣傳教百年鋼珠筆",
+        image: "assets/P5P6P7.png",
+        note: "鋼珠筆只保留一張代表圖，底部狀態列會顯示款式與價格。",
+        variants: ["三色款"],
+        listPrice: 25,
+        salePrice: 20,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/P5P6P7" }],
+        size: 124,
+        radius: 84,
+        mapX: 0.34,
+        mapY: 0.17
+      },
+      {
+        id: "pb44",
+        title: "只見耶穌-斜肩郵差包",
+        fullTitle: "只見耶穌-斜肩郵差包",
+        image: "assets/PB44.png",
+        note: "郵差包只放單張圖，商品點開後會展開完整商品資訊。",
+        variants: ["黑色", "米白", "藍色", "粉色"],
+        listPrice: 500,
+        salePrice: 399,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PB44" }],
+        size: 162,
+        radius: 108,
+        mapX: 0.57,
+        mapY: 0.18
+      },
+      {
+        id: "pb45",
+        title: "臺灣傳教百年紀念杯袋",
+        fullTitle: "臺灣傳教百年紀念杯袋",
+        image: "assets/PB45.png",
+        note: "杯袋保留單張代表圖，點開後再看價格與購買頁。",
+        variants: ["憑信", "榮耀", "平安", "盼望"],
+        listPrice: 200,
+        salePrice: 149,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PB45" }],
+        size: 138,
+        radius: 92,
+        mapX: 0.79,
+        mapY: 0.21
+      },
+      {
+        id: "pg03",
+        title: "臺灣傳教百年紀念領帶夾",
+        fullTitle: "臺灣傳教百年紀念領帶夾",
+        image: "assets/PG03-5+PG03-6.png",
+        note: "領帶夾使用單張圖，保留款式資訊與直接購買入口。",
+        variants: ["金色", "銀色"],
+        listPrice: 250,
+        salePrice: 199,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG03" }],
+        size: 126,
+        radius: 86,
+        mapX: 0.9,
+        mapY: 0.42
+      },
+      {
+        id: "pg40-6",
+        title: "臺灣傳教百年三角立牌燈箱",
+        fullTitle: "臺灣傳教百年三角立牌燈箱",
+        image: "assets/PG40-6正面.png",
+        frames: [
+          { type: "image", image: "assets/PG40-6正面.png" },
+          { type: "image", image: "assets/PG40-6背面.png" }
+        ],
+        note: "燈箱會自動每三秒翻面一次，展示正反兩面。",
+        variants: ["正面", "背面"],
+        viewerStackMode: "wide",
+        listPrice: 200,
+        salePrice: 150,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG40-6" }],
+        size: 140,
+        radius: 92,
+        mapX: 0.24,
+        mapY: 0.42
+      },
+      {
+        id: "pg41",
+        title: "長方形洗碗棉",
+        fullTitle: "長方形洗碗棉",
+        image: "assets/PG41-1.png",
+        frames: [
+          { type: "image", image: "assets/PG41-1.png" },
+          { type: "image", image: "assets/PG41-2.png" },
+          { type: "image", image: "assets/PG41-3.png" }
+        ],
+        note: "海綿整合成一個物件，會自動輪播三種造型。",
+        variants: ["款式一", "款式二", "款式三"],
+        viewerStackMode: "wide",
+        listPrice: 39,
+        salePrice: 35,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG41" }],
+        size: 124,
+        radius: 82,
+        mapX: 0.44,
+        mapY: 0.4
+      },
+      {
+        id: "pg44-1",
+        title: "臺灣傳教百年LOGO水晶貼",
+        fullTitle: "臺灣傳教百年LOGO水晶貼",
+        image: "assets/PG44-1.png",
+        note: "水晶貼保留單一商品圖，適合作為場景中的小型可撿拾物件。",
+        variants: ["單款"],
+        listPrice: 69,
+        salePrice: 62,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG44-1" }],
+        size: 118,
+        radius: 80,
+        mapX: 0.67,
+        mapY: 0.46
+      },
+      {
+        id: "pg48",
+        title: "臺灣傳教百年修正帶",
+        fullTitle: "臺灣傳教百年修正帶",
+        image: "assets/PG48.png",
+        note: "修正帶只放一張圖，點開後在底部看品項資訊。",
+        variants: ["五款隨機"],
+        listPrice: 50,
+        salePrice: 40,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG48" }],
+        size: 140,
+        radius: 92,
+        mapX: 0.11,
+        mapY: 0.65
+      },
+      {
+        id: "pg49-1",
+        title: "讚美詩有聲系列鑰匙圈#27",
+        fullTitle: "讚美詩有聲系列鑰匙圈#27",
+        image: "assets/PG49-1.png",
+        note: "鑰匙圈保留獨立物件，方便在地圖中分開撿取。",
+        variants: ["#27"],
+        listPrice: 50,
+        salePrice: 45,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG49" }],
+        size: 108,
+        radius: 74,
+        mapX: 0.76,
+        mapY: 0.61
+      },
+      {
+        id: "pg49-2",
+        title: "讚美詩有聲系列鑰匙圈#449",
+        fullTitle: "讚美詩有聲系列鑰匙圈#449",
+        image: "assets/PG49-2.png",
+        note: "第二個鑰匙圈維持獨立顯示，對應不同圖樣。",
+        variants: ["#449"],
+        listPrice: 50,
+        salePrice: 45,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG49" }],
+        size: 108,
+        radius: 74,
+        mapX: 0.87,
+        mapY: 0.7
+      },
+      {
+        id: "pg27",
+        title: "小台MP3-聖經播放器",
+        fullTitle: "小台MP3-聖經播放器",
+        image: "assets/PG27.png",
+        note: "播放器維持單一商品顯示，點開後直接顯示價格與連結。",
+        variants: ["單款"],
+        listPrice: 1000,
+        salePrice: 900,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG27" }],
+        size: 156,
+        radius: 102,
+        mapX: 0.56,
+        mapY: 0.67
+      },
+      {
+        id: "s046g",
+        title: "A5格紋筆記本",
+        fullTitle: "A5格紋筆記本",
+        image: "assets/S046G-1.png",
+        frames: notebookFramesG,
+        initialFrame: 1,
+        note: "S046G 會每三秒翻頁一次，點開後可一次看到四張封面。",
+        variants: ["封面 1", "封面 2", "封面 3", "封面 4"],
+        viewerStackMode: "tall",
+        listPrice: 25,
+        salePrice: 25,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/S046G" }],
+        size: 152,
+        radius: 94,
+        mapX: 0.21,
+        mapY: 0.78
+      },
+      {
+        id: "s046f",
+        title: "A5線條公益筆記本",
+        fullTitle: "A5線條公益筆記本",
+        image: "assets/S046F-1.png",
+        frames: notebookFramesF,
+        initialFrame: 0,
+        note: "S046F 會每三秒翻頁一次，點開後可一次看到四張封面。",
+        variants: ["封面 1", "封面 2", "封面 3", "封面 4"],
+        viewerStackMode: "tall",
+        listPrice: 25,
+        salePrice: 25,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/S046F" }],
+        size: 152,
+        radius: 94,
+        mapX: 0.34,
+        mapY: 0.78
+      },
+      {
+        id: "pg25",
+        title: "愛滿溢紅包袋(五入)",
+        fullTitle: "愛滿溢紅包袋(五入)",
+        image: "assets/PG25-01.png",
+        frames: hongbaoFrames,
+        initialFrame: 0,
+        note: "紅包袋改用你切好的五張圖，會自動翻頁輪播，尺寸也放大一些。",
+        variants: ["款式 1", "款式 2", "款式 3", "款式 4", "款式 5"],
+        viewerStackMode: "tall",
+        listPrice: 125,
+        salePrice: 99,
+        actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG25" }],
+        size: 72,
+        radius: 50,
+        mapX: 0.49,
+        mapY: 0.84
+      }
+    ];
+
+    const map = document.getElementById("map");
+    const overlay = document.getElementById("overlay");
+    const viewer = document.getElementById("viewer");
+    const viewerGallery = document.getElementById("viewerGallery");
+    const hud = document.getElementById("hud");
+    const hudTitle = document.getElementById("hudTitle");
+    const hudMeta = document.getElementById("hudMeta");
+    const hudLinks = document.getElementById("hudLinks");
+    const hudClose = document.getElementById("hudClose");
+
+    const sprites = [];
+    const state = {
+      width: 0,
+      height: 0,
+      activeId: null,
+      dragId: null,
+      animationFrame: 0
+    };
+
+    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+    const formatPrice = (value) => `NT$ ${value}`;
+
+    function getColumns() {
+      return window.innerWidth < 860 ? 4 : 7;
+    }
+
+    function getSceneBounds(sprite) {
+      const mobile = window.innerWidth < 860;
+      return {
+        left: sprite.radius + (mobile ? 24 : 30),
+        right: sprite.radius + (mobile ? 24 : 30),
+        top: sprite.radius + (mobile ? 112 : 32),
+        bottom: sprite.radius + (mobile ? 110 : 146)
+      };
+    }
+
+    function getGridPosition(index, total) {
+      const columns = getColumns();
+      const rows = Math.ceil(total / columns);
+      const col = index % columns;
+      const row = Math.floor(index / columns);
+      return {
+        x: (col + 0.5) / columns,
+        y: (row + 0.68) / rows
+      };
+    }
+
+    function getFrameForSprite(sprite, index) {
+      if (!sprite.frames || !sprite.frames.length) {
+        return { type: "image", image: sprite.image };
+      }
+      const safeIndex = ((index % sprite.frames.length) + sprite.frames.length) % sprite.frames.length;
+      return sprite.frames[safeIndex];
+    }
+
+    function getFrameImage(sprite, index = sprite.frameIndex || 0) {
+      const frame = getFrameForSprite(sprite, index);
+      return frame.image || sprite.image;
+    }
+
+    function setSurfaceFrame(surface, frame, altText) {
+      if (!surface || !frame) return;
+      surface.innerHTML = `<img class="pickup-image" src="${frame.image}" alt="${altText}">`;
+    }
+
+    function createSprite(product, index) {
+      const wrapper = document.createElement("article");
+      wrapper.className = "pickup";
+      wrapper.dataset.id = product.id;
+      wrapper.style.setProperty("--sprite-size", `${product.size}px`);
+      wrapper.style.setProperty("--float-shift", `${(index % 5) * -2}px`);
+      wrapper.innerHTML = `
+        <div class="pickup-body">
+          <button class="pickup-button" type="button" aria-label="${product.fullTitle}">
+            <span class="pickup-core">
+              <span class="pickup-surface face-front"></span>
+              <span class="pickup-surface face-back"></span>
+            </span>
+            <span class="pickup-capsules" aria-hidden="true">
+              <span class="pickup-pill title">${product.title}</span>
+              <span class="pickup-pill price">特價 <strong>${formatPrice(product.salePrice)}</strong></span>
+            </span>
+          </button>
+        </div>
+      `;
+      map.appendChild(wrapper);
+
+      const sprite = {
+        ...product,
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        xRatio: getGridPosition(index, products.length).x,
+        yRatio: getGridPosition(index, products.length).y,
+        el: wrapper,
+        button: wrapper.querySelector(".pickup-button"),
+        frontSurface: wrapper.querySelector(".pickup-surface.face-front"),
+        backSurface: wrapper.querySelector(".pickup-surface.face-back"),
+        draggedDistance: 0,
+        isPointerDown: false,
+        wobble: Math.random() * Math.PI * 2,
+        frameIndex: product.initialFrame || 0
+      };
+
+      setSurfaceFrame(sprite.frontSurface, getFrameForSprite(sprite, sprite.frameIndex), product.fullTitle);
+      if (sprite.frames && sprite.frames.length > 1) {
+        setSurfaceFrame(sprite.backSurface, getFrameForSprite(sprite, sprite.frameIndex + 1), product.fullTitle);
+      } else {
+        sprite.backSurface.remove();
+      }
+
+      sprite.button.addEventListener("pointerdown", (event) => startDrag(event, sprite));
+      sprite.button.addEventListener("pointermove", (event) => moveDrag(event, sprite));
+      sprite.button.addEventListener("pointerup", (event) => endDrag(event, sprite));
+      sprite.button.addEventListener("pointercancel", (event) => endDrag(event, sprite));
+      return sprite;
+    }
+
+    function queueAutoFlip(sprite, index) {
+      if (!sprite.frames || sprite.frames.length < 2) return;
+      sprite.flipInterval = 3000;
+      sprite.flipDuration = 760;
+      sprite.flipInProgress = false;
+      sprite.nextFlipAt = performance.now() + 1200 + index * 420;
+    }
+
+    function runFlip(sprite) {
+      if (sprite.flipInProgress || !sprite.frames || sprite.frames.length < 2) return;
+      const nextIndex = (sprite.frameIndex + 1) % sprite.frames.length;
+      sprite.flipInProgress = true;
+      setSurfaceFrame(sprite.backSurface, getFrameForSprite(sprite, nextIndex), sprite.fullTitle);
+      sprite.el.classList.add("is-flipping");
+
+      window.setTimeout(() => {
+        sprite.el.classList.add("is-resetting-flip");
+        setSurfaceFrame(sprite.frontSurface, getFrameForSprite(sprite, nextIndex), sprite.fullTitle);
+        sprite.frameIndex = nextIndex;
+        sprite.el.classList.remove("is-flipping");
+
+        if (state.activeId === sprite.id) {
+          refreshHud(sprite);
+        }
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            sprite.el.classList.remove("is-resetting-flip");
+            sprite.flipInProgress = false;
+          });
+        });
+      }, sprite.flipDuration);
+    }
+
+    function applyTransform(sprite) {
+      sprite.el.style.transform = `translate3d(${sprite.x}px, ${sprite.y}px, 0)`;
+    }
+
+    function layoutSprites() {
+      const rect = map.getBoundingClientRect();
+      state.width = rect.width;
+      state.height = rect.height;
+
+      sprites.forEach((sprite, index) => {
+        const bounds = getSceneBounds(sprite);
+        const defaultGrid = getGridPosition(index, sprites.length);
+        const grid = {
+          x: sprite.mapX ?? defaultGrid.x,
+          y: sprite.mapY ?? defaultGrid.y
+        };
+        const jitterX = ((index % 3) - 1) * (window.innerWidth < 860 ? 12 : 20);
+        const jitterY = ((index % 4) - 1.5) * (window.innerWidth < 860 ? 16 : 18);
+        sprite.xRatio = grid.x;
+        sprite.yRatio = grid.y;
+        sprite.x = clamp(grid.x * rect.width + jitterX, bounds.left, rect.width - bounds.right);
+        sprite.y = clamp(grid.y * rect.height + jitterY, bounds.top, rect.height - bounds.bottom);
+        sprite.vx = 0;
+        sprite.vy = 0;
+        applyTransform(sprite);
+      });
+    }
+
+    function buildMeta(sprite) {
+      return [
+        `<span class="hud-price"><span class="hud-price-label">定價</span><span class="hud-price-value">${formatPrice(sprite.listPrice)}</span></span>`,
+        `<span class="hud-price sale"><span class="hud-price-label">特價</span><span class="hud-price-value">${formatPrice(sprite.salePrice)}</span></span>`
+      ].join("");
+    }
+
+    function buildLinks(sprite) {
+      return sprite.actions.map((action) => {
+        if (action.pending) {
+          return `<span class="hud-link pending">${action.label}</span>`;
+        }
+        return `<a class="hud-link primary" href="${action.href}" target="_blank" rel="noreferrer">${action.label}</a>`;
+      }).join("");
+    }
+
+    function getDisplayGroups(sprite) {
+      if (sprite.viewerGroups && sprite.viewerGroups.length) {
+        return sprite.viewerGroups;
+      }
+      if (sprite.frames && sprite.frames.length > 1) {
+        return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall" }];
+      }
+      return [];
+    }
+
+    function buildStackMarkup(group) {
+      const stackMode = group.stackMode || "tall";
+      const isWide = stackMode === "wide";
+      const count = group.frames.length;
+      const cards = group.frames.map((frame, index) => {
+        const centerOffset = index - (count - 1) / 2;
+        const rotate = centerOffset * (isWide ? 3.2 : 4.6);
+        const offsetX = centerOffset * (isWide ? 26 : 22);
+        const offsetY = centerOffset * (isWide ? 12 : 18);
+        const width = isWide ? 84 : 72;
+        const aspect = isWide ? "1.6 / 1" : "0.72 / 1";
+        return `<img class="viewer-card" src="${frame.image}" alt="" style="--offset-x:${offsetX}px; --offset-y:${offsetY}px; --card-rotate:${rotate}deg; --card-width:${width}%; --card-aspect:${aspect}; z-index:${index + 1};">`;
+      }).join("");
+
+      return `
+        <div class="viewer-group">
+          ${group.label ? `<div class="viewer-group-title">${group.label}</div>` : ""}
+          <div class="viewer-stack ${isWide ? "is-wide" : ""}">
+            ${cards}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderViewer(sprite) {
+      const displayGroups = getDisplayGroups(sprite);
+      if (!displayGroups.length) {
+        viewerGallery.innerHTML = `<img class="viewer-single" src="${getFrameImage(sprite)}" alt="${sprite.fullTitle}">`;
+        return;
+      }
+
+      viewerGallery.innerHTML = `<div class="viewer-groups">${displayGroups.map((group) => buildStackMarkup(group)).join("")}</div>`;
+    }
+
+    function refreshHud(sprite) {
+      renderViewer(sprite);
+      hudTitle.textContent = sprite.fullTitle;
+      hudMeta.innerHTML = buildMeta(sprite);
+      hudLinks.innerHTML = buildLinks(sprite);
+    }
+
+    function openHud(sprite) {
+      state.activeId = sprite.id;
+      sprites.forEach((item) => item.el.classList.toggle("is-selected", item.id === sprite.id));
+      refreshHud(sprite);
+      overlay.classList.add("is-open");
+      overlay.setAttribute("aria-hidden", "false");
+      viewer.setAttribute("aria-hidden", "false");
+      hud.setAttribute("aria-hidden", "false");
+    }
+
+    function closeHud() {
+      state.activeId = null;
+      sprites.forEach((item) => item.el.classList.remove("is-selected"));
+      overlay.classList.remove("is-open");
+      overlay.setAttribute("aria-hidden", "true");
+      viewer.setAttribute("aria-hidden", "true");
+      hud.setAttribute("aria-hidden", "true");
+    }
+
+    function startDrag(event, sprite) {
+      event.preventDefault();
+      sprite.isPointerDown = true;
+      sprite.draggedDistance = 0;
+      sprite.pointerOffsetX = event.clientX - sprite.x;
+      sprite.pointerOffsetY = event.clientY - sprite.y;
+      state.dragId = sprite.id;
+      sprite.el.classList.add("is-dragging");
+      sprite.button.setPointerCapture(event.pointerId);
+    }
+
+    function moveDrag(event, sprite) {
+      if (!sprite.isPointerDown || state.dragId !== sprite.id) return;
+      const bounds = getSceneBounds(sprite);
+      const nextX = clamp(event.clientX - sprite.pointerOffsetX, bounds.left, state.width - bounds.right);
+      const nextY = clamp(event.clientY - sprite.pointerOffsetY, bounds.top, state.height - bounds.bottom);
+      sprite.draggedDistance += Math.hypot(nextX - sprite.x, nextY - sprite.y);
+      sprite.vx = nextX - sprite.x;
+      sprite.vy = nextY - sprite.y;
+      sprite.x = nextX;
+      sprite.y = nextY;
+      applyTransform(sprite);
+    }
+
+    function endDrag(event, sprite) {
+      if (!sprite.isPointerDown) return;
+      const wasDragged = sprite.draggedDistance > 8;
+      sprite.isPointerDown = false;
+      sprite.el.classList.remove("is-dragging");
+      if (sprite.button.hasPointerCapture(event.pointerId)) {
+        sprite.button.releasePointerCapture(event.pointerId);
+      }
+      state.dragId = null;
+      sprite.xRatio = sprite.x / state.width;
+      sprite.yRatio = sprite.y / state.height;
+      if (!wasDragged) {
+        openHud(sprite);
+      }
+    }
+
+    function applyPhysics() {
+      const now = performance.now();
+
+      for (let i = 0; i < sprites.length; i += 1) {
+        const a = sprites[i];
+
+        if (a.frames && a.frames.length > 1 && !a.isPointerDown && now >= a.nextFlipAt) {
+          runFlip(a);
+          a.nextFlipAt = now + a.flipInterval;
+        }
+
+        if (!a.isPointerDown) {
+          a.vx += Math.sin(now * 0.001 + a.wobble) * 0.014;
+          a.vy += Math.cos(now * 0.00115 + a.wobble) * 0.014;
+        }
+
+        for (let j = i + 1; j < sprites.length; j += 1) {
+          const b = sprites[j];
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const distance = Math.hypot(dx, dy) || 0.001;
+          const minDistance = a.radius + b.radius;
+          if (distance >= minDistance) continue;
+
+          const overlap = (minDistance - distance) * 0.5;
+          const nx = dx / distance;
+          const ny = dy / distance;
+
+          if (!a.isPointerDown) {
+            a.x -= nx * overlap;
+            a.y -= ny * overlap;
+            a.vx -= nx * overlap * 0.03;
+            a.vy -= ny * overlap * 0.03;
+          }
+
+          if (!b.isPointerDown) {
+            b.x += nx * overlap;
+            b.y += ny * overlap;
+            b.vx += nx * overlap * 0.03;
+            b.vy += ny * overlap * 0.03;
+          }
+        }
+      }
+
+      sprites.forEach((sprite) => {
+        const bounds = getSceneBounds(sprite);
+        if (!sprite.isPointerDown) {
+          sprite.vx *= 0.92;
+          sprite.vy *= 0.92;
+          sprite.x += sprite.vx;
+          sprite.y += sprite.vy;
+        }
+
+        const maxX = state.width - bounds.right;
+        const maxY = state.height - bounds.bottom;
+
+        if (sprite.x < bounds.left) {
+          sprite.x = bounds.left;
+          sprite.vx *= -0.42;
+        }
+        if (sprite.x > maxX) {
+          sprite.x = maxX;
+          sprite.vx *= -0.42;
+        }
+        if (sprite.y < bounds.top) {
+          sprite.y = bounds.top;
+          sprite.vy *= -0.42;
+        }
+        if (sprite.y > maxY) {
+          sprite.y = maxY;
+          sprite.vy *= -0.42;
+        }
+
+        applyTransform(sprite);
+      });
+
+      state.animationFrame = requestAnimationFrame(applyPhysics);
+    }
+
+    function init() {
+      products.forEach((product, index) => {
+        const sprite = createSprite(product, index);
+        sprites.push(sprite);
+        queueAutoFlip(sprite, index);
+      });
+
+      layoutSprites();
+      cancelAnimationFrame(state.animationFrame);
+      applyPhysics();
+    }
+
+    hudClose.addEventListener("click", closeHud);
+
+    document.addEventListener("click", (event) => {
+      if (event.target.closest(".pickup") || event.target.closest(".hud") || event.target.closest(".viewer")) return;
+      closeHud();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeHud();
+      }
+    });
+
+    window.addEventListener("resize", layoutSprites);
+
+    init();
+  </script>
+</body>
+</html>
