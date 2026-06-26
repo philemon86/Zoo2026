@@ -566,7 +566,7 @@
       pointer-events: none;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 860px), (pointer: coarse) {
       html,
       body {
         height: 100%;
@@ -1169,7 +1169,9 @@
     const formatPrice = (value) => `NT$ ${value}`;
 
     function isMobileLayout() {
-      return window.innerWidth < 860;
+      const coarsePointer = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      const touchDevice = navigator.maxTouchPoints > 0;
+      return window.innerWidth < 860 || coarsePointer || touchDevice;
     }
 
     function getColumns() {
