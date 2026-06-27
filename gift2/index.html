@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" type="image/png" href="../assets/common/favicon.png">
+  <link rel="stylesheet" href="../assets/common/bear-cursor.css">
   <title>最新禮品地圖</title>
   <style>
     :root {
@@ -328,6 +330,11 @@
       transition: opacity 0.24s ease, transform 0.24s ease;
     }
 
+    .viewer.is-row-view {
+      width: min(76vw, 900px);
+      min-height: min(52vh, 620px);
+    }
+
     .overlay.is-open .viewer {
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -380,12 +387,12 @@
     }
 
     .viewer-stack.is-row {
-      width: min(640px, 68vw);
+      width: min(840px, 76vw);
       height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 18px;
+      gap: 22px;
       padding: 8px 0;
     }
 
@@ -393,7 +400,7 @@
       position: relative;
       left: auto;
       top: auto;
-      width: var(--row-card-width, min(185px, 20vw));
+      width: var(--row-card-width, min(220px, 22vw));
       max-width: 100%;
       transform: none;
       filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
@@ -1437,8 +1444,8 @@
           return [{ frames: sprite.frames, stackMode: "row", rowStyle: "angle" }];
         }
         const spreadMap = {
-          "s046g": 4.4,
-          "s046f": 4.4
+          "s046g": 5.2,
+          "s046f": 5.2
         };
         const spread = spreadMap[sprite.id];
         return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall", spread: spread || 1 }];
@@ -1450,7 +1457,7 @@
       const stackMode = group.stackMode || "tall";
       if (stackMode === "row") {
         const rowStyle = group.rowStyle || "line";
-        const rowCardWidth = rowStyle === "angle" ? "min(112px, 12vw)" : "min(190px, 19vw)";
+        const rowCardWidth = rowStyle === "angle" ? "min(220px, 20vw)" : "min(232px, 22vw)";
         const cards = group.frames.map((frame, index) => {
           const count = group.frames.length;
           const centerOffset = index - (count - 1) / 2;
@@ -1498,6 +1505,8 @@
 
     function renderViewer(sprite) {
       const displayGroups = getDisplayGroups(sprite);
+      const hasRowGroups = displayGroups.some((group) => group.stackMode === "row");
+      viewer.classList.toggle("is-row-view", hasRowGroups);
       if (!displayGroups.length) {
         viewerGallery.innerHTML = `<img class="viewer-single" src="${getFrameImage(sprite)}" alt="${sprite.fullTitle}">`;
         return;
@@ -1530,6 +1539,7 @@
       overlay.setAttribute("aria-hidden", "true");
       viewer.setAttribute("aria-hidden", "true");
       hud.setAttribute("aria-hidden", "true");
+      viewer.classList.remove("is-row-view");
     }
 
     function openMobileCard(cardId) {
