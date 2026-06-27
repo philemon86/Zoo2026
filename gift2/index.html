@@ -379,6 +379,26 @@
       height: min(240px, 30vh);
     }
 
+    .viewer-stack.is-row {
+      width: min(520px, 56vw);
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 8px 0;
+    }
+
+    .viewer-stack.is-row .viewer-card {
+      position: relative;
+      left: auto;
+      top: auto;
+      width: min(210px, 24vw);
+      max-width: 100%;
+      transform: none;
+      filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
+    }
+
     .viewer-card {
       position: absolute;
       left: 50%;
@@ -1403,19 +1423,34 @@
       }
       if (sprite.frames && sprite.frames.length > 1) {
         const spreadMap = {
-          "pg40-6": 2.15,
-          "s046g": 1.6,
-          "s046f": 1.6,
-          "pg25": 1.7
+          "pg40-6": 0,
+          "s046g": 1.9,
+          "s046f": 1.9,
+          "pg25": 2.05
         };
-        const spread = spreadMap[sprite.id] || 1;
-        return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall", spread }];
+        const spread = spreadMap[sprite.id];
+        if (sprite.id === "pg40-6") {
+          return [{ frames: sprite.frames, stackMode: "row", spread: 1 }];
+        }
+        return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall", spread: spread || 1 }];
       }
       return [];
     }
 
     function buildStackMarkup(group) {
       const stackMode = group.stackMode || "tall";
+      if (stackMode === "row") {
+        const cards = group.frames.map((frame, index) => {
+          return `<img class="viewer-card" src="${frame.image}" alt="" style="z-index:${index + 1};">`;
+        }).join("");
+        return `
+          <div class="viewer-group">
+            <div class="viewer-stack is-row">
+              ${cards}
+            </div>
+          </div>
+        `;
+      }
       const isWide = stackMode === "wide";
       const spread = group.spread || 1;
       const count = group.frames.length;
