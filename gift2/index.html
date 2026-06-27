@@ -403,14 +403,14 @@
     }
 
     .viewer-stack.is-column {
-      width: min(300px, 72vw);
+      width: min(260px, 66vw);
       height: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: var(--stack-gap, 6px);
-      padding: 8px 0;
+      gap: var(--stack-gap, 0px);
+      padding: 0;
     }
 
     .viewer-stack.is-grid {
@@ -441,7 +441,7 @@
       position: relative;
       left: auto;
       top: auto;
-      width: var(--column-card-width, min(220px, 58vw));
+      width: var(--column-card-width, min(170px, 46vw));
       max-width: 100%;
       transform: none;
       filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
@@ -688,9 +688,10 @@
 
       .top-pills {
         position: fixed;
-        top: calc(68px + env(safe-area-inset-top));
-        left: calc(12px + env(safe-area-inset-left));
-        right: calc(12px + env(safe-area-inset-right));
+        top: calc(12px + env(safe-area-inset-top));
+        left: calc(112px + env(safe-area-inset-left));
+        right: auto;
+        width: max-content;
       }
 
       .top-pill {
@@ -1513,7 +1514,7 @@
             frames: sprite.frames,
             stackMode: "row",
             rowStyle: isMobileLayout() ? "column" : "line",
-            cardWidth: isMobileLayout() ? "min(180px, 48vw)" : "min(232px, 22vw)",
+            cardWidth: isMobileLayout() ? "min(158px, 42vw)" : "min(232px, 22vw)",
             stackGap: "0px"
           }];
         }
