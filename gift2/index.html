@@ -657,36 +657,8 @@
       .mobile-card-body {
         min-width: 0;
         display: grid;
-        gap: 8px;
-      }
-
-      .mobile-card-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
+        align-content: center;
         gap: 10px;
-      }
-
-      .mobile-card-title {
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.2;
-        color: var(--ink);
-        font-weight: 900;
-      }
-
-      .mobile-card-tag {
-        flex: 0 0 auto;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 28px;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: rgba(104, 128, 83, 0.12);
-        color: var(--green-deep);
-        font-size: 12px;
-        font-weight: 800;
       }
 
       .mobile-card-prices {
@@ -704,13 +676,12 @@
         border-radius: 999px;
         border: 1px solid rgba(94, 110, 76, 0.12);
         background: rgba(255, 255, 255, 0.86);
-        color: var(--ink);
+        color: var(--sale);
         font-size: 13px;
         font-weight: 800;
       }
 
       .mobile-card-price.sale {
-        color: var(--sale);
         background: rgba(186, 110, 78, 0.08);
       }
 
@@ -1242,7 +1213,6 @@
 
     function buildMobileCard(product) {
       const image = getFrameImage(product);
-      const code = product.id.toUpperCase();
       const actions = product.actions.map((action) => buildMobileActionMarkup(action)).join("");
       return `
         <article class="mobile-card" data-id="${product.id}">
@@ -1250,15 +1220,7 @@
             <img src="${image}" alt="${product.fullTitle}" loading="lazy" decoding="async">
           </button>
           <div class="mobile-card-body">
-            <div class="mobile-card-top">
-              <h3 class="mobile-card-title">${product.title}</h3>
-              <span class="mobile-card-tag">${code}</span>
-            </div>
             <div class="mobile-card-prices">
-              <span class="mobile-card-price">
-                <span class="mobile-card-price-label">定價</span>
-                <strong>${formatPrice(product.listPrice)}</strong>
-              </span>
               <span class="mobile-card-price sale">
                 <span class="mobile-card-price-label">特價</span>
                 <strong>${formatPrice(product.salePrice)}</strong>
@@ -1440,7 +1402,8 @@
         return sprite.viewerGroups;
       }
       if (sprite.frames && sprite.frames.length > 1) {
-        return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall" }];
+        const spread = ["s046g", "s046f", "pg25"].includes(sprite.id) ? 1.35 : 1;
+        return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall", spread }];
       }
       return [];
     }
@@ -1448,13 +1411,14 @@
     function buildStackMarkup(group) {
       const stackMode = group.stackMode || "tall";
       const isWide = stackMode === "wide";
+      const spread = group.spread || 1;
       const count = group.frames.length;
       const cards = group.frames.map((frame, index) => {
         const centerOffset = index - (count - 1) / 2;
-        const rotate = centerOffset * (isWide ? 3.2 : 4.6);
-        const offsetX = centerOffset * (isWide ? 26 : 22);
-        const offsetY = centerOffset * (isWide ? 12 : 18);
-        const width = isWide ? 84 : 72;
+        const rotate = centerOffset * (isWide ? 3.2 : 4.6) * spread;
+        const offsetX = centerOffset * (isWide ? 26 : 22) * spread;
+        const offsetY = centerOffset * (isWide ? 12 : 18) * spread;
+        const width = isWide ? 84 : 70;
         const aspect = isWide ? "1.6 / 1" : "0.72 / 1";
         return `<img class="viewer-card" src="${frame.image}" alt="" style="--offset-x:${offsetX}px; --offset-y:${offsetY}px; --card-rotate:${rotate}deg; --card-width:${width}%; --card-aspect:${aspect}; z-index:${index + 1};">`;
       }).join("");
