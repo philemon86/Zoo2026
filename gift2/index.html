@@ -156,7 +156,7 @@
       background: transparent;
       display: grid;
       place-items: center;
-      cursor: grab;
+      cursor: pointer;
       touch-action: none;
     }
 
@@ -199,11 +199,11 @@
     }
 
     .pickup:hover .pickup-core {
-      transform: translateY(calc(var(--float-shift) - 7px)) scale(1.03);
+      transform: translateY(calc(var(--float-shift) - 4px));
     }
 
     .pickup.is-selected .pickup-core {
-      transform: translateY(calc(var(--float-shift) - 10px)) scale(1.18);
+      transform: translateY(calc(var(--float-shift) - 8px));
     }
 
     .pickup-surface {
@@ -380,12 +380,12 @@
     }
 
     .viewer-stack.is-row {
-      width: min(520px, 56vw);
+      width: min(640px, 68vw);
       height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 18px;
       padding: 8px 0;
     }
 
@@ -393,10 +393,15 @@
       position: relative;
       left: auto;
       top: auto;
-      width: min(210px, 24vw);
+      width: var(--row-card-width, min(185px, 20vw));
       max-width: 100%;
       transform: none;
       filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
+    }
+
+    .viewer-stack.is-row.is-angle .viewer-card {
+      transform: rotate(var(--row-rotate, 0deg)) translateY(var(--row-shift-y, 0px));
+      transform-origin: 50% 60%;
     }
 
     .viewer-card {
@@ -973,7 +978,7 @@
         ],
         note: "燈箱會自動每三秒翻面一次，展示正反兩面。",
         variants: ["正面", "背面"],
-        viewerStackMode: "wide",
+        viewerStackMode: "row",
         listPrice: 200,
         salePrice: 150,
         actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG40-6" }],
@@ -994,7 +999,7 @@
         ],
         note: "海綿整合成一個物件，會自動輪播三種造型。",
         variants: ["款式一", "款式二", "款式三"],
-        viewerStackMode: "wide",
+        viewerStackMode: "row",
         listPrice: 39,
         salePrice: 35,
         actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG41" }],
@@ -1123,7 +1128,7 @@
         initialFrame: 0,
         note: "紅包袋改用你切好的五張圖，會自動翻頁輪播，尺寸也放大一些。",
         variants: ["款式 1", "款式 2", "款式 3", "款式 4", "款式 5"],
-        viewerStackMode: "tall",
+        viewerStackMode: "row",
         listPrice: 125,
         salePrice: 99,
         actions: [{ label: "前往購買", href: "https://www.pbooks.com.tw/products/PG25" }],
@@ -1422,16 +1427,20 @@
         return sprite.viewerGroups;
       }
       if (sprite.frames && sprite.frames.length > 1) {
+        if (sprite.id === "pg40-6") {
+          return [{ frames: sprite.frames, stackMode: "row", rowStyle: "line" }];
+        }
+        if (sprite.id === "pg41") {
+          return [{ frames: sprite.frames, stackMode: "row", rowStyle: "line" }];
+        }
+        if (sprite.id === "pg25") {
+          return [{ frames: sprite.frames, stackMode: "row", rowStyle: "angle" }];
+        }
         const spreadMap = {
-          "pg40-6": 0,
-          "s046g": 4,
-          "s046f": 4,
-          "pg25": 4.2
+          "s046g": 4.4,
+          "s046f": 4.4
         };
         const spread = spreadMap[sprite.id];
-        if (sprite.id === "pg40-6") {
-          return [{ frames: sprite.frames, stackMode: "row", spread: 1 }];
-        }
         return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall", spread: spread || 1 }];
       }
       return [];
@@ -1440,12 +1449,25 @@
     function buildStackMarkup(group) {
       const stackMode = group.stackMode || "tall";
       if (stackMode === "row") {
+        const rowStyle = group.rowStyle || "line";
+        const rowCardWidth = rowStyle === "angle" ? "min(112px, 12vw)" : "min(190px, 19vw)";
         const cards = group.frames.map((frame, index) => {
-          return `<img class="viewer-card" src="${frame.image}" alt="" style="z-index:${index + 1};">`;
+          const count = group.frames.length;
+          const centerOffset = index - (count - 1) / 2;
+          let rotate = 0;
+          let shiftY = 0;
+          if (rowStyle === "angle") {
+            rotate = centerOffset * 2;
+            shiftY = Math.abs(centerOffset) * -1;
+          } else if (rowStyle === "fanned") {
+            rotate = centerOffset * 4.5;
+            shiftY = -Math.abs(centerOffset) * 2;
+          }
+          return `<img class="viewer-card" src="${frame.image}" alt="" style="--row-rotate:${rotate}deg; --row-shift-y:${shiftY}px; --row-card-width:${rowCardWidth}; z-index:${index + 1};">`;
         }).join("");
         return `
           <div class="viewer-group">
-            <div class="viewer-stack is-row">
+            <div class="viewer-stack is-row ${rowStyle === "angle" || rowStyle === "fanned" ? "is-angle" : ""}">
               ${cards}
             </div>
           </div>
