@@ -403,14 +403,28 @@
     }
 
     .viewer-stack.is-column {
-      width: min(500px, 84vw);
+      width: min(300px, 72vw);
       height: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 6px;
       padding: 8px 0;
+    }
+
+    .viewer-stack.is-grid {
+      width: min(420px, 84vw);
+      height: auto;
+      display: grid;
+      justify-content: center;
+      align-content: start;
+      gap: 8px;
+      padding: 8px 0;
+    }
+
+    .viewer-stack.is-grid.is-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .viewer-stack.is-row .viewer-card {
@@ -427,7 +441,17 @@
       position: relative;
       left: auto;
       top: auto;
-      width: var(--row-card-width, min(300px, 68vw));
+      width: var(--column-card-width, min(220px, 58vw));
+      max-width: 100%;
+      transform: none;
+      filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
+    }
+
+    .viewer-stack.is-grid .viewer-card {
+      position: relative;
+      left: auto;
+      top: auto;
+      width: var(--grid-card-width, min(128px, 34vw));
       max-width: 100%;
       transform: none;
       filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
@@ -1480,7 +1504,7 @@
           return [{
             frames: sprite.frames,
             stackMode: "row",
-            rowStyle: isMobileLayout() ? "line" : "line",
+            rowStyle: "line",
             cardWidth: isMobileLayout() ? "min(430px, 44vw)" : "min(232px, 22vw)"
           }];
         }
@@ -1489,14 +1513,16 @@
             frames: sprite.frames,
             stackMode: "row",
             rowStyle: isMobileLayout() ? "column" : "line",
-            cardWidth: isMobileLayout() ? "min(320px, 68vw)" : "min(232px, 22vw)"
+            cardWidth: isMobileLayout() ? "min(220px, 58vw)" : "min(232px, 22vw)"
           }];
         }
         if (sprite.id === "pg25") {
-          return [{ frames: sprite.frames, stackMode: "row", rowStyle: "fanned" }];
+          return [{ frames: sprite.frames, stackMode: "row", rowStyle: isMobileLayout() ? "line" : "fanned", cardWidth: isMobileLayout() ? "min(62px, 17vw)" : "min(360px, 31vw)" }];
         }
         if (sprite.id === "s046g" || sprite.id === "s046f") {
-          return [{ frames: sprite.frames, stackMode: "row", rowStyle: "fanned" }];
+          return isMobileLayout()
+            ? [{ frames: sprite.frames, stackMode: "grid", columns: 2, cardWidth: "min(132px, 34vw)" }]
+            : [{ frames: sprite.frames, stackMode: "row", rowStyle: "fanned" }];
         }
         const spreadMap = {
           "s046g": 6.2,
@@ -1510,6 +1536,20 @@
 
     function buildStackMarkup(group) {
       const stackMode = group.stackMode || "tall";
+      if (stackMode === "grid") {
+        const columns = group.columns || 2;
+        const gridCardWidth = group.cardWidth || "min(132px, 34vw)";
+        const cards = group.frames.map((frame, index) => {
+          return `<img class="viewer-card" src="${assetUrl(frame.image)}" alt="" style="--grid-card-width:${gridCardWidth}; z-index:${index + 1};">`;
+        }).join("");
+        return `
+          <div class="viewer-group">
+            <div class="viewer-stack is-grid is-grid-${columns}">
+              ${cards}
+            </div>
+          </div>
+        `;
+      }
       if (stackMode === "row") {
         const rowStyle = group.rowStyle || "line";
         const rowCardWidth = group.cardWidth || (rowStyle === "fanned" ? "min(360px, 31vw)" : rowStyle === "angle" ? "min(220px, 20vw)" : "min(232px, 22vw)");
