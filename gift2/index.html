@@ -398,7 +398,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: var(--stack-gap, 8px);
       padding: 8px 0;
     }
 
@@ -409,7 +409,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: var(--stack-gap, 6px);
       padding: 8px 0;
     }
 
@@ -1513,11 +1513,18 @@
             frames: sprite.frames,
             stackMode: "row",
             rowStyle: isMobileLayout() ? "column" : "line",
-            cardWidth: isMobileLayout() ? "min(220px, 58vw)" : "min(232px, 22vw)"
+            cardWidth: isMobileLayout() ? "min(200px, 52vw)" : "min(232px, 22vw)",
+            stackGap: isMobileLayout() ? "3px" : "8px"
           }];
         }
         if (sprite.id === "pg25") {
-          return [{ frames: sprite.frames, stackMode: "row", rowStyle: isMobileLayout() ? "line" : "fanned", cardWidth: isMobileLayout() ? "min(62px, 17vw)" : "min(360px, 31vw)" }];
+          return [{
+            frames: sprite.frames,
+            stackMode: "row",
+            rowStyle: isMobileLayout() ? "line" : "fanned",
+            cardWidth: isMobileLayout() ? "min(56px, 15vw)" : "min(360px, 31vw)",
+            stackGap: isMobileLayout() ? "0px" : "8px"
+          }];
         }
         if (sprite.id === "s046g" || sprite.id === "s046f") {
           return isMobileLayout()
@@ -1553,6 +1560,7 @@
       if (stackMode === "row") {
         const rowStyle = group.rowStyle || "line";
         const rowCardWidth = group.cardWidth || (rowStyle === "fanned" ? "min(360px, 31vw)" : rowStyle === "angle" ? "min(220px, 20vw)" : "min(232px, 22vw)");
+        const stackGap = group.stackGap || "";
         const cards = group.frames.map((frame, index) => {
           const count = group.frames.length;
           const centerOffset = index - (count - 1) / 2;
@@ -1569,7 +1577,7 @@
         }).join("");
         return `
           <div class="viewer-group">
-            <div class="viewer-stack ${rowStyle === "column" ? "is-column" : "is-row"} ${rowStyle === "angle" || rowStyle === "fanned" ? "is-angle" : ""}">
+            <div class="viewer-stack ${rowStyle === "column" ? "is-column" : "is-row"} ${rowStyle === "angle" || rowStyle === "fanned" ? "is-angle" : ""}" style="${stackGap ? `--stack-gap:${stackGap};` : ""}">
               ${cards}
             </div>
           </div>
