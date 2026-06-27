@@ -53,7 +53,7 @@
       isolation: isolate;
       user-select: none;
       touch-action: none;
-      background: url("assets/草地電腦板.png") center / cover no-repeat;
+      background: #f5ebca;
     }
 
     .scene::before {
@@ -66,6 +66,12 @@
         linear-gradient(180deg, rgba(255, 251, 241, 0.16), rgba(255, 248, 231, 0.08) 32%, rgba(248, 238, 207, 0.22));
       pointer-events: none;
       z-index: 0;
+    }
+
+    @media (min-width: 861px) {
+      .scene {
+        background: url("assets/草地電腦板.webp") center / cover no-repeat;
+      }
     }
 
     .home-link {
@@ -1159,6 +1165,7 @@
     const hudClose = document.getElementById("hudClose");
 
     const sprites = [];
+    let spritesReady = false;
     const state = {
       width: 0,
       height: 0,
@@ -1175,6 +1182,10 @@
       const coarsePointer = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
       const touchDevice = navigator.maxTouchPoints > 0;
       return window.innerWidth < 860 || coarsePointer || touchDevice;
+    }
+
+    function assetUrl(path) {
+      return path.replace(/\.png$/i, ".webp");
     }
 
     function getColumns() {
@@ -1233,7 +1244,7 @@
 
     function getFrameImage(sprite, index = sprite.frameIndex || 0) {
       const frame = getFrameForSprite(sprite, index);
-      return frame.image || sprite.image;
+      return assetUrl(frame.image || sprite.image);
     }
 
     function buildMobileActionMarkup(action) {
@@ -1274,7 +1285,7 @@
 
     function setSurfaceFrame(surface, frame, altText) {
       if (!surface || !frame) return;
-      surface.innerHTML = `<img class="pickup-image" src="${frame.image}" alt="${altText}">`;
+      surface.innerHTML = `<img class="pickup-image" src="${assetUrl(frame.image)}" alt="${altText}">`;
     }
 
     function createSprite(product, index) {
@@ -1330,6 +1341,16 @@
       sprite.button.addEventListener("pointerup", (event) => endDrag(event, sprite));
       sprite.button.addEventListener("pointercancel", (event) => endDrag(event, sprite));
       return sprite;
+    }
+
+    function ensureSprites() {
+      if (spritesReady) return;
+      products.forEach((product, index) => {
+        const sprite = createSprite(product, index);
+        sprites.push(sprite);
+        queueAutoFlip(sprite, index);
+      });
+      spritesReady = true;
     }
 
     function queueAutoFlip(sprite, index) {
@@ -1470,7 +1491,7 @@
             rotate = centerOffset * 5.5;
             shiftY = -Math.abs(centerOffset) * 3;
           }
-          return `<img class="viewer-card" src="${frame.image}" alt="" style="--row-rotate:${rotate}deg; --row-shift-y:${shiftY}px; --row-card-width:${rowCardWidth}; z-index:${index + 1};">`;
+          return `<img class="viewer-card" src="${assetUrl(frame.image)}" alt="" style="--row-rotate:${rotate}deg; --row-shift-y:${shiftY}px; --row-card-width:${rowCardWidth}; z-index:${index + 1};">`;
         }).join("");
         return `
           <div class="viewer-group">
@@ -1490,7 +1511,7 @@
         const offsetY = centerOffset * (isWide ? 12 : 18) * spread;
         const width = isWide ? 80 : 70;
         const aspect = isWide ? "1.6 / 1" : "0.72 / 1";
-        return `<img class="viewer-card" src="${frame.image}" alt="" style="--offset-x:${offsetX}px; --offset-y:${offsetY}px; --card-rotate:${rotate}deg; --card-width:${width}%; --card-aspect:${aspect}; z-index:${index + 1};">`;
+        return `<img class="viewer-card" src="${assetUrl(frame.image)}" alt="" style="--offset-x:${offsetX}px; --offset-y:${offsetY}px; --card-rotate:${rotate}deg; --card-width:${width}%; --card-aspect:${aspect}; z-index:${index + 1};">`;
       }).join("");
 
       return `
@@ -1683,22 +1704,17 @@
     }
 
     function init() {
-      products.forEach((product, index) => {
-        const sprite = createSprite(product, index);
-        sprites.push(sprite);
-        queueAutoFlip(sprite, index);
-      });
-
       if (isMobileLayout()) {
         renderMobileCatalog();
         cancelAnimationFrame(state.animationFrame);
         state.animationFrame = 0;
       } else if (mobileCatalog) {
         mobileCatalog.innerHTML = "";
+        ensureSprites();
       }
 
-      layoutSprites();
       if (!isMobileLayout()) {
+        layoutSprites();
         cancelAnimationFrame(state.animationFrame);
         applyPhysics();
       }
@@ -1718,16 +1734,19 @@
     });
 
     window.addEventListener("resize", () => {
-      layoutSprites();
       if (isMobileLayout()) {
         renderMobileCatalog();
         cancelAnimationFrame(state.animationFrame);
         state.animationFrame = 0;
       } else if (mobileCatalog) {
         mobileCatalog.innerHTML = "";
+        ensureSprites();
+        layoutSprites();
         if (!state.animationFrame) {
           applyPhysics();
         }
+      } else {
+        layoutSprites();
       }
     });
 
