@@ -331,7 +331,7 @@
     }
 
     .viewer.is-row-view {
-      width: min(76vw, 900px);
+      width: min(90vw, 1100px);
       min-height: min(52vh, 620px);
     }
 
@@ -387,7 +387,7 @@
     }
 
     .viewer-stack.is-row {
-      width: min(840px, 76vw);
+      width: min(1000px, 90vw);
       height: auto;
       display: flex;
       align-items: center;
@@ -400,7 +400,7 @@
       position: relative;
       left: auto;
       top: auto;
-      width: var(--row-card-width, min(220px, 22vw));
+      width: var(--row-card-width, min(240px, 22vw));
       max-width: 100%;
       transform: none;
       filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.42));
@@ -1441,7 +1441,7 @@
           return [{ frames: sprite.frames, stackMode: "row", rowStyle: "line" }];
         }
         if (sprite.id === "pg25") {
-          return [{ frames: sprite.frames, stackMode: "row", rowStyle: "angle" }];
+          return [{ frames: sprite.frames, stackMode: "row", rowStyle: "fanned" }];
         }
         const spreadMap = {
           "s046g": 5.2,
@@ -1457,7 +1457,7 @@
       const stackMode = group.stackMode || "tall";
       if (stackMode === "row") {
         const rowStyle = group.rowStyle || "line";
-        const rowCardWidth = rowStyle === "angle" ? "min(220px, 20vw)" : "min(232px, 22vw)";
+        const rowCardWidth = rowStyle === "fanned" ? "min(300px, 26vw)" : rowStyle === "angle" ? "min(220px, 20vw)" : "min(232px, 22vw)";
         const cards = group.frames.map((frame, index) => {
           const count = group.frames.length;
           const centerOffset = index - (count - 1) / 2;
@@ -1467,8 +1467,8 @@
             rotate = centerOffset * 2;
             shiftY = Math.abs(centerOffset) * -1;
           } else if (rowStyle === "fanned") {
-            rotate = centerOffset * 4.5;
-            shiftY = -Math.abs(centerOffset) * 2;
+            rotate = centerOffset * 5.5;
+            shiftY = -Math.abs(centerOffset) * 3;
           }
           return `<img class="viewer-card" src="${frame.image}" alt="" style="--row-rotate:${rotate}deg; --row-shift-y:${shiftY}px; --row-card-width:${rowCardWidth}; z-index:${index + 1};">`;
         }).join("");
