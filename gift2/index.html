@@ -1402,7 +1402,13 @@
         return sprite.viewerGroups;
       }
       if (sprite.frames && sprite.frames.length > 1) {
-        const spread = ["s046g", "s046f", "pg25"].includes(sprite.id) ? 1.35 : 1;
+        const spreadMap = {
+          "pg40-6": 2.15,
+          "s046g": 1.6,
+          "s046f": 1.6,
+          "pg25": 1.7
+        };
+        const spread = spreadMap[sprite.id] || 1;
         return [{ frames: sprite.frames, stackMode: sprite.viewerStackMode || "tall", spread }];
       }
       return [];
@@ -1418,7 +1424,7 @@
         const rotate = centerOffset * (isWide ? 3.2 : 4.6) * spread;
         const offsetX = centerOffset * (isWide ? 26 : 22) * spread;
         const offsetY = centerOffset * (isWide ? 12 : 18) * spread;
-        const width = isWide ? 84 : 70;
+        const width = isWide ? 80 : 70;
         const aspect = isWide ? "1.6 / 1" : "0.72 / 1";
         return `<img class="viewer-card" src="${frame.image}" alt="" style="--offset-x:${offsetX}px; --offset-y:${offsetY}px; --card-rotate:${rotate}deg; --card-width:${width}%; --card-aspect:${aspect}; z-index:${index + 1};">`;
       }).join("");
