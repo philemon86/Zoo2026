@@ -1513,16 +1513,16 @@
             frames: sprite.frames,
             stackMode: "row",
             rowStyle: isMobileLayout() ? "column" : "line",
-            cardWidth: isMobileLayout() ? "min(200px, 52vw)" : "min(232px, 22vw)",
-            stackGap: isMobileLayout() ? "3px" : "8px"
+            cardWidth: isMobileLayout() ? "min(180px, 48vw)" : "min(232px, 22vw)",
+            stackGap: "0px"
           }];
         }
         if (sprite.id === "pg25") {
           return [{
             frames: sprite.frames,
             stackMode: "row",
-            rowStyle: isMobileLayout() ? "line" : "fanned",
-            cardWidth: isMobileLayout() ? "min(56px, 15vw)" : "min(360px, 31vw)",
+            rowStyle: "line",
+            cardWidth: isMobileLayout() ? "min(58px, 16vw)" : "min(176px, 15vw)",
             stackGap: isMobileLayout() ? "0px" : "8px"
           }];
         }
