@@ -1306,13 +1306,15 @@
                     ? '「9折送書、79折送書、買就送書」的所有商品。'
                     : `「${label}」的所有商品。`;
             saleFilterList.innerHTML = matchedItems.map(item => item.outerHTML).join('');
+            enhanceMultibuyBadges(saleFilterList);
             showZone('sale-filter-zone');
         };
 
-        document.querySelectorAll('.book-badge').forEach(badge => {
-            if (badge.textContent.trim() !== '多買多送書') return;
+        const bindMultibuyBadge = badge => {
+            if (badge.dataset.multibuyBound === 'true') return;
             badge.classList.add('badge-glowing-trace');
             badge.dataset.multibuyInfo = '';
+            badge.dataset.multibuyBound = 'true';
             badge.setAttribute('role', 'button');
             badge.setAttribute('tabindex', '0');
             const showMultibuyInfo = event => {
@@ -1324,7 +1326,16 @@
             badge.addEventListener('keydown', event => {
                 if (event.key === 'Enter' || event.key === ' ') showMultibuyInfo(event);
             });
-        });
+        };
+
+        const enhanceMultibuyBadges = (root = document) => {
+            root.querySelectorAll('.book-badge').forEach(badge => {
+                if (badge.textContent.trim() !== '多買多送書') return;
+                bindMultibuyBadge(badge);
+            });
+        };
+
+        enhanceMultibuyBadges();
 
         document.getElementById('multibuy-close').addEventListener('click', () => multibuyDialog.close());
 
