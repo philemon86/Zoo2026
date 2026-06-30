@@ -1286,9 +1286,16 @@
                 ? ['9折送書', '79折送書', '買就送書']
                 : [label];
 
+            const seenSaleItems = new Set();
             const matchedItems = Array.from(document.querySelectorAll('.compact-book-item')).filter(item => {
                 const badge = item.querySelector('.book-badge');
-                return badge && mergeLabels.includes(badge.textContent.trim());
+                if (!badge || !mergeLabels.includes(badge.textContent.trim())) return false;
+
+                const code = item.querySelector('.book-code')?.textContent.trim() || '';
+                const key = `${badge.textContent.trim()}::${code}`;
+                if (seenSaleItems.has(key)) return false;
+                seenSaleItems.add(key);
+                return true;
             });
 
             saleFilterTitle.textContent = label;
