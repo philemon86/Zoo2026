@@ -543,9 +543,7 @@
         <nav class="sale-tabs" aria-label="特價分類">
             <button class="sale-link-btn" type="button" data-sale-filter="多買多送書">多買多送書</button>
             <button class="sale-link-btn" type="button" data-sale-filter="99元大特價">99元大特價</button>
-            <button class="sale-link-btn" type="button" data-sale-filter="9折送書">9折送書</button>
-            <button class="sale-link-btn" type="button" data-sale-filter="79折送書">79折送書</button>
-            <button class="sale-link-btn" type="button" data-sale-filter="買就送書">買就送書</button>
+            <button class="sale-link-btn" type="button" data-sale-filter="買一送一">買一送一</button>
             <button class="sale-link-btn" type="button" data-sale-filter="買繪本送桌遊">買繪本送桌遊</button>
         </nav>
     </div>
@@ -1284,13 +1282,19 @@
         };
 
         const renderSaleFilter = label => {
+            const mergeLabels = label === '買一送一'
+                ? ['9折送書', '79折送書', '買就送書']
+                : [label];
+
             const matchedItems = Array.from(document.querySelectorAll('.compact-book-item')).filter(item => {
                 const badge = item.querySelector('.book-badge');
-                return badge && badge.textContent.trim() === label;
+                return badge && mergeLabels.includes(badge.textContent.trim());
             });
 
             saleFilterTitle.textContent = label;
-            saleFilterSubtitle.textContent = `目前顯示「${label}」的所有商品。`;
+            saleFilterSubtitle.textContent = label === '買一送一'
+                ? '目前顯示「9折送書、79折送書、買就送書」的所有商品。'
+                : `目前顯示「${label}」的所有商品。`;
             saleFilterList.innerHTML = matchedItems.map(item => item.outerHTML).join('');
             showZone('sale-filter-zone');
         };
