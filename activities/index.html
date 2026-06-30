@@ -222,6 +222,41 @@
             box-shadow: 0 4px 10px rgba(107, 123, 102, 0.2);
         }
 
+        .sale-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px 16px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .sale-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sale-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            min-height: 36px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.86rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .sale-link-btn:hover {
+            background: #f1eee5;
+            border-color: #d3cfc2;
+        }
+
         /* --- 書籍/商品清單區塊 --- */
         .zone-content {
             display: none;
@@ -268,6 +303,10 @@
             .compact-book-list {
                 grid-template-columns: 1fr 1fr;
                 gap: 14px;
+            }
+
+            .sale-tabs {
+                justify-content: center;
             }
         }
 
@@ -418,7 +457,9 @@
                 border-radius: 16px;
             }
             .park-tabs { flex-wrap: wrap; justify-content: center; overflow-x: visible; white-space: normal; padding: 0 10px; }
+            .sale-tabs { flex-wrap: wrap; justify-content: center; overflow-x: visible; white-space: normal; padding: 10px 10px 0; }
             .tab-btn { padding: 6px 10px; font-size: 0.8rem; }
+            .sale-link-btn { padding: 6px 10px; font-size: 0.76rem; }
             .countdown-container { width: auto; max-width: calc(100vw - 24px); justify-content: center; gap: 3px; padding: 10px 8px; }
             .countdown-box { min-width: 40px; }
             .countdown-num { font-size: 1.4rem; }
@@ -496,6 +537,14 @@
             <button class="tab-btn" data-target="owl-zone">🦉 貓頭鷹教員</button>
             <button class="tab-btn" data-target="sheep-zone">🐑 小羊童書</button>
             <button class="tab-btn" data-target="gift-zone">🎁 精選好禮</button>
+        </nav>
+        <nav class="sale-tabs" aria-label="特價分類">
+            <a class="sale-link-btn" href="https://www.pbooks.com.tw/products/c187" target="_blank" rel="noopener noreferrer">多買多送書</a>
+            <a class="sale-link-btn" href="https://www.pbooks.com.tw/products/c172" target="_blank" rel="noopener noreferrer">99元大特價</a>
+            <a class="sale-link-btn" href="https://www.pbooks.com.tw/products/c215" target="_blank" rel="noopener noreferrer">9折送書</a>
+            <a class="sale-link-btn" href="https://www.pbooks.com.tw/products/c136" target="_blank" rel="noopener noreferrer">79折送書</a>
+            <a class="sale-link-btn" href="https://www.pbooks.com.tw/products/pb31-pb32" target="_blank" rel="noopener noreferrer">買就送書</a>
+            <a class="sale-link-btn" href="https://www.pbooks.com.tw/products/c011" target="_blank" rel="noopener noreferrer">買繪本送桌遊</a>
         </nav>
     </div>
 
@@ -1023,7 +1072,7 @@
             </a>
             <a class="compact-book-item" href="https://www.pbooks.com.tw/products/c122" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
                 <div class="book-left">
-                    <span class="book-badge badge-discount">9折</span>
+                    <span class="book-badge badge-discount">買繪本送桌遊</span>
                     <div class="book-meta">
                         <span class="book-code">C122</span>
                         <span class="book-name">瑪拉基書中人與神爭辯</span>
@@ -1052,7 +1101,7 @@
         <div class="compact-book-list">
             <a class="compact-book-item" href="https://www.pbooks.com.tw/products/c011" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
                 <div class="book-left">
-                    <span class="book-badge badge-discount">9折</span>
+                    <span class="book-badge badge-discount">買繪本送桌遊</span>
                     <div class="book-meta">
                         <span class="book-code">C011</span>
                         <span class="book-name">綠手指的秘密</span>
@@ -1062,7 +1111,7 @@
             </a>
             <a class="compact-book-item" href="https://www.pbooks.com.tw/products/c286" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
                 <div class="book-left">
-                    <span class="book-badge badge-discount">9折</span>
+                    <span class="book-badge badge-discount">買繪本送桌遊</span>
                     <div class="book-meta">
                         <span class="book-code">C286</span>
                         <span class="book-name">石頭的祈禱</span>
@@ -1072,7 +1121,7 @@
             </a>
             <a class="compact-book-item" href="https://www.pbooks.com.tw/products/c253" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
                 <div class="book-left">
-                    <span class="book-badge badge-discount">9折</span>
+                    <span class="book-badge badge-discount">買繪本送桌遊</span>
                     <div class="book-meta">
                         <span class="book-code">C253</span>
                         <span class="book-name">王子與十大惡人</span>
@@ -1082,7 +1131,7 @@
             </a>
             <a class="compact-book-item" href="https://www.pbooks.com.tw/products/c243" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
                 <div class="book-left">
-                    <span class="book-badge badge-discount">9折</span>
+                    <span class="book-badge badge-discount">買繪本送桌遊</span>
                     <div class="book-meta">
                         <span class="book-code">C243</span>
                         <span class="book-name">小不點的禱告</span>
@@ -1092,7 +1141,7 @@
             </a>
             <a class="compact-book-item" href="https://www.pbooks.com.tw/products/c263" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
                 <div class="book-left">
-                    <span class="book-badge badge-discount">9折</span>
+                    <span class="book-badge badge-discount">買繪本送桌遊</span>
                     <div class="book-meta">
                         <span class="book-code">C263</span>
                         <span class="book-name">小不點去聚會</span>
