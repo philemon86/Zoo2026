@@ -1311,10 +1311,10 @@
         };
 
         const bindMultibuyBadge = badge => {
-            if (badge.dataset.multibuyBound === 'true') return;
+            if (badge.__multibuyBound === true) return;
             badge.classList.add('badge-glowing-trace');
             badge.dataset.multibuyInfo = '';
-            badge.dataset.multibuyBound = 'true';
+            badge.__multibuyBound = true;
             badge.setAttribute('role', 'button');
             badge.setAttribute('tabindex', '0');
             const showMultibuyInfo = event => {
