@@ -1300,8 +1300,8 @@
 
             saleFilterTitle.textContent = label;
             saleFilterSubtitle.textContent = label === '買一送一'
-                ? '目前顯示「9折送書、79折送書、買就送書」的所有商品。'
-                : `目前顯示「${label}」的所有商品。`;
+                ? '「9折送書、79折送書、買就送書」的所有商品。'
+                : `「${label}」的所有商品。`;
             saleFilterList.innerHTML = matchedItems.map(item => item.outerHTML).join('');
             showZone('sale-filter-zone');
         };
