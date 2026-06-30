@@ -1300,9 +1300,11 @@
             });
 
             saleFilterTitle.textContent = label;
-            saleFilterSubtitle.textContent = label === '買一送一'
-                ? '「9折送書、79折送書、買就送書」的所有商品。'
-                : `「${label}」的所有商品。`;
+            saleFilterSubtitle.textContent = label === '多買多送書'
+                ? '購買指定書籍即可任選新歌背後的樂章、響起福音的號角、末世教會的覺醒、基督徒的投資與理財擇一贈送，可累計贈送。'
+                : label === '買一送一'
+                    ? '「9折送書、79折送書、買就送書」的所有商品。'
+                    : `「${label}」的所有商品。`;
             saleFilterList.innerHTML = matchedItems.map(item => item.outerHTML).join('');
             showZone('sale-filter-zone');
         };
