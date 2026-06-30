@@ -49,6 +49,23 @@
             background: linear-gradient(to bottom, #EFECE3, var(--bg-paper));
         }
 
+        .hero-artwork {
+            width: min(100%, 1240px);
+            margin: 0 auto 22px;
+        }
+
+        .hero-artwork picture,
+        .hero-artwork img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .hero-artwork img {
+            border-radius: 20px;
+            box-shadow: 0 14px 36px rgba(62, 58, 55, 0.08);
+        }
+
         .hero-title {
             font-size: 2.8rem;
             font-weight: 900;
@@ -369,6 +386,15 @@
         .promo-dialog-close { min-height: 40px; padding: 8px 18px; border: 0; border-radius: 999px; color: white; background: var(--accent-green); font: inherit; font-weight: 900; cursor: pointer; }
 
         @media (max-width: 767px) {
+            .hero {
+                padding-top: 28px;
+            }
+            .hero-artwork {
+                margin-bottom: 16px;
+            }
+            .hero-artwork img {
+                border-radius: 16px;
+            }
             .park-tabs { flex-wrap: wrap; justify-content: center; overflow-x: visible; white-space: normal; padding: 0 10px; }
             .tab-btn { padding: 6px 10px; font-size: 0.8rem; }
             .countdown-container { width: auto; max-width: calc(100vw - 24px); justify-content: center; gap: 3px; padding: 10px 8px; }
@@ -385,8 +411,12 @@
 <body>
 
     <section class="hero">
-        <h1 class="hero-title">閱讀動物園活動內容</h1>
-        <p class="hero-subtitle">暑期書展・五大重點優惠</p>
+        <div class="hero-artwork">
+            <picture>
+                <source media="(max-width: 767px)" srcset="assets/ACT-PHONE.png">
+                <img src="assets/ACT-COM.png" alt="閱讀動物園活動須知插圖">
+            </picture>
+        </div>
         
         <div class="countdown-container" id="countdown">
             <div class="countdown-box">
