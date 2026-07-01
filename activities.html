@@ -10,6 +10,33 @@
     gtag('js', new Date());
     gtag('config', 'G-JD1JHF86H1');
   </script>
+  <script>
+    function trackPurchaseLinkClick(anchor) {
+      if (typeof gtag !== 'function' || !anchor) return;
+      const href = anchor.href || '';
+      if (!/^https:\/\/www\.pbooks\.com\.tw\/products\//i.test(href)) return;
+
+      const linkText = (anchor.dataset.gaLabel || anchor.getAttribute('aria-label') || anchor.textContent || '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      gtag('event', 'purchase_link_click', {
+        event_category: 'ecommerce',
+        event_label: linkText || href,
+        destination_url: href,
+        link_text: linkText || '(empty)',
+        link_id: anchor.id || '',
+        page_path: window.location.pathname,
+        transport_type: 'beacon'
+      });
+    }
+
+    document.addEventListener('click', function (event) {
+      const anchor = event.target.closest('a[href]');
+      if (!anchor) return;
+      trackPurchaseLinkClick(anchor);
+    }, true);
+  </script>
   <link rel="icon" type="image/png" href="assets/common/favicon.png">
   <title>Redirecting...</title>
   <link rel="canonical" href="https://zoo.pbooks.com.tw/activities/">
